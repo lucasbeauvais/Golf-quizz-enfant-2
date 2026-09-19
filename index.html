@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Golf Academy - L'aventure des Drapeaux avec Coach Rina</title>
+<meta name="description" content="Un jeu pour s'entrainer aux regles et a l'etiquette du golf, avec Coach Rina le panda.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237fd1a3'/%3E%3Ccircle cx='19' cy='16' r='9' fill='%2320232a'/%3E%3Ccircle cx='45' cy='16' r='9' fill='%2320232a'/%3E%3Ccircle cx='32' cy='34' r='22' fill='%23fff'/%3E%3Cellipse cx='23' cy='30' rx='7' ry='9' fill='%2320232a'/%3E%3Cellipse cx='41' cy='30' rx='7' ry='9' fill='%2320232a'/%3E%3Ccircle cx='23' cy='31' r='3' fill='%23fff'/%3E%3Ccircle cx='41' cy='31' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --grass1:#8fe07a; --grass2:#5cb84a; --grass3:#3f9a3a;
+    --sky1:#7fd0ff; --sky2:#bfeaff; --sky3:#fff3c9;
+    --panel:#fffdf8; --panel2:#f4efdd;
+    --ink:#20302a; --inkSoft:#5c6b60;
+    --pink:#ff6fa0; --purple:#8b5cf6; --orange:#ff9d3f; --yellow:#ffd23f; --cyan:#22d3ee;
+    --green:#1f9d55; --green-dk:#0e6b38; --green-lt:#7fe0ab;
+    --red:#ef4444; --red-dk:#b3231e;
+    --blue:#2e7bf0; --blue-dk:#1a4fa0;
+    --line:#e7ddc0;
+    --ok:#22b566; --ko:#ef4444;
+    --shadow:0 18px 44px rgba(15,45,35,.28);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Nunito',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--ink); min-height:100vh; display:flex; justify-content:center;
+    padding:16px 12px 44px; position:relative; overflow-x:hidden;
+    background:linear-gradient(180deg,var(--sky1) 0%, var(--sky2) 38%, var(--sky3) 68%, #eafbe0 100%);
+  }
+  h1,h2,.brand,.btn,.qtext,.pc-txt b,.playercard b{font-family:'Baloo 2',sans-serif}
+
+  /* ===================== ANIMATED BACKGROUND ===================== */
+  .bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .sun{position:absolute;top:6%;right:9%;width:80px;height:80px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff6c8, #ffd23f 60%, #ffb400 100%);
+    box-shadow:0 0 60px 18px rgba(255,210,63,.55); animation:sunPulse 4.5s ease-in-out infinite}
+  @keyframes sunPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .cloud{position:absolute;opacity:.9;animation:drift linear infinite}
+  .cloud svg{display:block;filter:drop-shadow(0 6px 4px rgba(0,0,0,.06))}
+  .cloud.c1{top:8%;left:-220px;width:170px;animation-duration:52s}
+  .cloud.c2{top:16%;left:-260px;width:130px;animation-duration:68s;animation-delay:-20s}
+  .cloud.c3{top:4%;left:-300px;width:200px;animation-duration:80s;animation-delay:-45s}
+  @keyframes drift{from{transform:translateX(0)}to{transform:translateX(130vw)}}
+  .bird{position:absolute;font-size:15px;opacity:.65;animation:driftFast linear infinite;color:#20302a}
+  .bird.b1{top:20%;left:-5%;animation-duration:22s}
+  .bird.b2{top:26%;left:-12%;animation-duration:27s;animation-delay:-8s;font-size:11px}
+  @keyframes driftFast{from{transform:translateX(0) translateY(0)}50%{transform:translateX(60vw) translateY(-14px)}to{transform:translateX(120vw) translateY(0)}}
+  .hillband{position:absolute;left:0;right:0;bottom:0;height:22vh;min-height:120px}
+  .hillband svg{width:100%;height:100%;display:block}
+  @media (prefers-reduced-motion: reduce){.sun,.cloud,.bird{animation:none}}
+
+  /* ===================== SHELL ===================== */
+  .wrap{width:100%;max-width:560px;position:relative;z-index:1}
+  .card{background:var(--panel);border-radius:26px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line);
+    animation:cardIn .45s cubic-bezier(.2,.9,.25,1.2)}
+  @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .topbar{background:linear-gradient(120deg,var(--green-dk),var(--green) 60%,#2bb56a);color:#fff;padding:13px 16px;display:flex;align-items:center;gap:10px;position:relative}
+  .topbar svg.flagicon{flex:0 0 auto;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+  .brand{font-size:17px;letter-spacing:.2px;line-height:1.15;font-weight:800}
+  .brand small{display:block;font-family:'Nunito';font-size:10.5px;font-weight:700;opacity:.85;letter-spacing:1.1px;text-transform:uppercase;margin-top:3px}
+  .progress{margin-left:auto;font-size:12px;text-align:right;font-weight:700}
+  .track{height:7px;background:rgba(255,255,255,.25);border-radius:99px;margin-top:6px;width:100px;overflow:hidden}
+  .track > i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--orange));width:0;transition:width .4s cubic-bezier(.3,.9,.3,1);border-radius:99px}
+  .mutebtn{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);
+    color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .mutebtn:active{transform:scale(.92)}
+  .body{padding:0}
+  .pad{padding:20px 18px 24px}
+
+  .decor{width:100%;height:112px;overflow:hidden;line-height:0;position:relative}
+  .decor svg{display:block}
+  .decor .flagwig{transform-origin:8px 100%;animation:wig 2.6s ease-in-out infinite}
+  @keyframes wig{0%,100%{transform:rotate(0deg)}50%{transform:rotate(4deg)}}
+
+  /* ===================== BUTTONS ===================== */
+  .btn{appearance:none;border:0;cursor:pointer;font:inherit;font-family:'Baloo 2',sans-serif;background:var(--green);color:#fff;
+    padding:15px 22px;border-radius:16px;font-size:17px;font-weight:700;box-shadow:0 6px 0 var(--green-dk);
+    transition:transform .08s ease, box-shadow .08s ease}
+  .btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--green-dk)}
+  .btn.big{width:100%;margin-top:8px}
+  .btn.orange{background:var(--orange);box-shadow:0 6px 0 #c9711a}
+  .btn.orange:active{box-shadow:0 2px 0 #c9711a}
+  .btn.pink{background:var(--pink);box-shadow:0 6px 0 #c23f74}
+  .btn.pink:active{box-shadow:0 2px 0 #c23f74}
+  .btn.ghost{background:#fff;color:var(--green-dk);box-shadow:0 3px 0 var(--line);border:1.5px solid var(--line)}
+  .btn.ghost:active{box-shadow:0 1px 0 var(--line)}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .mixcard{margin-top:18px;width:100%;appearance:none;border:2px dashed #b98bf2;background:linear-gradient(120deg,#f4ecff,#fff);color:#6d3fc9;
+    font:inherit;font-family:'Baloo 2';font-weight:800;font-size:15px;padding:14px;border-radius:18px;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left}
+  .mixcard:active{transform:scale(.98)}
+  .mixcard[disabled]{opacity:.5;cursor:default}
+  .mixcard .mixtxt span{display:block;font-family:'Nunito';font-weight:700;font-size:12px;color:#8a76b0;margin-top:2px}
+
+  /* ===================== PANDA COACH ===================== */
+  .rina-wrap{display:flex;align-items:flex-end;gap:10px;margin:2px 0 14px}
+  .rina-wrap.center{justify-content:center}
+  .rina{flex:0 0 auto;animation:pandaBob 2.8s ease-in-out infinite}
+  .rina.happy{animation:pandaJump .6s ease}
+  .rina.sad{animation:pandaShake .5s ease}
+  @keyframes pandaBob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+  @keyframes pandaJump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-16px) scale(1.05)}55%{transform:translateY(0) scale(.98)}75%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  @keyframes pandaShake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-5px) rotate(-4deg)}40%{transform:translateX(5px) rotate(4deg)}60%{transform:translateX(-3px) rotate(-2deg)}80%{transform:translateX(3px) rotate(2deg)}}
+  .bubble{position:relative;background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px 13px;font-size:13.5px;line-height:1.4;
+    color:var(--ink);font-weight:700;box-shadow:0 6px 14px rgba(20,50,40,.08);flex:1;min-width:0}
+  .bubble:before{content:'';position:absolute;left:-9px;bottom:14px;width:0;height:0;border:8px solid transparent;border-right-color:#fff}
+  .bubble:after{content:'';position:absolute;left:-12px;bottom:12px;width:0;height:0;border:9px solid transparent;border-right-color:var(--line);z-index:-1}
+  @media (prefers-reduced-motion: reduce){.rina,.rina.happy,.rina.sad{animation:none}}
+
+  /* ===================== PROFILE ===================== */
+  .profile h1,.home h1,.collection h1{font-size:24px;margin:6px 0 2px;text-align:center;color:var(--green-dk);font-weight:800}
+  .subhead{text-align:center;font-size:13px;color:var(--inkSoft);font-weight:700;margin:0 0 14px}
+  .lbl{display:block;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:#8a9a8c;font-weight:800;margin:16px 0 8px}
+  .nameinput{width:100%;font:inherit;font-family:'Baloo 2';font-size:19px;font-weight:700;padding:14px 16px;border-radius:15px;
+    border:2px solid var(--line);background:#fff;color:var(--ink);outline:none;text-align:center}
+  .nameinput:focus{border-color:var(--green-lt);box-shadow:0 0 0 4px rgba(127,224,171,.3)}
+  .avatargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .avataropt{position:relative;background:#fff;border:2.5px solid var(--line);border-radius:18px;padding:6px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:border-color .12s ease, transform .1s ease}
+  .avataropt:active{transform:scale(.93)}
+  .avataropt.sel{border-color:var(--green);background:#eafaf1;box-shadow:0 0 0 4px rgba(45,156,99,.18);transform:scale(1.03)}
+  .avataropt.locked{cursor:default;opacity:.9}
+  .avataropt .lock{position:absolute;inset:0;background:rgba(255,255,255,.72);border-radius:15px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:2px;font-size:9.5px;font-weight:800;color:#7a6a3a}
+
+  /* ===================== HOME / MAP ===================== */
+  .playercard{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:20px;padding:12px 14px;
+    margin-top:-34px;position:relative;box-shadow:0 10px 22px rgba(20,60,40,.12)}
+  .playercard .pc-av{flex:0 0 auto;background:linear-gradient(160deg,#eafaf1,#dff3e5);border-radius:16px;padding:3px;line-height:0}
+  .pc-txt{flex:1;min-width:0}
+  .pc-txt b{display:block;font-size:18px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pc-txt span{font-size:12px;color:#6a7a6c;font-weight:700}
+  .pc-stars{flex:0 0 auto;display:flex;align-items:center;gap:5px;font-weight:800;color:#b8860b;font-size:15px;font-family:'Baloo 2'}
+  .sectitle{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#8a9a8c;font-weight:800;margin:20px 0 2px;text-align:center}
+
+  .roadmap{position:relative;margin:14px 0 4px;padding-left:2px}
+  .roadmap:before{content:'';position:absolute;left:34px;top:10px;bottom:10px;width:4px;border-radius:99px;
+    background:repeating-linear-gradient(180deg,#d8e6d3 0 10px, transparent 10px 18px)}
+  .stage{position:relative;display:flex;align-items:center;gap:14px;padding:10px 4px;margin-bottom:2px}
+  .stage .node{flex:0 0 auto;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    position:relative;z-index:1;border:4px solid #fff;box-shadow:0 6px 14px rgba(20,50,40,.18);cursor:pointer;transition:transform .12s ease}
+  .stage .node:active{transform:scale(.94)}
+  .stage.locked .node{cursor:default;filter:grayscale(.5);opacity:.72}
+  .stage.next .node{animation:nodePulse 1.8s ease-in-out infinite}
+  @keyframes nodePulse{0%,100%{box-shadow:0 6px 14px rgba(20,50,40,.18),0 0 0 0 rgba(255,210,63,.55)}50%{box-shadow:0 6px 14px rgba(20,50,40,.18),0 0 0 10px rgba(255,210,63,0)}}
+  .stage .sinfo{flex:1;min-width:0;background:#fff;border:2px solid var(--line);border-radius:16px;padding:9px 12px;cursor:pointer}
+  .stage.locked .sinfo{cursor:default;opacity:.75}
+  .stage .sinfo b{display:block;font-size:14.5px;color:var(--ink);font-family:'Baloo 2'}
+  .stage .sinfo span{font-size:11.5px;color:#6a7a6c;font-weight:700}
+  .stage .sstars{display:flex;gap:1px;margin-top:3px}
+  .stage .lockbadge{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.35)}
+  .homebtns{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+
+  /* ===================== COLLECTION ===================== */
+  .mascotgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+  .mascot{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border:2.5px solid var(--line);border-radius:18px;
+    padding:9px 11px;cursor:pointer;transition:border-color .12s ease,transform .1s ease}
+  .mascot:active{transform:scale(.97)}
+  .mascot.sel{border-color:var(--green);background:#eafaf1}
+  .mascot.locked{cursor:default}
+  .mascot .mtx{min-width:0}
+  .mascot .mtx b{display:block;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Baloo 2'}
+  .mascot .mtx span{font-size:11px;color:#8a9a8c;font-weight:700}
+  .mascot .mlock{position:absolute;inset:0;background:rgba(255,255,255,.78);border-radius:16px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;font-weight:800;color:#7a6a3a}
+
+  /* ===================== PLAY ===================== */
+  .playbar{display:flex;align-items:center;gap:9px;background:#eafaf1;border:2px solid #cfe9da;border-radius:16px;padding:7px 10px;margin-bottom:14px}
+  .playbar .pb-av{line-height:0;flex:0 0 auto}
+  .pb-name{font-weight:800;font-size:13.5px;color:var(--green-dk);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Baloo 2'}
+  .pb-score{font-size:12.5px;font-weight:800;color:#4a5a4c;flex:0 0 auto}
+  .pb-streak{flex:0 0 auto;background:linear-gradient(120deg,var(--yellow),var(--orange));color:#4a3800;font-size:11px;font-weight:800;padding:4px 9px;border-radius:99px;animation:flamePulse 1s ease-in-out infinite}
+  @keyframes flamePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .meta{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+  .badge{font-size:11px;letter-spacing:.3px;text-transform:uppercase;padding:5px 10px;border-radius:99px;font-weight:800}
+  .badge.theme{background:var(--green);color:#fff}
+  .badge.ref{background:var(--panel2);color:#6b5a2e;border:1px solid var(--line)}
+  .leveldot{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11px;color:#7d8a7e;font-weight:800}
+  .leveldot i{width:11px;height:11px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.15)}
+  .scene{width:100%;height:auto;display:block;border-radius:16px;border:2px solid var(--line);background:#8bc34a;margin-bottom:14px;
+    animation:sceneIn .35s ease}
+  @keyframes sceneIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+  .qtext{font-size:18px;line-height:1.42;font-weight:700;color:var(--ink);margin:2px 0 14px}
+  .choices{display:flex;flex-direction:column;gap:10px}
+  .choice{text-align:left;background:#fff;border:2px solid var(--line);color:var(--ink);padding:13px 14px;border-radius:15px;font-size:15px;
+    font-weight:700;cursor:pointer;font:inherit;display:flex;gap:11px;align-items:flex-start;transition:border-color .12s ease, background .12s ease, transform .08s ease}
+  .choice:active{transform:scale(.98)}
+  .choice:hover{border-color:var(--green-lt)}
+  .choice .letter{flex:0 0 auto;width:26px;height:26px;border-radius:9px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#6b5a2e;font-family:'Baloo 2'}
+  .choice.correct{border-color:var(--ok);background:#eafaf1;animation:popGood .35s ease}
+  .choice.correct .letter{background:var(--ok);color:#fff}
+  .choice.wrong{border-color:var(--ko);background:#fdeceb;animation:shakeX .4s ease}
+  .choice.wrong .letter{background:var(--ko);color:#fff}
+  .choice[disabled]{cursor:default}
+  @keyframes popGood{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:scale(1)}}
+  .tools{display:flex;gap:10px;margin-top:14px;align-items:center}
+  .hintbtn{background:#fff;border:2px dashed var(--purple);color:var(--purple);padding:10px 14px;border-radius:13px;font:inherit;
+    font-family:'Baloo 2';font-weight:800;font-size:13.5px;cursor:pointer;display:flex;gap:7px;align-items:center}
+  .hintbtn:active{transform:translateY(1px)}
+  .hintzone{margin-top:12px;display:none}
+  .hintzone.show{display:flex}
+  .explain{margin-top:14px;padding:0;border-radius:16px;font-size:14.5px;line-height:1.55;display:none}
+  .explain.show{display:flex;gap:10px;align-items:flex-start;animation:slideUp .3s ease}
+  @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .explain .ebubble{flex:1;min-width:0;padding:12px 14px;border-radius:15px;border:2px solid var(--line)}
+  .explain.good .ebubble{background:#eafaf1;border-color:#bfe0cb}
+  .explain.bad .ebubble{background:#fdeceb;border-color:#f0c9c6}
+  .explain b{display:block;margin-bottom:4px;font-size:15px;font-family:'Baloo 2'}
+  .nextrow{margin-top:16px;display:none}
+  .nextrow.show{display:flex}
+  .nextrow .btn{width:100%}
+
+  /* ===================== RESULT ===================== */
+  .result{text-align:center;padding:4px 2px}
+  .result h2{font-size:24px;margin:10px 0 2px;color:var(--green-dk);font-weight:800}
+  .starsbig{display:flex;justify-content:center;gap:8px;margin:12px 0 4px}
+  .scorebig{font-family:'Baloo 2';font-weight:800;font-size:48px;color:var(--green-dk);line-height:1;margin:6px 0}
+  .scorebig small{font-size:20px;color:#8a9a8c;font-weight:700}
+  .verdict{font-size:14.5px;color:#4a5a4c;max-width:430px;margin:8px auto 4px;line-height:1.55;font-weight:700}
+  .unlock{margin:12px auto 2px;background:linear-gradient(120deg,#fff7e0,#fff0c4);border:2px solid #eadfb4;color:#7a5a10;font-weight:800;
+    font-size:13.5px;padding:11px 15px;border-radius:15px;display:inline-flex;align-items:center;gap:9px;animation:unlockPop .5s ease}
+  @keyframes unlockPop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+  .scorecard{margin:16px 0 6px;border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+  .scorecard .row{display:flex;font-size:12.5px;border-bottom:1px solid var(--panel2)}
+  .scorecard .row:last-child{border-bottom:0}
+  .scorecard .row > div{padding:8px 10px}
+  .scorecard .row .n{width:34px;color:#9a8a5c;font-weight:800;flex:0 0 auto;text-align:center;background:var(--panel)}
+  .scorecard .row .t{flex:1;text-align:left;color:#3a4a3c;font-weight:700}
+  .scorecard .row .m{flex:0 0 auto;width:34px;text-align:center;font-weight:800}
+  .scorecard .row .m.y{color:var(--ok)}
+  .scorecard .row .m.x{color:var(--ko)}
+  .bestrow{display:inline-flex;align-items:center;gap:7px;margin:2px auto 0;background:#fff7e0;border:2px solid #eadfb4;color:#6b5a2e;font-size:12.5px;font-weight:800;padding:6px 13px;border-radius:99px}
+  .footer{margin-top:16px;font-size:11px;color:#7d8a7e;text-align:center;line-height:1.5}
+
+  /* ===================== FX ===================== */
+  .confetti{position:fixed;pointer-events:none;z-index:60;will-change:transform,opacity;animation:confettiPop 1s ease-out forwards}
+  @keyframes confettiPop{0%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.4)}}
+  @keyframes shakeX{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  .shake{animation:shakeX .4s ease}
+  @keyframes pop{0%{transform:scale(.3) rotate(-15deg);opacity:0}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+  .starpop{animation:pop .5s cubic-bezier(.3,1.5,.5,1) both}
+  .fadein{animation:fadeInUp .35s ease both}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @media (prefers-reduced-motion: reduce){.shake{animation:none}.confetti{display:none}.starpop{animation:none}.fadein{animation:none}.card{animation:none}}
+
+</style>
+</head>
+<body>
+<div class="bgfx" aria-hidden="true">
+  <div class="sun"></div>
+  <div class="cloud c1"><svg viewBox="0 0 120 60"><ellipse cx="30" cy="38" rx="28" ry="18" fill="#fff"/><ellipse cx="60" cy="26" rx="26" ry="22" fill="#fff"/><ellipse cx="90" cy="38" rx="24" ry="16" fill="#fff"/></svg></div>
+  <div class="cloud c2"><svg viewBox="0 0 120 60"><ellipse cx="30" cy="38" rx="28" ry="18" fill="#fff"/><ellipse cx="60" cy="26" rx="26" ry="22" fill="#fff"/><ellipse cx="90" cy="38" rx="24" ry="16" fill="#fff"/></svg></div>
+  <div class="cloud c3"><svg viewBox="0 0 120 60"><ellipse cx="30" cy="38" rx="28" ry="18" fill="#fff"/><ellipse cx="60" cy="26" rx="26" ry="22" fill="#fff"/><ellipse cx="90" cy="38" rx="24" ry="16" fill="#fff"/></svg></div>
+  <div class="bird b1">&#8964;</div>
+  <div class="bird b2">&#8964;</div>
+</div>
+<div class="wrap">
+  <div class="card" id="card">
+    <div class="topbar">
+      <svg class="flagicon" width="26" height="34" viewBox="0 0 26 34" aria-hidden="true">
+        <line x1="4" y1="2" x2="4" y2="32" stroke="#f7f3e8" stroke-width="2"/>
+        <path d="M4 3 L22 8 L4 13 Z" fill="#ffd23f"/>
+        <ellipse cx="4" cy="32" rx="4" ry="2" fill="#ffffff" opacity=".35"/>
+      </svg>
+      <div class="brand">Golf Academy<small>L'aventure des drapeaux</small></div>
+      <div class="progress" id="prog" style="display:none">
+        <span id="progtxt">Question 1 / 5</span>
+        <div class="track"><i id="progbar"></i></div>
+      </div>
+      <button class="mutebtn" id="mutebtn" title="Son" aria-label="Activer ou couper le son"></button>
+    </div>
+    <div class="body" id="view"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   BRIQUES SVG (scenes de jeu)
+   ============================================================ */
+var VB='0 0 400 230';
+function svg(i){return '<svg class="scene" viewBox="'+VB+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+i+'</svg>';}
+function grass(){return '<rect x="0" y="0" width="400" height="230" fill="#7cb342"/><rect x="0" y="0" width="400" height="230" fill="#000" opacity="0.03"/>';}
+function fairway(){return '<path d="M120 230 Q150 120 175 30 L245 30 Q235 130 280 230 Z" fill="#8bc34a"/>';}
+function ball(x,y){return '<ellipse cx="'+x+'" cy="'+(y+6)+'" rx="8" ry="3" fill="#000" opacity=".18"/><circle cx="'+x+'" cy="'+y+'" r="7" fill="#fff" stroke="#b7b7a6"/><circle cx="'+(x-2)+'" cy="'+(y-2)+'" r="1.4" fill="#e6e6da"/>';}
+function flag(x,y){return '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-38)+'" stroke="#20301f" stroke-width="2.4"/><path d="M'+x+' '+(y-38)+' l 20 6 l -20 6 z" fill="#c81d25"/><ellipse cx="'+x+'" cy="'+(y+1)+'" rx="7" ry="3" fill="#12261a"/>';}
+function markX(x,y){return '<g stroke="#c81d25" stroke-width="3" stroke-linecap="round"><line x1="'+(x-7)+'" y1="'+(y-7)+'" x2="'+(x+7)+'" y2="'+(y+7)+'"/><line x1="'+(x+7)+'" y1="'+(y-7)+'" x2="'+(x-7)+'" y2="'+(y+7)+'"/></g>';}
+function label(x,y,t,f){return '<text x="'+x+'" y="'+y+'" font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="'+(f||'#fff')+'" text-anchor="middle">'+t+'</text>';}
+function marker(x,y){return '<ellipse cx="'+x+'" cy="'+(y+3)+'" rx="6" ry="2" fill="#000" opacity=".15"/><circle cx="'+x+'" cy="'+y+'" r="5.5" fill="#d33" stroke="#7a1010"/><circle cx="'+x+'" cy="'+y+'" r="2" fill="#fff"/>';}
+function bag(x,y,c){c=c||'#2d6a4f';return '<g>'+
+  '<ellipse cx="'+x+'" cy="'+(y+24)+'" rx="14" ry="4" fill="#000" opacity=".15"/>'+
+  '<line x1="'+(x-4)+'" y1="'+(y-4)+'" x2="'+(x-7)+'" y2="'+(y-22)+'" stroke="#555" stroke-width="2"/>'+
+  '<line x1="'+(x+3)+'" y1="'+(y-4)+'" x2="'+(x+6)+'" y2="'+(y-24)+'" stroke="#555" stroke-width="2"/>'+
+  '<circle cx="'+(x-7)+'" cy="'+(y-22)+'" r="2.5" fill="#333"/><circle cx="'+(x+6)+'" cy="'+(y-24)+'" r="2.5" fill="#333"/>'+
+  '<rect x="'+(x-9)+'" y="'+(y-6)+'" width="18" height="30" rx="8" fill="'+c+'"/>'+
+  '<rect x="'+(x-9)+'" y="'+(y+3)+'" width="18" height="6" fill="#fff" opacity=".3"/></g>';}
+function person(x,y){return '<g stroke="#20301f" stroke-width="3" stroke-linecap="round" fill="none">'+
+  '<circle cx="'+x+'" cy="'+(y-16)+'" r="5" fill="#20301f" stroke="none"/>'+
+  '<line x1="'+x+'" y1="'+(y-11)+'" x2="'+x+'" y2="'+(y+2)+'"/>'+
+  '<line x1="'+x+'" y1="'+(y-6)+'" x2="'+(x-7)+'" y2="'+(y-1)+'"/><line x1="'+x+'" y1="'+(y-6)+'" x2="'+(x+7)+'" y2="'+(y-1)+'"/>'+
+  '<line x1="'+x+'" y1="'+(y+2)+'" x2="'+(x-6)+'" y2="'+(y+14)+'"/><line x1="'+x+'" y1="'+(y+2)+'" x2="'+(x+6)+'" y2="'+(y+14)+'"/></g>';}
+
+function sceneGreen(bx,by,extra){return svg(grass()+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="none" stroke="#7cb342" stroke-width="3"/>'+
+  flag(250,96)+'<circle cx="250" cy="96" r="6" fill="#12261a"/>'+(extra||'')+ball(bx,by));}
+function sceneWaterRed(bx,by,extra){return svg(grass()+fairway()+
+  '<path d="M250 40 Q360 60 355 150 Q350 220 250 215 Q300 130 250 40 Z" fill="#4fc3f7"/>'+
+  '<path d="M250 40 Q360 60 355 150 Q350 220 250 215 Q300 130 250 40 Z" fill="none" stroke="#c81d25" stroke-width="3" stroke-dasharray="9 6"/>'+
+  '<g stroke="#c81d25" stroke-width="3"><line x1="252" y1="42" x2="252" y2="30"/><line x1="300" y1="118" x2="308" y2="110"/><line x1="252" y1="214" x2="252" y2="226"/></g>'+
+  label(300,150,"Zone rouge","#0d3b52")+(extra||'')+(bx!==null?ball(bx,by):''));}
+function sceneWaterYellow(bx,by,extra){return svg(grass()+fairway()+
+  '<path d="M60 150 Q200 120 340 150 L340 210 Q200 185 60 210 Z" fill="#4fc3f7"/>'+
+  '<path d="M60 150 Q200 120 340 150" fill="none" stroke="#f2c400" stroke-width="3" stroke-dasharray="9 6"/>'+
+  '<g stroke="#e0b000" stroke-width="3"><line x1="90" y1="150" x2="90" y2="138"/><line x1="200" y1="127" x2="200" y2="115"/><line x1="310" y1="150" x2="310" y2="138"/></g>'+
+  label(200,190,"Zone jaune","#5a4a00")+(extra||'')+(bx!==null?ball(bx,by):''));}
+function sceneBunker(bx,by,extra){return svg(grass()+
+  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="#e9d8a6"/>'+
+  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="none" stroke="#cbb877" stroke-width="3"/>'+
+  '<ellipse cx="200" cy="60" rx="120" ry="45" fill="#aed76a"/>'+flag(210,52)+
+  label(200,150,"Bunker","#8a6d1f")+(extra||'')+ball(bx,by));}
+function sceneTee(bx,by,extra){return svg(grass()+
+  '<ellipse cx="200" cy="120" rx="140" ry="80" fill="#8bc34a"/>'+
+  '<circle cx="120" cy="105" r="8" fill="#1f6feb"/><circle cx="280" cy="105" r="8" fill="#1f6feb"/>'+
+  '<line x1="120" y1="105" x2="280" y2="105" stroke="#fff" stroke-width="2" stroke-dasharray="4 6" opacity=".8"/>'+
+  label(200,92,"Depart","#20301f")+(extra||'')+ball(bx,by));}
+function sceneOB(bx,by,extra){return svg(grass()+
+  '<rect x="300" y="0" width="100" height="230" fill="#6d8b4a"/>'+
+  '<line x1="300" y1="0" x2="300" y2="230" stroke="#fff" stroke-width="3"/>'+
+  '<g fill="#fff" stroke="#cfcfcf"><rect x="296" y="30" width="8" height="26" rx="2"/><rect x="296" y="110" width="8" height="26" rx="2"/><rect x="296" y="190" width="8" height="26" rx="2"/></g>'+
+  (extra||'')+ball(bx,by));}
+function sceneTrees(bx,by,extra){function tree(x,y,r){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#3f6b2e"/><circle cx="'+(x-r*0.4)+'" cy="'+(y-r*0.3)+'" r="'+(r*0.6)+'" fill="#4c7f36"/>';}
+  return svg(grass()+'<rect x="0" y="0" width="400" height="230" fill="#5a7a3a" opacity=".35"/>'+
+  tree(90,70,34)+tree(160,50,30)+tree(250,64,36)+tree(320,80,30)+tree(120,130,26)+(extra||'')+ball(bx,by));}
+function sceneCartPath(bx,by,extra){return svg(grass()+fairway()+
+  '<path d="M40 0 Q120 100 60 230 L110 230 Q150 110 90 0 Z" fill="#c9c9c2"/>'+
+  '<path d="M40 0 Q120 100 60 230" fill="none" stroke="#a7a79e" stroke-width="2"/>'+
+  label(75,120,"Chemin","#4a4a45")+(extra||'')+ball(bx,by));}
+function sceneGUR(bx,by,mode,extra){var z=(mode==='water')
+  ? '<ellipse cx="200" cy="130" rx="80" ry="45" fill="#7fc9e8" opacity=".85"/><ellipse cx="200" cy="130" rx="80" ry="45" fill="none" stroke="#3a8db0" stroke-width="2"/>'+label(200,133,"Eau temporaire","#0d3b52")
+  : '<ellipse cx="200" cy="130" rx="80" ry="45" fill="#7cb342"/><ellipse cx="200" cy="130" rx="80" ry="45" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="7 5"/>'+label(200,127,"G.U.R.","#fff")+label(200,142,"terrain en reparation","#20301f");
+  return svg(grass()+fairway()+z+(extra||'')+ball(bx,by));}
+function sceneEmbedded(bx,by){return svg(grass()+fairway()+
+  '<ellipse cx="'+bx+'" cy="'+(by+2)+'" rx="16" ry="9" fill="#5a7a3a"/>'+
+  '<ellipse cx="'+bx+'" cy="'+(by+2)+'" rx="16" ry="9" fill="none" stroke="#3f5a26" stroke-width="1.5"/>'+
+  '<circle cx="'+bx+'" cy="'+by+'" r="7" fill="#fff" stroke="#b7b7a6"/>'+
+  label(bx,by-18,"balle enfoncee","#20301f"));}
+function sceneFairway(bx,by,extra){return svg(grass()+fairway()+
+  '<ellipse cx="210" cy="45" rx="55" ry="26" fill="#aed76a"/>'+flag(225,40)+(extra||'')+ball(bx,by));}
+
+/* --- scenes specifiques --- */
+function sceneSafety(){return svg(grass()+
+  '<ellipse cx="240" cy="90" rx="120" ry="58" fill="#aed76a"/>'+flag(285,78)+
+  person(250,120)+label(250,145,"joueur devant","#20301f")+
+  ball(80,180)+label(80,205,"toi","#20301f"));}
+function sceneBag(){return svg(grass()+
+  '<ellipse cx="190" cy="110" rx="120" ry="66" fill="#aed76a"/>'+flag(190,90)+'<circle cx="190" cy="90" r="6" fill="#12261a"/>'+
+  '<line x1="320" y1="55" x2="366" y2="34" stroke="#20301f" stroke-width="2"/><path d="M366 34 l-9 1 l4 6 z" fill="#20301f"/>'+label(350,24,"trou suivant","#20301f")+
+  bag(190,118,'#c81d25')+label(190,150,"A","#20301f")+
+  bag(340,120,'#2d6a4f')+label(340,152,"B","#20301f")+
+  bag(60,185,'#1f6feb')+label(60,214,"C","#20301f"));}
+function sceneOrder(){return svg(grass()+
+  '<ellipse cx="200" cy="115" rx="145" ry="82" fill="#aed76a"/>'+flag(200,95)+'<circle cx="200" cy="95" r="6" fill="#12261a"/>'+
+  ball(238,122)+label(238,144,"balle A","#20301f")+
+  ball(85,178)+label(85,200,"balle B","#20301f"));}
+function scenePitch(bx,by){return svg(grass()+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
+  '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="#6f8f4a"/>'+
+  '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="none" stroke="#4f6a32" stroke-width="1.5"/>'+
+  label(bx-26,by-13,"pitch","#20301f")+ball(bx,by));}
+function sceneTool(){var cx=200,cy=62;
+  var t='<g stroke="#2b2b2b" stroke-width="7" fill="none" stroke-linecap="round">'+
+    '<line x1="'+cx+'" y1="'+(cy+80)+'" x2="'+cx+'" y2="'+(cy+18)+'"/>'+
+    '<line x1="'+(cx-22)+'" y1="'+(cy+18)+'" x2="'+(cx-22)+'" y2="'+(cy-38)+'"/>'+
+    '<line x1="'+(cx+22)+'" y1="'+(cy+18)+'" x2="'+(cx+22)+'" y2="'+(cy-38)+'"/>'+
+    '<path d="M'+(cx-22)+' '+(cy+18)+' Q'+cx+' '+(cy+38)+' '+(cx+22)+' '+(cy+18)+'"/></g>'+
+    '<rect x="'+(cx-7)+'" y="'+(cy+82)+'" width="14" height="46" rx="7" fill="#2d6a4f"/>';
+  return svg(grass()+'<ellipse cx="200" cy="196" rx="60" ry="12" fill="#000" opacity=".08"/>'+t+label(200,220,"Quel est cet objet ?","#20301f"));}
+function sceneDivot(){return svg(grass()+fairway()+
+  '<ellipse cx="185" cy="150" rx="22" ry="11" fill="#7a5a34"/>'+
+  '<ellipse cx="185" cy="150" rx="22" ry="11" fill="none" stroke="#5a4020" stroke-width="1.5"/>'+
+  '<ellipse cx="248" cy="162" rx="17" ry="8" fill="#6b8f3a"/>'+
+  '<ellipse cx="248" cy="162" rx="17" ry="8" fill="none" stroke="#4f6a32" stroke-width="1"/>'+
+  label(185,135,"trou","#20301f")+label(255,182,"la motte","#20301f"));}
+function sceneRake(){return svg(grass()+
+  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="#e9d8a6"/>'+
+  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="none" stroke="#cbb877" stroke-width="3"/>'+
+  '<g stroke="#cbb877" stroke-width="2"><line x1="120" y1="138" x2="175" y2="138"/><line x1="120" y1="150" x2="175" y2="150"/><line x1="120" y1="162" x2="175" y2="162"/></g>'+
+  '<line x1="248" y1="105" x2="298" y2="176" stroke="#8a5a2a" stroke-width="4"/>'+
+  '<line x1="288" y1="188" x2="316" y2="164" stroke="#8a5a2a" stroke-width="4"/>'+
+  '<g stroke="#8a5a2a" stroke-width="2"><line x1="290" y1="184" x2="293" y2="192"/><line x1="297" y1="180" x2="300" y2="188"/><line x1="304" y1="175" x2="307" y2="183"/><line x1="311" y1="170" x2="314" y2="178"/></g>'+
+  label(150,150,"traces dans le sable","#8a6d1f"));}
+function sceneMarker(){return svg(grass()+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
+  ball(170,150)+marker(191,155)+label(191,176,"marqueur","#20301f"));}
+
+/* ============================================================
+   BANQUE DE QUESTIONS
+   flag : vert | rouge | bleu | jaune | blanc
+   ref  : (optionnel) reference regle, affichee si presente
+   ============================================================ */
+var BANK = [
+
+  /* =======================  DRAPEAU VERT  ======================= */
+  {flag:"vert",theme:"Securite",scene:sceneSafety(),
+   q:"Un joueur est encore devant toi, pres du green. Peux-tu taper ta balle ?",
+   choices:["Oui, je vise a cote","Non, j'attends qu'il soit parti et loin","Oui si je crie avant","Oui, il n'a qu'a faire attention"],
+   correct:1,hint:"La securite passe toujours avant le jeu.",
+   explain:"On ne joue jamais quand quelqu'un peut etre atteint par la balle. Tu attends que la personne devant soit partie et bien a l'ecart."},
+  {flag:"vert",theme:"Securite",scene:null,
+   q:"Avant de faire ton swing, que verifies-tu autour de toi ?",
+   choices:["Que personne n'est trop pres, devant ou derriere","Que le drapeau est bien droit","Rien, je tape","La couleur du ciel"],
+   correct:0,hint:"Un club et une balle, ca peut faire mal.",
+   explain:"Avant chaque coup, tu regardes que personne n'est assez pres pour etre touche par ton club (en arriere) ou par ta balle (devant)."},
+  {flag:"vert",theme:"Comportement",scene:null,
+   q:"Un joueur a cote de toi s'apprete a taper sa balle. Que fais-tu ?",
+   choices:["Je lui parle pour l'encourager","Je bouge devant lui","Je reste silencieux et immobile","Je tape en meme temps"],
+   correct:2,hint:"Au golf, on laisse le calme a celui qui joue.",
+   explain:"Quand quelqu'un joue, on reste silencieux et immobile, un peu en retrait. Le bruit ou le mouvement peuvent le gener."},
+  {flag:"vert",theme:"Green & pitch",scene:scenePitch(210,150),
+   q:"Comment appelle-t-on la petite marque que la balle laisse en tombant sur le green ?",
+   choices:["Un divot","Un pitch","Un bunker","Un birdie"],
+   correct:1,hint:"C'est un mot court, tres utilise sur le green.",
+   explain:"La marque laissee par la balle sur le green s'appelle un pitch. On apprend tres tot a le reparer pour garder un beau green."},
+  {flag:"vert",theme:"Materiel",scene:sceneTool(),
+   q:"Cet objet a deux dents (une fourchette). A quoi sert-il ?",
+   choices:["A planter la balle","A reparer les pitchs sur le green","A ratisser le bunker","A porter le sac"],
+   correct:1,hint:"On s'en sert sur le green, la ou tombe la balle.",
+   explain:"C'est un releve-pitch. Il sert a reparer la marque de balle (le pitch) sur le green. On doit toujours en avoir un dans la poche. C'est le geste prefere du coach Rina : releve ton pitch... et parfois celui des autres !"},
+  {flag:"vert",theme:"Materiel",scene:sceneTee(200,115),
+   q:"Pour surelever la balle au depart, on la pose sur un petit objet. C'est...",
+   choices:["Un tee","Un marqueur","Un pitch","Un club"],
+   correct:0,hint:"Petit piquet en bois ou plastique planté dans le sol.",
+   explain:"On pose la balle sur un tee au depart. On prefere les tees en bois, et on ne les laisse pas trainer par terre apres."},
+  {flag:"vert",theme:"But du jeu",scene:sceneGreen(180,150),
+   q:"Au golf, quel est le but du jeu ?",
+   choices:["Taper le plus fort possible","Mettre la balle dans le trou en le moins de coups possible","Aller le plus vite","Faire le plus de bruit"],
+   correct:1,hint:"On compte les coups, et le moins gagne.",
+   explain:"Le but est de mettre la balle dans le trou en jouant le moins de coups possible. Le drapeau montre ou se trouve le trou."},
+  {flag:"vert",theme:"Comportement",scene:null,
+   q:"Ton copain reussit un tres joli coup. Que fais-tu ?",
+   choices:["Je fais semblant de rien","Je le felicite","Je dis que j'aurais fait mieux","Je crie tres fort"],
+   correct:1,hint:"Le golf, c'est aussi apprecier le jeu des autres.",
+   explain:"On felicite ses partenaires pour leurs bons coups. C'est la courtoisie du golf, et ca rend la partie plus agreable."},
+  {flag:"vert",theme:"Comportement",scene:null,
+   q:"Tu rates ton coup et tu es enerve. Que ne dois-tu JAMAIS faire ?",
+   choices:["Respirer un bon coup","Jeter ou lancer ton club","Recommencer plus doucement","Demander un conseil au pro"],
+   correct:1,hint:"Un club lance peut blesser quelqu'un.",
+   explain:"On ne jette jamais son club, meme enerve : c'est dangereux et ce n'est pas respectueux. On respire et on repart calmement."},
+  {flag:"vert",theme:"Etiquette",scene:null,
+   q:"A la fin de la partie, que fais-tu avec tes partenaires ?",
+   choices:["Je pars sans rien dire","Je les remercie (et je leur serre la main)","Je range vite mon sac","Je recompte tout"],
+   correct:1,hint:"C'est une belle tradition au golf.",
+   explain:"A la fin, on remercie ses partenaires et on se serre la main. C'est la politesse de fin de partie au golf."},
+  {flag:"vert",theme:"Materiel",scene:sceneMarker(),
+   q:"Qu'est-ce qu'il faut toujours avoir dans sa poche pour le green ?",
+   choices:["Un tee et une balle","Un releve-pitch et un marqueur","Des lunettes","Un telephone"],
+   correct:1,hint:"Un pour reparer, un pour marquer la balle.",
+   explain:"Sur le green, il faut un releve-pitch (pour reparer les pitchs) et un marqueur (pour marquer la place de sa balle). Toujours en poche !"},
+  {flag:"vert",theme:"Green & pitch",scene:sceneGreen(180,150),
+   q:"Sur le green, qu'est-ce qu'on evite de faire pour ne pas l'abimer ?",
+   choices:["Marcher doucement","Trainer les pieds ou courir","Regarder ou est le trou","Poser sa balle"],
+   correct:1,hint:"Le green est fragile, comme un joli tapis.",
+   explain:"On marche doucement sur le green, sans trainer les pieds ni courir : le gazon du green est tres fragile et met du temps a se reparer."},
+  {flag:"vert",theme:"Securite",scene:null,
+   q:"Au practice, comment tape-t-on les balles en securite ?",
+   choices:["Chacun a son poste, tous dans le meme sens","Chacun comme il veut","En se croisant","En marchant devant les autres"],
+   correct:0,hint:"Tout le monde vise du meme cote.",
+   explain:"Au practice, chacun reste a son poste et tape dans le meme sens. On ne va jamais devant les autres pendant qu'ils frappent."},
+  {flag:"vert",theme:"Etiquette",scene:sceneGreen(200,138),
+   q:"Le drapeau planté dans le trou sert a quoi ?",
+   choices:["A decorer","A montrer ou est le trou, meme de loin","A tenir la balle","A mesurer le vent"],
+   correct:1,hint:"On le voit de loin sur le parcours.",
+   explain:"Le drapeau (ou 'flag') montre l'emplacement du trou, meme quand on est loin sur le trou. On le remet toujours en place a la fin."},
+  {flag:"vert",theme:"Comportement",scene:null,
+   q:"Un adulte te dit d'attendre avant de jouer. Que fais-tu ?",
+   choices:["Je tape quand meme, je suis pret","J'attends, la securite d'abord","Je discute","Je change de trou"],
+   correct:1,hint:"L'adulte voit peut-etre un danger que tu ne vois pas.",
+   explain:"Si un adulte te demande d'attendre, tu attends : il voit peut-etre un joueur ou un danger. La securite passe avant l'envie de jouer."},
+
+  /* =======================  DRAPEAU ROUGE  ======================= */
+  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(),
+   q:"Ta balle est sur le green et tu veux la ramasser. Que fais-tu d'abord ?",
+   choices:["Je la prends directement","Je pose un marqueur juste derriere, puis je la releve","Je la pousse du pied","Je la lance"],
+   correct:1,hint:"Il faut pouvoir la remettre exactement au meme endroit.",
+   explain:"Avant de relever ta balle sur le green, tu poses un marqueur juste derriere. Comme ca tu la reposes ensuite exactement a sa place."},
+  {flag:"rouge",theme:"Green & pitch",scene:scenePitch(215,150),
+   q:"Tu vois un pitch (marque de balle) sur le green. Que fais-tu ?",
+   choices:["Rien, ce n'est pas le mien","Je le repare avec mon releve-pitch","Je marche dessus","J'appelle le pro"],
+   correct:1,hint:"On repare son pitch... et souvent aussi celui des autres.",
+   explain:"Un bon golfeur repare son pitch (et volontiers ceux des autres). Un pitch non repare laisse une marque qui abime le green longtemps."},
+  {flag:"rouge",theme:"Green & pitch",scene:scenePitch(215,150),
+   q:"Comment repare-t-on bien un pitch ?",
+   choices:["On souleve la terre vers le haut","On pousse les bords vers le centre, puis on tapote","On tape avec le club","On verse de l'eau"],
+   correct:1,hint:"On rapproche l'herbe vers le milieu, on ne souleve pas.",
+   explain:"On plante le releve-pitch sur les bords et on pousse doucement l'herbe vers le centre du pitch, puis on tapote avec le putter. On ne souleve pas la terre (ca coupe les racines)."},
+  {flag:"rouge",theme:"Regle de jeu",scene:sceneOrder(),
+   q:"Sur le green, deux balles. Qui joue en premier ?",
+   choices:["La balle A (la plus proche du trou)","La balle B (la plus loin du trou)","Celui qui est arrive le premier","Peu importe"],
+   correct:1,hint:"Au golf, c'est le plus eloigne du trou qui joue.",
+   explain:"Normalement, la balle la plus eloignee du trou joue en premier. Ici c'est la balle B. (Mais si tu es pret et que ca ne gene personne, on peut aussi jouer plus vite.)"},
+  {flag:"rouge",theme:"Etiquette",scene:sceneGreen(200,138),
+   q:"Tout le monde a fini le trou. Que fait-on du drapeau ?",
+   choices:["On le laisse par terre","On le remet bien droit dans le trou","On l'emmene","On le pose sur le green"],
+   correct:1,hint:"Le joueur suivant doit le retrouver en place.",
+   explain:"Quand le trou est fini, on remet le drapeau bien droit dans le trou, pour les joueurs qui arrivent apres. On ne le pose pas sur le green."},
+  {flag:"rouge",theme:"Securite",scene:sceneSafety(),
+   q:"Tu veux chipper vers le green, mais des joueurs y sont encore. Tu...",
+   choices:["Je tape vite avant eux","J'attends qu'ils s'eloignent","Je crie et je tape","Je vise a cote"],
+   correct:1,hint:"Jamais taper vers des gens.",
+   explain:"On ne joue jamais vers des personnes. Tu attends qu'elles aient quitte le green et soient a l'abri avant de chipper."},
+  {flag:"rouge",theme:"Etiquette",scene:sceneGreen(180,150),
+   q:"Ou ne dois-tu SURTOUT pas poser ton sac ?",
+   choices:["A cote du green","Sur le green","Pres du trou suivant","Sur le chemin"],
+   correct:1,hint:"Le green est fragile et le sac est lourd.",
+   explain:"On ne pose jamais son sac (ni son chariot) sur le green : c'est lourd et ca abime le gazon. On le laisse au bord, du cote du trou suivant."},
+  {flag:"rouge",theme:"Etiquette",scene:sceneRake(),
+   q:"Tu viens de jouer un coup dans le bunker (le sable). Avant de partir, tu...",
+   choices:["Je laisse comme ca","Je ratisse le sable avec le rateau","Je saute dedans","Je remets du sable"],
+   correct:1,hint:"Le joueur suivant doit trouver un sable bien lisse.",
+   explain:"Apres avoir joue dans le bunker, on le ratisse pour effacer ses traces. Ainsi le prochain joueur trouve un sable lisse."},
+  {flag:"rouge",theme:"Etiquette",scene:sceneOrder(),
+   q:"Sur le green, ou ne marche-t-on pas ?",
+   choices:["Au bord du green","Sur la ligne entre la balle des autres et le trou","Derriere sa propre balle","Vers le drapeau"],
+   correct:1,hint:"C'est le chemin que va suivre la balle des autres.",
+   explain:"On evite de marcher sur la 'ligne de putt' des autres (entre leur balle et le trou) : nos pas y laissent des marques qui devient leur balle."},
+  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(),
+   q:"Le marqueur, qu'est-ce que c'est ?",
+   choices:["Un stylo","Un petit jeton pour marquer la place de la balle sur le green","Un club special","Un tee en metal"],
+   correct:1,hint:"Souvent une petite piece ou un jeton plat.",
+   explain:"Le marqueur est un petit jeton (ou une piece) qu'on pose derriere la balle sur le green pour marquer sa place avant de la relever."},
+  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(),
+   q:"Tu as marque et releve ta balle. Ou la reposes-tu ?",
+   choices:["N'importe ou sur le green","Juste devant le marqueur, a sa place exacte","Plus pres du trou","Dans le trou"],
+   correct:1,hint:"Le marqueur montre l'endroit exact.",
+   explain:"Tu reposes la balle juste devant le marqueur, exactement a l'endroit ou elle etait, puis tu enleves le marqueur avant de jouer."},
+  {flag:"rouge",theme:"Comportement",scene:null,
+   q:"Ta balle rate le trou de tout pres. Comment reagis-tu ?",
+   choices:["Je tape le sol de colere","Je reste calme et je continue","Je crie","J'abandonne le trou"],
+   correct:1,hint:"Le golf demande de rester calme, meme quand c'est rageant.",
+   explain:"On reste calme, meme apres un coup rate de peu. Se mettre en colere n'aide pas a mieux jouer et gene les autres."},
+  {flag:"rouge",theme:"Rapidite",scene:null,
+   q:"Pendant que les autres jouent, comment gagner du temps ?",
+   choices:["Je regarde mon telephone","Je me prepare pour etre pret quand c'est mon tour","Je m'assois loin","Je range mon sac"],
+   correct:1,hint:"Etre pret a l'avance fait avancer la partie.",
+   explain:"On profite du temps ou les autres jouent pour reflechir a son coup et se preparer. Comme ca, quand c'est ton tour, tu es deja pret : la partie avance."},
+  {flag:"rouge",theme:"Etiquette",scene:sceneBag(),
+   q:"Tu arrives a pied au green. Ou poses-tu ton sac (A, B ou C) ?",
+   choices:["A : sur le green","B : du cote du trou suivant","C : la ou tu es arrive","N'importe ou"],
+   correct:1,hint:"On veut repartir vite... et sans abimer le green.",
+   explain:"On pose son sac du cote du trou suivant (B), jamais sur le green (A). Comme ca, une fois le trou fini, on repart tout de suite sans revenir en arriere."},
+  {flag:"rouge",theme:"Materiel",scene:sceneTool(),
+   q:"Rappel : cet objet a deux dents, c'est le releve-pitch. Quand l'utilises-tu ?",
+   choices:["Dans le bunker","Sur le green, pour reparer les pitchs","Au depart","Jamais"],
+   correct:1,hint:"Sur le green, la ou la balle laisse des marques.",
+   explain:"Le releve-pitch s'utilise sur le green pour reparer les marques de balle (les pitchs). Un bon reflexe a chaque passage sur un green."},
+
+  /* =======================  DRAPEAU BLEU  ======================= */
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneTee(200,120),
+   q:"Au depart, ou as-tu le droit de poser ta balle ?",
+   choices:["Devant les marques","Entre les deux marques (jamais devant)","A cote des marques","Ou tu veux sur le trou"],
+   correct:1,hint:"Jamais devant les plots de depart.",
+   explain:"On joue depuis l'espace entre les deux marques de depart, jamais devant. C'est l'aire de depart."},
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneTee(200,138),
+   q:"Peux-tu reculer un peu derriere les marques pour jouer ?",
+   choices:["Non, il faut etre juste sur la ligne","Oui, jusqu'a 2 longueurs de club derriere","Oui, autant que je veux","Non, jamais"],
+   correct:1,hint:"Un petit rectangle, pas seulement une ligne.",
+   explain:"L'aire de depart est un rectangle : entre les marques, et jusqu'a 2 longueurs de club vers l'arriere. Tu peux reculer un peu, mais pas avancer devant."},
+  {flag:"bleu",theme:"Rapidite",scene:sceneOrder(),
+   q:"En jeu, qui joue normalement en premier ?",
+   choices:["Le plus jeune","Le plus loin du trou (mais tu peux jouer si tu es pret et que ca ne gene personne)","Le plus proche du trou","Toujours le meme"],
+   correct:1,hint:"Le plus loin d'abord... mais on peut aller plus vite si c'est sur.",
+   explain:"Normalement, la balle la plus eloignee du trou joue en premier. Mais pour ne pas perdre de temps, tu peux jouer des que tu es pret, si c'est sans danger : c'est le 'jeu rapide'."},
+  {flag:"bleu",theme:"Rapidite",scene:sceneBag(),
+   q:"En arrivant au green, ou poses-tu ton sac pour repartir vite ?",
+   choices:["A : sur le green","B : du cote du trou suivant","C : loin derriere","Sur le drapeau"],
+   correct:1,hint:"Du cote de la sortie, pour ne pas revenir sur ses pas.",
+   explain:"On pose le sac du cote du trou suivant (B). Jamais sur le green. Ainsi, le trou fini, on part directement : c'est bon pour le rythme de jeu."},
+  {flag:"bleu",theme:"Score",scene:null,
+   q:"Tu as deja joue 8 coups sur le meme trou et la balle n'est pas rentree. Que fais-tu ?",
+   choices:["Je continue jusqu'a la rentrer","Je releve la balle, je note le score maximum et je passe au trou suivant","J'abandonne la partie","Je recommence le trou"],
+   correct:1,hint:"Il existe un 'score maximum' pour ne pas se decourager.",
+   explain:"Avec le 'score maximum', au bout de 8 coups tu releves ta balle, tu notes le score prevu et tu passes au trou suivant. Ca evite de se decourager et ca fait avancer la partie."},
+  {flag:"bleu",theme:"Score",scene:null,
+   q:"Qui compte tes coups pendant la partie ?",
+   choices:["Personne","Je compte tous mes coups moi-meme, honnetement","Seulement l'adulte","On ne compte pas"],
+   correct:1,hint:"Le golf est un sport d'honnetete.",
+   explain:"Chaque joueur compte tous ses coups, honnetement, y compris les coups rates. L'honnetete est une valeur importante au golf."},
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneTee(200,120),
+   q:"Apres le 1er trou, qui a 'l'honneur' (joue en premier) au depart suivant ?",
+   choices:["Le plus grand","Celui qui a fait le meilleur score au trou d'avant","Le plus jeune","Celui qui veut"],
+   correct:1,hint:"Le meilleur du trou precedent est recompense.",
+   explain:"Celui qui a fait le meilleur score au trou precedent a 'l'honneur' : il joue en premier au depart du trou suivant."},
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneWaterRed(268,150),
+   q:"Ta balle tombe dans l'eau, entre des piquets rouges ou jaunes. Est-elle perdue pour toujours ?",
+   choices:["Oui, tant pis","Non : je peux repartir en ajoutant 1 coup de penalite","Non, je vais la chercher dans l'eau","Oui, je passe au trou suivant"],
+   correct:1,hint:"L'eau, c'est une 'zone a penalite', pas la fin.",
+   explain:"Une balle dans l'eau (zone a penalite, piquets rouges ou jaunes) n'est pas perdue pour de bon : tu peux repartir en ajoutant 1 coup de penalite."},
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneTrees(150,140),
+   q:"Tu ne retrouves pas ta balle dans les arbres. Combien de temps peux-tu chercher ?",
+   choices:["1 minute","3 minutes","10 minutes","Le temps que tu veux"],
+   correct:1,hint:"C'est assez court, il faut chercher vite.",
+   explain:"Tu as 3 minutes pour chercher ta balle. Passe ce temps, elle est perdue et tu rejoues d'ou tu venais avec 1 coup de penalite."},
+  {flag:"bleu",theme:"Etiquette",scene:sceneDivot(),
+   q:"En tapant, tu as arrache une motte de gazon (un divot) sur le fairway. Que fais-tu ?",
+   choices:["Je la laisse","Je la remets dans le trou et j'appuie dessus","Je la jette au loin","Je la mets dans ma poche"],
+   correct:1,hint:"On repare le gazon qu'on abime.",
+   explain:"On ramasse la motte (le divot) et on la remet dans son trou en appuyant dessus, pour que le gazon repousse. C'est prendre soin du parcours."},
+  {flag:"bleu",theme:"Rapidite",scene:null,
+   q:"Le groupe derriere vous joue plus vite et vous attend souvent. Que faites-vous ?",
+   choices:["On joue encore plus lentement","On les laisse passer devant","On accelere en courant","On ne fait rien"],
+   correct:1,hint:"Politesse et rythme : on ne bloque pas les plus rapides.",
+   explain:"Si le groupe derriere est plus rapide et vous attend, la politesse est de le laisser passer. On l'invite a jouer devant a un moment sur."},
+  {flag:"bleu",theme:"Comportement",scene:null,
+   q:"Un joueur d'un autre trou, a cote, s'apprete a jouer. Tu...",
+   choices:["Je continue a parler fort","J'attends et je reste silencieux","Je passe devant lui","Je tape pour le presser"],
+   correct:1,hint:"Le calme vaut aussi entre trous voisins.",
+   explain:"Meme si ce n'est pas ton groupe, tu attends et tu restes silencieux pendant qu'un joueur proche s'apprete a jouer. C'est le respect au golf."},
+  {flag:"bleu",theme:"Materiel",scene:null,
+   q:"Combien de clubs peut-on avoir au maximum dans son sac ?",
+   choices:["10","14","18","Autant qu'on veut"],
+   correct:1,hint:"Un chiffre pair, connu des joueurs.",
+   explain:"Maximum 14 clubs dans le sac. On peut en avoir moins, ce n'est pas grave, surtout quand on debute."},
+  {flag:"bleu",theme:"Materiel",scene:null,
+   q:"Combien de balles au minimum dois-tu avoir sur toi avant de partir jouer ?",
+   choices:["Aucune, il y en a sur le parcours","Au moins 2","Exactement 1","Au moins 10"],
+   correct:1,hint:"Pense au cas ou tu dois jouer une balle 'provisoire'.",
+   explain:"On garde toujours au moins 2 balles sur soi. Comme ca, si on doit rejouer ou jouer une balle provisoire (balle peut-etre perdue ou hors limites), on en a toujours une prete."},
+  {flag:"bleu",theme:"Securite",scene:null,
+   q:"Avant de taper ton coup de depart, tu verifies surtout que...",
+   choices:["Le trou est loin","Personne n'est devant ni trop pres","La balle est propre","Le vent est bon"],
+   correct:1,hint:"La securite avant tout.",
+   explain:"Avant chaque depart, tu regardes que le groupe devant est bien parti et hors de portee, et que personne n'est trop pres de toi."},
+  {flag:"bleu",theme:"Etiquette",scene:sceneRake(),
+   q:"Tu sors du bunker apres ton coup. Que fais-tu du sable ?",
+   choices:["Rien","Je ratisse pour effacer mes traces","Je le tasse avec le pied","Je le mouille"],
+   correct:1,hint:"Sable lisse pour le joueur suivant.",
+   explain:"On ratisse le bunker apres son passage, puis on repose le rateau la ou le club l'a indique (souvent a l'exterieur, pres du bord)."},
+
+  /* =======================  DRAPEAU JAUNE  ======================= */
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 18",scene:sceneOB(240,150),
+   q:"Les piquets BLANCS sur un parcours marquent quoi ?",
+   choices:["De l'eau","La limite du terrain (hors limites)","Un terrain en reparation","Le chemin"],
+   correct:1,hint:"Blanc = la frontiere du terrain.",
+   explain:"Les piquets ou lignes blanches marquent le hors limites. Si ta balle est entierement au-dela, elle est hors limites : tu rejoues d'ou tu venais avec 1 coup de penalite."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 17",scene:sceneWaterYellow(200,165),
+   q:"Ta balle est dans une zone a penalite (piquets rouges ou jaunes). Que peux-tu faire ?",
+   choices:["Rien, elle est perdue","Te degager en ajoutant 1 coup de penalite","La jouer sans penalite obligatoirement","Recommencer le trou"],
+   correct:1,hint:"On peut toujours repartir pour 1 coup.",
+   explain:"Dans une zone a penalite, tu peux te degager pour 1 coup de penalite (ou parfois jouer la balle telle quelle si tu peux). Les piquets rouges ou jaunes montrent cette zone."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 17",scene:sceneWaterRed(215,175,'<path d="M235 100 Q260 150 218 172" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 4"/>'),
+   q:"Ta balle rentre dans l'eau puis RESSORT et s'arrete sur l'herbe. Que se passe-t-il ?",
+   choices:["1 coup de penalite","Je la joue normalement, sans penalite","Je dois la remettre dans l'eau","Elle est perdue"],
+   correct:1,hint:"Ce qui compte, c'est ou elle s'arrete.",
+   explain:"Une balle n'est dans l'eau que si elle s'y arrete. Si elle ressort et repose sur l'herbe, tu la joues normalement, sans penalite."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 12",scene:sceneBunker(180,155),
+   q:"Ta balle est dans le bunker. Qu'est-ce qui est interdit avant de jouer ?",
+   choices:["Enlever une feuille","Toucher le sable pour le tester","Regarder la balle","Poser son sac dehors"],
+   correct:1,hint:"On ne 'teste' jamais le sable.",
+   explain:"Dans le bunker, tu ne dois pas tester le sable ni le toucher juste derriere ta balle avant de jouer. Sinon, penalite. (Enlever une feuille est permis.) Et souviens-toi : pour Rina, le bunker est le coup le plus facile du golf !"},
+  {flag:"jaune",theme:"Etiquette",scene:sceneRake(),
+   q:"Apres ton coup dans le bunker, quel est le bon reflexe ?",
+   choices:["Partir vite","Ratisser le sable derriere soi","Sauter dehors","Laisser le rateau dans le trou"],
+   correct:1,hint:"On laisse le bunker propre.",
+   explain:"On ratisse le bunker apres son passage pour effacer les traces, puis on repose le rateau proprement au bord. Le joueur suivant retrouve un sable lisse."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 9",scene:sceneFairway(180,150),
+   q:"Sur le fairway, un coup de vent fait rouler ta balle un peu plus loin. Que fais-tu ?",
+   choices:["Je la remets a sa place","Je la joue d'ou elle est maintenant, sans penalite","Je compte 1 coup","Je la remets sur un tee"],
+   correct:1,hint:"Le vent, ce n'est pas toi.",
+   explain:"Quand le vent deplace ta balle (hors green), tu la joues de son nouvel endroit, sans penalite. Tu n'y es pour rien."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 15",scene:sceneFairway(200,150,'<path d="M180 138 q6 -6 12 0" stroke="#6d5a2a" stroke-width="2" fill="none"/><circle cx="216" cy="142" r="3" fill="#7a6a3a"/>'),
+   q:"Une feuille et un petit caillou sont juste a cote de ta balle. Peux-tu les enlever ?",
+   choices:["Non, jamais","Oui, mais attention a ne pas faire bouger la balle","Seulement sur le green","Oui, sans aucun risque"],
+   correct:1,hint:"On peut les enlever, mais la balle ne doit pas bouger.",
+   explain:"Tu peux enlever les detritus (feuilles, brindilles, cailloux) partout. Mais si la balle bouge a cause de ca (hors green), c'est 1 coup de penalite et tu la remets."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 18",scene:sceneTrees(150,140),
+   q:"Ta balle est vraiment perdue apres 3 minutes de recherche. Que fais-tu ?",
+   choices:["Je continue de chercher","Je rejoue d'ou j'avais joue, avec 1 coup de penalite","Je pose une balle sur place","Je passe au trou suivant"],
+   correct:1,hint:"On repart du point du coup precedent.",
+   explain:"Balle perdue = tu retournes rejouer du point du coup precedent, avec 1 coup de penalite (c'est la regle 'distance et coup')."},
+  {flag:"jaune",theme:"Securite",scene:sceneFairway(180,150),
+   q:"Ta balle part tout droit vers d'autres joueurs. Que cries-tu pour les prevenir ?",
+   choices:["Attention","Balle ! (ou 'Fore !')","Pardon","Rien"],
+   correct:1,hint:"C'est le cri d'alerte connu de tous les golfeurs.",
+   explain:"Si ta balle part vers des personnes, tu cries fort 'Balle !' (ou 'Fore !'). C'est le signal d'alerte pour qu'elles se protegent la tete."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 16",scene:sceneCartPath(78,150),
+   q:"Ta balle repose SUR le chemin en dur (des voiturettes). Que peux-tu faire ?",
+   choices:["Jouer depuis le chemin","Te degager gratuitement juste a cote","Te degager avec 1 penalite","Reculer au depart"],
+   correct:1,hint:"Un chemin en dur n'est pas fait pour jouer dessus.",
+   explain:"Le chemin en dur donne droit a un degagement GRATUIT (sans penalite) : tu te degages a l'endroit le plus proche a cote, pas plus pres du trou."},
+  {flag:"jaune",theme:"Green & pitch",ref:"Regle 13",scene:sceneGreen(200,138),
+   q:"Tu puttes en laissant le drapeau dans le trou, et ta balle le tape. Penalite ?",
+   choices:["Oui, 2 coups","Oui, 1 coup","Non, aucune penalite","Il faut rejouer"],
+   correct:2,hint:"On a le droit de garder le drapeau pour putter.",
+   explain:"Tu peux putter avec le drapeau reste dans le trou. Si ta balle le touche, aucune penalite : elle est jouee comme elle repose."},
+  {flag:"jaune",theme:"Score",scene:null,
+   q:"Tu as pris 1 coup de penalite dans l'eau. Que fais-tu de ce coup ?",
+   choices:["Je l'oublie","Je l'ajoute a mon score du trou","Je l'enleve","Je le donne a un autre"],
+   correct:1,hint:"Les penalites comptent dans le score.",
+   explain:"Un coup de penalite s'ajoute a ton score du trou, comme un coup joue. Compter juste, penalites comprises, fait partie du jeu."},
+  {flag:"jaune",theme:"Etiquette",scene:sceneGreen(180,150),
+   q:"Prendre soin du parcours, c'est faire quoi ?",
+   choices:["Rien de special","Remettre les divots, ratisser les bunkers, reparer les pitchs","Courir sur le green","Laisser ses tees partout"],
+   correct:1,hint:"On laisse le parcours aussi beau qu'on l'a trouve.",
+   explain:"Prendre soin du parcours, c'est remettre les mottes (divots), ratisser les bunkers et reparer les pitchs. On laisse le terrain propre pour les suivants."},
+  {flag:"jaune",theme:"Securite",scene:sceneFairway(180,160),
+   q:"Des joueurs devant vont taper leur coup. Peux-tu traverser le fairway devant eux ?",
+   choices:["Oui, vite fait","Non, j'attends qu'ils aient joue et soient loin","Oui si je cours","Oui en faisant signe"],
+   correct:1,hint:"On ne passe jamais devant des joueurs qui vont frapper.",
+   explain:"On ne traverse jamais devant des joueurs qui s'appretent a taper. Tu attends qu'ils aient joue et que ce soit sans danger."},
+
+  /* =======================  DRAPEAU BLANC  ======================= */
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 19",scene:sceneTrees(200,150),
+   q:"Ta balle est coincee sous un arbre, injouable. Combien d'options as-tu (1 coup chacune) ?",
+   choices:["Une seule","Trois : rejouer d'ou tu venais, dropper en arriere, ou dropper a cote (2 longueurs)","Deux","Aucune"],
+   correct:1,hint:"Trois options, comme pour une zone rouge.",
+   explain:"Balle injouable = 3 options a 1 coup chacune : rejouer du point precedent, dropper en arriere sur la ligne, ou dropper sur le cote dans 2 longueurs de club (pas plus pres du trou). C'est toi qui decides."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 14",scene:sceneFairway(200,150,'<line x1="200" y1="118" x2="200" y2="146" stroke="#fff" stroke-width="2" stroke-dasharray="3 4"/><text x="238" y="132" font-family="Helvetica" font-size="11" fill="#20301f">genou</text>'),
+   q:"Quand tu dois 'dropper' ta balle, de quelle hauteur la laisses-tu tomber ?",
+   choices:["De l'epaule","De la hauteur du genou","Contre le sol","Peu importe"],
+   correct:1,hint:"Ni tout en haut, ni tout en bas.",
+   explain:"On drope de la hauteur du genou, debout. Un drop de l'epaule ou trop bas doit etre recommence."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 18.3",scene:sceneOB(160,150),
+   q:"Tu crains que ta balle soit perdue ou hors limites. Que fais-tu avant d'aller chercher ?",
+   choices:["Je joue une balle en cachette","J'annonce 'balle provisoire' et j'en joue une","Je pars chercher direct","Je demande a l'arbitre"],
+   correct:1,hint:"Le mot 'provisoire' doit etre dit avant.",
+   explain:"Tu annonces clairement 'balle provisoire' AVANT d'aller chercher. Si l'originale est perdue ou hors limites, la provisoire devient ta balle en jeu."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 17",scene:sceneWaterRed(268,150),
+   q:"Zone a penalite ROUGE : combien d'options de degagement (en plus de jouer la balle telle quelle) ?",
+   choices:["Une","Deux","Trois","Aucune"],
+   correct:2,hint:"Le rouge a une option de plus que le jaune.",
+   explain:"Zone rouge (1 coup) : rejouer d'ou tu venais, dropper en arriere sur la ligne, ou dropper sur le cote (2 longueurs). Le jaune n'a pas l'option laterale."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 17.1",scene:sceneWaterRed(285,140,markX(252,120)+label(252,105,"passage")),
+   q:"Pour te degager d'une zone rouge, a partir de quel point mesures-tu ?",
+   choices:["La ou la balle est dans l'eau","Le point ou elle a franchi le bord (la croix)","Le milieu de l'eau","Le trou"],
+   correct:1,hint:"Jamais l'endroit final dans l'eau.",
+   explain:"On part du point ou la balle a franchi le bord de la zone (la croix). C'est de la que tu mesures tes 2 longueurs pour le degagement lateral."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Definitions",scene:sceneFairway(200,150),
+   q:"Pour mesurer 'une longueur de club', quel club utilises-tu ?",
+   choices:["Le putter","Un fer 7","Le club le plus long du sac (sauf le putter), souvent le driver","Un club au hasard"],
+   correct:2,hint:"Le plus long pour avoir le plus de place.",
+   explain:"La longueur de club se mesure avec le club le plus long du sac hors putter (le driver en general). Elle sert aux zones de 1 ou 2 longueurs."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 16.3",scene:sceneEmbedded(200,150),
+   q:"Ta balle est enfoncee dans son propre trou (dans la terre molle) sur le fairway. Que peux-tu faire ?",
+   choices:["Rien, je joue telle quelle","Me degager gratuitement juste derriere le trou","Me degager avec 1 penalite","La deterrer a la main"],
+   correct:1,hint:"Une balle enfoncee dans l'herbe tondue donne droit a de l'aide gratuite.",
+   explain:"Une balle enfoncee dans sa propre marque (zone gazonnee) donne droit a un degagement GRATUIT : tu drops dans 1 longueur juste derriere l'endroit ou elle etait plantee."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 6.3c",scene:sceneTrees(200,150,'<circle cx="240" cy="150" r="7" fill="#fff" stroke="#c81d25" stroke-dasharray="2 2"/>'),
+   q:"Tu joues par erreur la balle d'un autre joueur. Que se passe-t-il ?",
+   choices:["Rien si je n'avais pas vu","2 coups de penalite, et je dois retrouver et jouer ma vraie balle","1 coup de penalite","Je continue avec"],
+   correct:1,hint:"D'ou l'interet de marquer sa balle au feutre !",
+   explain:"Jouer une 'mauvaise balle' = 2 coups de penalite, et tu dois corriger en jouant ta vraie balle. Marque toujours ta balle d'un signe pour la reconnaitre."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 10.2",scene:null,
+   q:"Tu demandes a un adversaire quel club utiliser. Autorise ?",
+   choices:["Oui, c'est normal","Non : demander ce conseil, c'est 2 coups de penalite","Oui, une seule fois","Seulement sur le green"],
+   correct:1,hint:"Demander quel club a un adversaire, c'est un 'conseil'.",
+   explain:"Demander (ou donner) un conseil comme le choix du club a un joueur qui n'est pas ton partenaire = 2 coups de penalite. Les infos publiques (distance, position du drapeau) restent permises."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 14.3c",scene:sceneFairway(200,150),
+   q:"Tu drops, mais la balle roule hors de la zone autorisee. Que fais-tu ?",
+   choices:["Je la joue quand meme","Je redrops une fois ; si ca rate encore, je la POSE","Je compte 1 coup","Je recommence tout"],
+   correct:1,hint:"Deux essais de drop, puis on pose.",
+   explain:"Si la balle dropee sort de la zone, tu redrops une 2e fois. Si elle roule encore dehors, tu la POSES a l'endroit ou elle a touche le sol au 2e drop."},
+  {flag:"blanc",theme:"Green & pitch",ref:"Regle 13.3",scene:sceneGreen(244,102),
+   q:"Ta balle est en equilibre au bord du trou. Combien de temps peux-tu attendre ?",
+   choices:["Le temps que je veux","Environ 10 secondes une fois arrive au trou","1 minute","3 minutes"],
+   correct:1,hint:"Un petit compte a rebours.",
+   explain:"Tu as le temps d'arriver au trou, puis environ 10 secondes. Apres, si elle tombe, ca compte mais avec 1 coup de penalite."},
+  {flag:"blanc",theme:"Green & pitch",ref:"Regle 11",scene:sceneGreen(210,150,'<circle cx="250" cy="150" r="7" fill="#ffd54f" stroke="#c9a227"/>'),
+   q:"Tu puttes et ta balle tape une autre balle posee sur le green. Que se passe-t-il ?",
+   choices:["Rien","2 coups de penalite pour toi, et on remet l'autre balle","1 coup pour l'autre joueur","Je rejoue sans penalite"],
+   correct:1,hint:"Deux balles sur le green + un putt = attention.",
+   explain:"Si ta balle puttee depuis le green tape une autre balle qui y etait posee, c'est 2 coups de penalite pour toi ; on remet l'autre balle a sa place. C'est pour ca qu'on marque les balles sur le green."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 16.1",scene:sceneGUR(200,132,'water'),
+   q:"Apres la pluie, ta balle est dans une flaque d'eau sur le fairway. Est-ce une zone a penalite ?",
+   choices:["Oui, 1 coup de penalite","Non : c'est de l'eau temporaire, degagement gratuit","Non, je ne peux rien faire","Oui, balle perdue"],
+   correct:1,hint:"Une flaque de pluie n'est pas un obstacle d'eau.",
+   explain:"Une flaque de pluie est de l'eau temporaire : degagement GRATUIT a l'endroit le plus proche au sec (pas plus pres du trou), dans 1 longueur de club."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 16.1",scene:sceneGUR(200,130,'gur'),
+   q:"Ta balle est dans une zone marquee 'G.U.R.' (terrain en reparation). Es-tu oblige de te degager ?",
+   choices:["Oui, obligatoire","Non : le degagement gratuit est un droit, tu peux aussi jouer la balle","Oui, avec 1 coup","Non, tu dois attendre"],
+   correct:1,hint:"C'est une aide offerte, pas une obligation.",
+   explain:"Le degagement d'un terrain en reparation est gratuit mais facultatif : tu peux jouer la balle telle quelle si tu preferes."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 16.1a",scene:sceneCartPath(120,150,'<path d="M120 150 L60 150" stroke="#c81d25" stroke-width="2" stroke-dasharray="4 4"/>'),
+   q:"Le chemin en dur te gene seulement pour VOIR le drapeau (ta balle est sur l'herbe). Degagement gratuit ?",
+   choices:["Oui, la gene visuelle suffit","Non : pas de degagement juste pour la ligne de vue","Oui, avec 1 coup","Seulement le week-end"],
+   correct:1,hint:"Le degagement couvre la balle, les pieds, le swing... pas la vue.",
+   explain:"On a droit au degagement d'une obstruction seulement si elle gene la balle, le stance (les pieds) ou le mouvement de swing. Etre gene juste pour voir le drapeau ne compte pas."},
+  {flag:"blanc",theme:"Rapidite",scene:sceneOrder(),
+   q:"Pour jouer vite et bien, quel est le bon reflexe ?",
+   choices:["Attendre son tour sans rien preparer","Se preparer pendant que les autres jouent, et jouer des qu'on est pret en securite","Courir entre les coups","Jouer tres lentement"],
+   correct:1,hint:"Prepare a l'avance, joue en securite des que possible.",
+   explain:"Le 'jeu rapide' : tu prepares ton coup pendant que les autres jouent, et tu joues des que tu es pret si c'est sans danger. C'est essentiel pour ne pas ralentir la partie."},
+  {flag:"blanc",theme:"Etiquette",scene:sceneRake(),
+   q:"Meme en autonomie (tu joues seul), que fais-tu apres etre passe dans un bunker ?",
+   choices:["Rien, je suis presse","Je ratisse et je repose le rateau proprement","Je laisse mes traces","Je remets du sable a la main"],
+   correct:1,hint:"L'etiquette ne s'arrete jamais, meme quand personne ne regarde.",
+   explain:"L'autonomie du drapeau blanc, c'est jouer seul en respectant TOUT : on ratisse le bunker, on repare pitchs et divots, on laisse passer les plus rapides. Le savoir-etre reste essentiel."},
+
+  /* ---- AJOUTS : plus de variete ---- */
+  {flag:"vert",theme:"Etiquette",scene:null,
+   q:"Sur le parcours, comment parle-t-on ?",
+   choices:["Tres fort pour s'amuser","Doucement, a voix basse","On chante","On siffle"],correct:1,
+   hint:"Le calme aide tout le monde a se concentrer.",
+   explain:"On parle a voix basse sur le parcours, surtout quand quelqu'un se prepare a jouer. Le golf aime le calme."},
+  {flag:"vert",theme:"Securite",scene:null,
+   q:"Tu portes ton club en marchant. A quoi fais-tu attention ?",
+   choices:["A le faire tourner vite","A ne toucher personne autour de toi","A courir avec","A viser les copains"],correct:1,
+   hint:"Un club, ca depasse et ca peut cogner.",
+   explain:"On porte son club calmement, sans le faire tournoyer, pour ne blesser personne autour de soi."},
+  {flag:"vert",theme:"Comportement",scene:null,
+   q:"Tu perds ta balle et tu es un peu decu. Que fais-tu ?",
+   choices:["Je me fache","Je reste calme et j'en prends une autre","J'arrete de jouer","Je boude"],correct:1,
+   hint:"On a toujours des balles de rechange dans la poche.",
+   explain:"Perdre une balle arrive a tout le monde. On reste calme et on en prend une autre : c'est pour ca qu'on en a plusieurs sur soi."},
+  {flag:"vert",theme:"Green & pitch",scene:sceneGreen(180,150),
+   q:"Comment s'appelle la zone d'herbe tres courte autour du trou ?",
+   choices:["Le fairway","Le green","Le bunker","Le rough"],correct:1,
+   hint:"C'est la qu'on fait rouler la balle vers le trou.",
+   explain:"Le green est la zone d'herbe tres courte autour du trou. C'est la qu'on 'putte' pour faire rouler la balle jusqu'au trou."},
+  {flag:"vert",theme:"Materiel",scene:null,
+   q:"Avec quoi frappe-t-on la balle de golf ?",
+   choices:["La main","Un club (un baton de golf)","Le pied","Une raquette"],correct:1,
+   hint:"On en a plusieurs sortes dans le sac.",
+   explain:"On frappe la balle avec un club. Il en existe plusieurs : le driver pour aller loin, les fers, le wedge, et le putter pour le green."},
+  {flag:"vert",theme:"Rapidite",scene:null,
+   q:"Quand c'est a toi de jouer et que tu es pret, tu...",
+   choices:["Attends longtemps","Joues sans trainer (mais en securite)","Laisses ton tour","Recommences ton echauffement"],correct:1,
+   hint:"On evite de faire attendre les autres.",
+   explain:"Quand c'est ton tour et que tu es pret, tu joues sans trainer, apres avoir verifie que c'est sans danger. La partie est plus agreable pour tous."},
+
+  {flag:"rouge",theme:"Comportement",scene:sceneTrees(150,150),
+   q:"Un partenaire cherche sa balle perdue. Que fais-tu ?",
+   choices:["Je regarde ailleurs","Je l'aide a chercher","Je pars devant","Je me moque"],correct:1,
+   hint:"A plusieurs, on cherche plus vite.",
+   explain:"On aide ses partenaires a chercher une balle perdue. C'est plus sympa et ca fait gagner du temps a tout le monde."},
+  {flag:"rouge",theme:"Etiquette",scene:sceneGreen(210,150),
+   q:"En attendant ton tour sur le green, ou te places-tu ?",
+   choices:["Devant celui qui joue","Un peu en retrait, hors de sa vue et de sa ligne","Sur le trou","Sur la ligne de sa balle"],correct:1,
+   hint:"On ne gene ni la vue ni la ligne des autres.",
+   explain:"On se place un peu en retrait, sans se tenir dans le champ de vision du joueur ni sur la ligne de sa balle vers le trou."},
+  {flag:"rouge",theme:"Green & pitch",scene:scenePitch(215,150),
+   q:"Pourquoi est-ce important de reparer les pitchs ?",
+   choices:["Pour decorer","Pour que le green reste lisse et que les balles roulent droit","Pour gagner des points","Ce n'est pas important"],correct:1,
+   hint:"Un pitch non repare fait une bosse longtemps.",
+   explain:"Un pitch non repare laisse une bosse qui abime le green et fait devier les balles. En le reparant, on garde un green lisse pour tout le monde."},
+  {flag:"rouge",theme:"Etiquette",scene:sceneRake(),
+   q:"Apres avoir ratisse, ou reposes-tu le rateau ?",
+   choices:["Au milieu du bunker","Pres du bord, la ou il gene le moins","Dans le trou","Sur le green"],correct:1,
+   hint:"Il ne doit gener ni les joueurs ni les balles.",
+   explain:"On repose le rateau proprement, en general a l'exterieur ou tout au bord du bunker, la ou il gene le moins le jeu."},
+  {flag:"rouge",theme:"Securite",scene:sceneSafety(),
+   q:"Avant de chipper vers le green, tu verifies quoi ?",
+   choices:["La couleur du drapeau","Que personne n'est sur le green ni devant","Le vent","Ta montre"],correct:1,
+   hint:"On ne joue jamais vers des gens.",
+   explain:"Avant de chipper, tu regardes que le green est libre et que personne n'est devant toi a portee de balle."},
+  {flag:"rouge",theme:"Rapidite",scene:sceneBag(),
+   q:"Tu viens de finir le trou. Quand notes-tu ton score ?",
+   choices:["Sur le green, tranquillement","En marchant vers le depart suivant, pour liberer le green","Jamais","Au clubhouse seulement"],correct:1,
+   hint:"On quitte vite le green pour le groupe derriere.",
+   explain:"On quitte le green rapidement une fois le trou fini, et on note le score en marchant vers le trou suivant. Ca evite de bloquer les joueurs derriere."},
+
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneTrees(170,150),
+   q:"Ta balle est dans l'herbe haute (le rough) mais tu peux la jouer. Que fais-tu ?",
+   choices:["Je la deplace sur le fairway","Je la joue comme elle est","Je la prends a la main","Je compte 1 penalite"],correct:1,
+   hint:"On joue la balle la ou elle repose.",
+   explain:"Regle de base du golf : on joue la balle comme elle repose, meme dans le rough. On ne la deplace pas pour se faciliter la vie."},
+  {flag:"bleu",theme:"Regle de jeu",scene:sceneTee(200,120),
+   q:"Tu fais ton swing mais tu rates completement la balle (tu tapes dans le vide). Ca compte ?",
+   choices:["Non, on recommence","Oui, ca compte 1 coup","Seulement la 2e fois","Non, c'est un essai"],correct:1,
+   hint:"Des que tu tentes de frapper, c'est un coup.",
+   explain:"Un coup ou l'on rate la balle en essayant de la frapper compte comme un coup joue. La balle, elle, reste en jeu la ou elle est."},
+  {flag:"bleu",theme:"Score",scene:null,
+   q:"Le 'par' d'un trou, c'est quoi ?",
+   choices:["Le nombre de coups prevu pour bien jouer le trou","Le nombre de joueurs","La longueur du trou","Le numero du trou"],correct:0,
+   hint:"Faire le par, c'est jouer le trou 'comme prevu'.",
+   explain:"Le par est le nombre de coups prevu pour bien jouer un trou (souvent 3, 4 ou 5). Finir en dessous du par, c'est tres bien joue !"},
+  {flag:"bleu",theme:"Materiel",scene:null,
+   q:"Avant de partir jouer, qu'est-ce qui doit etre dans ton sac ?",
+   choices:["Rien de special","Des balles, des tees, un releve-pitch, un marqueur et de l'eau","Juste un club","Un ballon"],correct:1,
+   hint:"On prepare son sac comme un bon padawan.",
+   explain:"Un sac bien prepare : plusieurs balles, des tees, un releve-pitch, un marqueur, de l'eau et un petit encas. Comme ca, on est pret a tout."},
+  {flag:"bleu",theme:"Etiquette",scene:sceneTee(200,120),
+   q:"Avec ton chariot ou ton sac, ou ne roules-tu jamais ?",
+   choices:["Sur le fairway","Sur les departs et les greens","Sur le chemin","Dans le rough"],correct:1,
+   hint:"Les zones tondues tres court sont fragiles.",
+   explain:"On ne fait jamais rouler son chariot sur les departs ni sur les greens : ce sont des zones fragiles. On les contourne."},
+  {flag:"bleu",theme:"Securite",scene:sceneFairway(180,160),
+   q:"Le groupe devant est encore a portee de ta balle. Tu joues quand ?",
+   choices:["Tout de suite","Quand il est hors d'atteinte","Je crie et je joue","Jamais"],correct:1,
+   hint:"On attend que ce soit vraiment sans danger.",
+   explain:"On attend que le groupe devant soit hors de portee avant de jouer. Mieux vaut patienter quelques secondes que de risquer de blesser quelqu'un."},
+
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 8",scene:sceneOB(230,150),
+   q:"Ta balle est juste contre un piquet BLANC de hors-limite. Peux-tu enlever le piquet pour jouer ?",
+   choices:["Oui, comme un rateau","Non, les piquets de hors-limite ne s'enlevent pas","Oui, avec 1 penalite","Seulement le tien"],correct:1,
+   hint:"Ces piquets definissent la limite du terrain.",
+   explain:"Les piquets de hors-limite ne se retirent pas : ils marquent la limite du terrain. On joue avec, ou on declare la balle injouable."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 7.2",scene:sceneTrees(180,150),
+   q:"Deux balles se ressemblent. Comment etre sur que c'est la tienne ?",
+   choices:["Je devine","Je l'ai marquee d'un signe avant de partir","Je prends la plus proche","Je demande a un copain"],correct:1,
+   hint:"Un bon reflexe : marquer sa balle au feutre.",
+   explain:"On marque sa balle d'un signe distinctif (un point, une initiale) avant de jouer. Comme ca, on la reconnait a coup sur et on evite les mauvaises balles."},
+  {flag:"jaune",theme:"Green & pitch",ref:"Regle 13.1c",scene:sceneGreen(190,150),
+   q:"Sur le green, peux-tu reparer une marque de chaussure (crampons) ?",
+   choices:["Non","Oui, on peut reparer les marques de pas et de crampons","Seulement les pitchs","Oui, avec 1 penalite"],correct:1,
+   hint:"Depuis 2019, on repare presque tout sur le green.",
+   explain:"Depuis 2019, on peut reparer les marques de chaussures, de crampons, les impacts, les anciens trous... presque tous les degats du green."},
+  {flag:"jaune",theme:"Securite",scene:null,
+   q:"Un orage arrive et tu entends le tonnerre pendant ta partie. Que fais-tu ?",
+   choices:["Je continue vite","J'arrete et je me mets a l'abri","Je leve mon club en l'air","Je cours sous un arbre isole"],correct:1,
+   hint:"Rien n'est plus important que ta securite.",
+   explain:"En cas d'orage, on arrete de jouer et on se met a l'abri. On ne reste pas a decouvert ni sous un arbre isole, et on ne brandit jamais son club en l'air."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 16.1",scene:sceneCartPath(78,150),
+   q:"Ta balle repose sur une plaque ou une bouche d'arrosage (objet fixe non naturel). Tu as droit a ?",
+   choices:["Rien","Un degagement gratuit a cote","Un degagement avec 1 penalite","Rejouer du depart"],correct:1,
+   hint:"Un objet fixe fabrique = obstruction inamovible.",
+   explain:"Une bouche d'arrosage ou une plaque est une obstruction inamovible : degagement GRATUIT a l'endroit le plus proche a cote, pas plus pres du trou."},
+  {flag:"jaune",theme:"Regle de jeu",ref:"Regle 15.2",scene:sceneBunker(180,150,'<rect x="150" y="120" width="40" height="6" rx="2" fill="#8a5a2a" transform="rotate(20 170 123)"/>'),
+   q:"Un rateau gene ta balle dans le bunker. Peux-tu l'enlever ?",
+   choices:["Non","Oui, et si la balle bouge tu la replaces sans penalite","Seulement hors du bunker","Oui, avec 1 penalite"],correct:1,
+   hint:"Le rateau est un objet qu'on peut deplacer.",
+   explain:"Le rateau est une obstruction amovible : tu peux l'enlever partout. Si la balle bouge en le retirant, aucune penalite, tu la remets a sa place."},
+
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 6.2b",scene:sceneTee(200,118),
+   q:"Au depart, tes PIEDS peuvent-ils etre en dehors de l'aire de depart ?",
+   choices:["Non, tout doit etre dedans","Oui, seule la balle doit etre dans l'aire","Non, penalite","Seulement un pied"],correct:1,
+   hint:"C'est la balle qui compte, pas les pieds.",
+   explain:"Seule la balle doit etre posee dans l'aire de depart. Tes pieds, eux, peuvent tres bien etre a l'exterieur. Pratique quand la balle est au bord."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 9.3",scene:sceneFairway(200,150),
+   q:"Tu t'installes pour jouer et la balle bouge toute seule (personne ne l'a touchee). Que fais-tu ?",
+   choices:["Je la remets","Je la joue de son nouvel endroit, sans penalite","1 penalite","Je recommence"],correct:1,
+   hint:"Si c'est la nature (vent, pente) et pas toi, pas de penalite.",
+   explain:"Si la balle bouge a cause de forces naturelles (vent, pente) et non parce que tu l'as touchee, tu la joues de son nouvel emplacement, sans penalite (sur le green, on la replace)."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 10.2b",scene:null,
+   q:"Peux-tu demander a quelqu'un de se placer dans ton dos, sur ta ligne, pour t'aider a viser pendant le coup ?",
+   choices:["Oui, toujours","Non, personne ne doit se tenir sur ta ligne derriere pendant que tu joues","Oui, seulement le caddie","Oui, sur le green"],correct:1,
+   hint:"Viser, ca se regle avant de se placer.",
+   explain:"Depuis 2019, personne (meme ton caddie) ne doit se tenir juste derriere toi sur ta ligne quand tu prends ta position pour jouer. Sinon, penalite."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 5.5",scene:sceneFairway(200,150),
+   q:"Pendant que tu joues un trou, peux-tu taper des balles d'entrainement ?",
+   choices:["Oui, autant que je veux","Non, pas de coup d'entrainement pendant le trou","Oui, une seule","Seulement au depart"],correct:1,
+   hint:"On s'entraine avant la partie, pas pendant le trou.",
+   explain:"On ne joue pas de coups d'entrainement pendant qu'on joue un trou. Entre deux trous, on peut juste faire quelques putts ou chips pres du green qu'on vient de finir."},
+  {flag:"blanc",theme:"Regle de jeu",ref:"Regle 20",scene:null,
+   q:"En pleine partie, tu ne sais pas quelle regle appliquer. Que fais-tu ?",
+   choices:["Je fais au hasard","Je demande a un arbitre, ou je note la situation pour verifier apres","J'abandonne","Je change de trou"],correct:1,
+   hint:"On ne devine pas : on demande ou on verifie.",
+   explain:"En cas de doute sur une regle, tu demandes a un arbitre si possible. Sinon, tu notes bien la situation (position de la balle, options prises) pour verifier apres la partie."},
+  {flag:"blanc",theme:"Green & pitch",ref:"Regle 9.4",scene:sceneMarker(),
+   q:"Ta balle est marquee sur le green. En la relevant, ton marqueur bouge. Penalite ?",
+   choices:["Oui, 1 coup","Non, tu le remets a sa place","Oui, 2 coups","Tu rejoues"],correct:1,
+   hint:"Sur le green, ces petits accidents sont pardonnes.",
+   explain:"Faire bouger accidentellement son marqueur (ou sa balle) sur le green n'entraine aucune penalite : tu le remets simplement a sa place."}
+];
+
+/* ============================================================
+   QUESTIONS BONUS - CULTURE GOLF (pour le plaisir, ne comptent pas)
+   ============================================================ */
+var BONUS = [
+  {q:"Combien de Masters (la veste verte) Rory McIlroy a-t-il gagnes a ce jour ?",
+   choices:["1","2","3","5"],correct:1,
+   explain:"Deux : en 2025 (ce qui completait son Grand Chelem en carriere) puis en 2026, coup sur coup. Il compte 6 titres majeurs au total."},
+  {q:"Quel age avait le plus jeune vainqueur de l'Open (le British Open) ?",
+   choices:["17 ans","25 ans","31 ans","14 ans"],correct:0,
+   explain:"Young Tom Morris a gagne l'Open a 17 ans, en 1868. Il reste le plus jeune champion de ce tres vieux tournoi."},
+  {q:"Dans quel pays est ne le golf ?",
+   choices:["La France","L'Ecosse","Les Etats-Unis","Le Japon"],correct:1,
+   explain:"Le golf moderne est ne en Ecosse, il y a plusieurs siecles. C'est de la que viennent beaucoup de mots du golf."},
+  {q:"Combien de trous compte un grand parcours de golf ?",
+   choices:["9","12","18","24"],correct:2,
+   explain:"Un parcours complet compte 18 trous. Beaucoup de clubs ont aussi des petits parcours de 9 trous, parfaits pour les jeunes."},
+  {q:"Au golf, un 'birdie' c'est quoi ?",
+   choices:["Un coup de moins que le par","Le par exactement","Un coup de plus que le par","Un oiseau sur le green"],correct:0,
+   explain:"Un birdie, c'est finir un trou en un coup de MOINS que le par. Deux de moins, c'est un 'eagle' (aigle) !"},
+  {q:"Quel club envoie la balle le plus LOIN ?",
+   choices:["Le putter","Le driver","Le wedge","Le fer 9"],correct:1,
+   explain:"Le driver est le club des grandes distances, utilise surtout au depart. Le putter, lui, sert a faire rouler la balle sur le green."},
+  {q:"Combien de tournois majeurs Tiger Woods a-t-il gagnes ?",
+   choices:["9","12","15","20"],correct:2,
+   explain:"Tiger Woods compte 15 titres majeurs, l'un des plus grands palmares de l'histoire, derriere Jack Nicklaus et ses 18."},
+  {q:"Comment appelle-t-on la personne qui porte le sac et conseille le joueur ?",
+   choices:["L'arbitre","Le caddie","Le starter","Le greenkeeper"],correct:1,
+   explain:"Le caddie porte le sac et peut donner des conseils au joueur (distance, choix de club, lecture du green)."},
+  {q:"Lequel de ces tournois n'est PAS un majeur de golf ?",
+   choices:["Le Masters","L'US Open","Roland-Garros","The Open"],correct:2,
+   explain:"Roland-Garros, c'est le tennis ! Les 4 majeurs du golf sont le Masters, l'US Open, The Open (britannique) et le PGA Championship."},
+  {q:"Mettre la balle dans le trou en un seul coup, ca s'appelle...",
+   choices:["Un birdie","Un trou en un (hole in one)","Un eagle","Un par"],correct:1,
+   explain:"C'est un 'trou en un' (hole in one) : tres rare et tres impressionnant, surtout pour les grands joueurs."},
+  {q:"Une face de club plus 'ouverte' envoie plutot la balle...",
+   choices:["Plus haut","Plus bas","Plus loin tout droit","Dans le trou a coup sur"],correct:0,
+   explain:"Ouvrir la face ajoute de la hauteur : la balle part plus haut (et plutot vers la droite pour un droitier). La 'fermer' fait l'inverse."},
+  {q:"A quoi servent les petits creux (alveoles) sur une balle de golf ?",
+   choices:["A la decorer","A la faire voler plus loin et plus droit","A la rendre plus lourde","A rien"],correct:1,
+   explain:"Les alveoles aident la balle a mieux fendre l'air : elle vole plus loin et plus stable qu'une balle toute lisse."},
+  {q:"La Ryder Cup, c'est une competition entre...",
+   choices:["Deux joueurs","L'Europe et les Etats-Unis","Tous les pays","Les clubs francais"],correct:1,
+   explain:"La Ryder Cup oppose une equipe d'Europe a une equipe des Etats-Unis, tous les deux ans. Une grande fete du golf par equipes."},
+  {q:"Sur le green, on fait ROULER la balle avec quel club ?",
+   choices:["Le driver","Le putter","Le wedge","Le bois 3"],correct:1,
+   explain:"Le putter est fait pour rouler la balle doucement sur le green, jusque dans le trou."},
+  {q:"Combien de tournois majeurs Jack Nicklaus a-t-il gagnes (record) ?",
+   choices:["12","15","18","20"],correct:2,
+   explain:"Jack Nicklaus, surnomme 'l'Ours d'or', detient le record avec 18 titres majeurs. Une legende absolue du golf."},
+  {q:"Dans quel pays se joue le Masters chaque annee ?",
+   choices:["En Ecosse","Aux Etats-Unis (a Augusta)","En France","En Angleterre"],correct:1,
+   explain:"Le Masters se joue chaque annee au meme endroit : le parcours d'Augusta National, aux Etats-Unis. Le vainqueur recoit une veste verte."},
+  {q:"Combien de joueurs au maximum dans une partie (un 'flight') ?",
+   choices:["2","4","6","8"],correct:1,
+   explain:"On joue en general par groupes de 4 joueurs maximum. A plus, la partie serait bien trop lente."},
+  {q:"A quel age Tiger Woods a-t-il gagne son premier Masters (record du plus jeune) ?",
+   choices:["18 ans","21 ans","25 ans","30 ans"],correct:1,
+   explain:"Tiger Woods a remporte le Masters 1997 a seulement 21 ans, devenant le plus jeune vainqueur de l'histoire du tournoi."}
+];
+
+/* ============================================================
+   DRAPEAUX + ETAPES (progression)
+   ============================================================ */
+var FLAG_ORDER=["vert","rouge","bleu","jaune","blanc"];
+var FLAGS={
+  vert: {name:"Drapeau vert",  sub:"securite, etiquette, respect",  color:"#2e9e5b", grad:"linear-gradient(135deg,#3fc17a,#1f9d55)"},
+  rouge:{name:"Drapeau rouge", sub:"le green, le pitch, le marqueur",color:"#c81d25", grad:"linear-gradient(135deg,#f0554d,#c81d25)"},
+  bleu: {name:"Drapeau bleu",  sub:"depart, ordre de jeu, rythme",  color:"#1f6feb", grad:"linear-gradient(135deg,#4a95ff,#1f6feb)"},
+  jaune:{name:"Drapeau jaune", sub:"regles du parcours, bunker, eau",color:"#eab308", grad:"linear-gradient(135deg,#ffd23f,#eab308)"},
+  blanc:{name:"Drapeau blanc", sub:"autonomie, regles completes",    color:"#8b93a0", grad:"linear-gradient(135deg,#ffffff,#dfe3e0)"}
+};
+/* etape precedente requise pour debloquer (null = toujours ouvert) */
+var FLAG_REQUIRES={vert:null,rouge:"vert",bleu:"rouge",jaune:"bleu",blanc:"jaune"};
+function stageUnlocked(f){var req=FLAG_REQUIRES[f];if(!req)return true;return (profile.stars[req]||0)>=1;}
+function mixUnlocked(){for(var i=0;i<FLAG_ORDER.length;i++){if((profile.stars[FLAG_ORDER[i]]||0)<1)return false;}return true;}
+
+var TARGET=5, ROUND=5, order=[], current=0, score=0, results=[], answered=false, curFlag="vert";
+var streak=0, maxStreak=0;
+
+function shuffle(a){var r=a.slice();for(var i=r.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=r[i];r[i]=r[j];r[j]=t;}return r;}
+function poolFor(f){if(f==='all')return BANK.slice();var p=[];for(var i=0;i<BANK.length;i++){if(BANK[i].flag===f)p.push(BANK[i]);}return p;}
+
+var ETQ_THEMES={"Etiquette":1,"Comportement":1,"Securite":1,"Rapidite":1};
+var recentQs={};
+function notIn(list){return function(q){return list.indexOf(q)===-1;};}
+function buildRound(flag){
+  var pool=poolFor(flag);
+  var recent=recentQs[flag]||[];
+  var cand=pool.filter(notIn(recent));
+  if(cand.length<TARGET){var prev=recent.slice(0,TARGET);cand=pool.filter(notIn(prev));}
+  if(cand.length<TARGET)cand=pool.slice();
+  var picked=shuffle(cand).slice(0,Math.min(TARGET,cand.length));
+  var hasE=false;
+  for(var i=0;i<picked.length;i++){ if(ETQ_THEMES[picked[i].theme]) hasE=true; }
+  if(!hasE){
+    var epool=cand.filter(function(q){return ETQ_THEMES[q.theme] && picked.indexOf(q)===-1;});
+    if(!epool.length) epool=pool.filter(function(q){return ETQ_THEMES[q.theme];});
+    if(epool.length) picked[picked.length-1]=shuffle(epool)[0];
+  }
+  recentQs[flag]=picked.concat(recent).slice(0,TARGET*2);
+  return shuffle(picked);
+}
+
+var bonusQ=null, lastBonus=null;
+function pickBonus(){
+  if(!BONUS.length) return null;
+  if(BONUS.length===1) return BONUS[0];
+  var b; do { b=shuffle(BONUS)[0]; } while(b===lastBonus);
+  lastBonus=b; return b;
+}
+
+/* ============================================================
+   VOIX DE COACH RINA + EFFETS
+   ============================================================ */
+var GOOD=["Dans le mille, champion !","Rina est fiere de toi !","Beau swing de reponse !","Birdie de logique, bravo !","Tu assures a fond !","Superbe, comme une pro !","Coup parfait, bien joue !","Rina te fait un high-five !"];
+var BAD=["Oups, un petit passage par le rough...","Pas grave, meme les pros ratent parfois !","Presque ! On retient la bonne reponse pour la prochaine fois.","Une petite balle perdue, on en reprend une !","Ce n'est qu'un entrainement, on progresse a chaque coup.","Rina te glisse un tuyau pour la prochaine question."];
+var reduceMotion=(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var CONF_COLORS=['#2e9e5b','#1f6feb','#eab308','#c81d25','#7fd1a3','#ffcf3f','#ff6fa0','#8b5cf6'];
+var CONF_SHAPES=['circle','square','flag'];
+function celebrate(big){
+  if(reduceMotion) return;
+  var cx=window.innerWidth/2, cy=window.innerHeight*0.32;
+  var n=big?34:18;
+  for(var i=0;i<n;i++){
+    var s=document.createElement('span'); s.className='confetti';
+    var shape=CONF_SHAPES[i%CONF_SHAPES.length];
+    var size=6+Math.random()*6;
+    s.style.width=size+'px'; s.style.height=size+'px'; s.style.background=CONF_COLORS[i%CONF_COLORS.length];
+    if(shape==='circle') s.style.borderRadius='50%';
+    else if(shape==='flag') { s.style.clipPath='polygon(0 0, 100% 25%, 0 50%)'; s.style.width=(size*1.6)+'px'; }
+    else s.style.borderRadius='2px';
+    s.style.left=cx+'px'; s.style.top=cy+'px';
+    var ang=Math.random()*Math.PI*2, dist=70+Math.random()*(big?220:150);
+    s.style.setProperty('--dx',(Math.cos(ang)*dist).toFixed(0)+'px');
+    s.style.setProperty('--dy',(Math.sin(ang)*dist-40).toFixed(0)+'px');
+    s.style.setProperty('--rot',(Math.random()*540-270).toFixed(0)+'deg');
+    document.body.appendChild(s);
+    (function(n){setTimeout(function(){if(n.parentNode)n.parentNode.removeChild(n);},1050);})(s);
+  }
+}
+function doShake(){ if(reduceMotion)return; var c=document.getElementById('card'); if(c){c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');} }
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ============================================================
+   SON (WebAudio, sans fichier externe)
+   ============================================================ */
+var actx=null;
+function ensureAudio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ actx=null; } } return actx; }
+function beep(freq,dur,type,vol,delay){
+  if(profile && profile.muted) return;
+  var ac=ensureAudio(); if(!ac) return;
+  var t0=ac.currentTime+(delay||0);
+  var osc=ac.createOscillator(), g=ac.createGain();
+  osc.type=type||'sine'; osc.frequency.setValueAtTime(freq,t0);
+  g.gain.setValueAtTime(0,t0);
+  g.gain.linearRampToValueAtTime(vol||0.12,t0+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  osc.connect(g); g.connect(ac.destination);
+  osc.start(t0); osc.stop(t0+dur+0.02);
+}
+function sndClick(){ beep(520,.06,'triangle',.08); }
+function sndGood(){ beep(523,.11,'triangle',.11,0); beep(659,.13,'triangle',.11,.08); beep(784,.18,'triangle',.12,.16); }
+function sndBad(){ beep(220,.16,'sawtooth',.09,0); beep(160,.22,'sawtooth',.08,.09); }
+function sndStar(){ beep(880,.1,'sine',.1,0); beep(1046,.16,'sine',.11,.1); }
+function updateMuteBtn(){
+  var b=document.getElementById('mutebtn'); if(!b) return;
+  b.innerHTML=profile.muted
+    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><line x1="16" y1="9" x2="21" y2="15"/><line x1="21" y1="9" x2="16" y2="15"/></svg>'
+    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a9 9 0 0 1 0 12"/></svg>';
+}
+
+/* ============================================================
+   SAUVEGARDE (localStorage)
+   ============================================================ */
+var SAVE_KEY='golf_academy_rina_v1';
+var OLD_SAVE_KEY='golf_drapeaux_v6';
+var profile=null;
+function blankProfile(){return {name:'',avatar:'a1',stars:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},best:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},played:0,muted:false,createdAt:Date.now()};}
+function loadSave(){
+  try{
+    var s=localStorage.getItem(SAVE_KEY);
+    if(s) return JSON.parse(s);
+    var old=localStorage.getItem(OLD_SAVE_KEY);
+    if(old){ var o=JSON.parse(old); var p=blankProfile();
+      p.name=o.name||''; p.avatar=o.avatar||'a1';
+      if(o.stars) p.stars=o.stars; if(o.best) p.best=o.best; p.played=o.played||0;
+      return p;
+    }
+    return null;
+  }catch(e){return null;}
+}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));}catch(e){}}
+function totalStars(){var t=0;for(var i=0;i<FLAG_ORDER.length;i++)t+=(profile.stars[FLAG_ORDER[i]]||0);return t;}
+function rankName(){var t=totalStars(); if(t>=15)return'Legende de Coach Rina'; if(t>=12)return'Champion du club'; if(t>=8)return'Pro en herbe'; if(t>=4)return'Espoir du parcours'; return'Bourgeon du practice';}
+
+/* ============================================================
+   AVATARS / MASCOTTES
+   ============================================================ */
+var MASCOTS=[
+  {id:'a1',name:'Casquette verte', need:0},
+  {id:'a2',name:'Casquette rouge', need:0},
+  {id:'a3',name:'Casquette jaune',   need:0},
+  {id:'a4',name:'Lunettes de soleil',need:0},
+  {id:'a5',name:'Chat golfeur',     need:3},
+  {id:'a6',name:'Balle disco',    need:6},
+  {id:'a7',name:'Golf-bot',         need:9},
+  {id:'a8',name:'Champion couronne', need:12},
+  {id:'a9',name:'Mini Rina',        need:15}
+];
+function mascotById(id){for(var i=0;i<MASCOTS.length;i++)if(MASCOTS[i].id===id)return MASCOTS[i];return MASCOTS[0];}
+function mascotUnlocked(m){return totalStars()>=m.need;}
+function starPts(cx,cy,r){var p='';for(var i=0;i<5;i++){var a=-Math.PI/2+i*2*Math.PI/5;var a2=a+Math.PI/5;p+=(cx+Math.cos(a)*r).toFixed(1)+','+(cy+Math.sin(a)*r).toFixed(1)+' '+(cx+Math.cos(a2)*r*0.46).toFixed(1)+','+(cy+Math.sin(a2)*r*0.46).toFixed(1)+' ';}return p;}
+function ballFace(){return '<circle cx="32" cy="38" r="18" fill="#ffffff" stroke="#cfcabb" stroke-width="2"/>'+
+  '<circle cx="24" cy="34" r="1.5" fill="#ddd7c6"/><circle cx="40" cy="34" r="1.5" fill="#ddd7c6"/><circle cx="32" cy="47" r="1.5" fill="#ddd7c6"/>'+
+  '<circle cx="27" cy="39" r="2.3" fill="#2a2a2a"/><circle cx="37" cy="39" r="2.3" fill="#2a2a2a"/>'+
+  '<path d="M27 45 Q32 49 37 45" stroke="#2a2a2a" stroke-width="2" fill="none" stroke-linecap="round"/>';}
+function cap(c){return '<path d="M15 33 Q32 11 49 33 Z" fill="'+c+'"/>'+'<path d="M15 33 Q7 34 6 39 L20 35 Z" fill="'+c+'"/>'+'<circle cx="32" cy="15" r="2.3" fill="'+c+'" stroke="#00000022"/>';}
+function catFace(){return '<path d="M17 27 L23 40 L15 38 Z" fill="#f6a13c"/><path d="M47 27 L41 40 L49 38 Z" fill="#f6a13c"/>'+
+  '<circle cx="32" cy="40" r="17" fill="#f7b25a"/>'+
+  '<circle cx="26" cy="39" r="2.3" fill="#2a2a2a"/><circle cx="38" cy="39" r="2.3" fill="#2a2a2a"/>'+
+  '<path d="M30 45 Q32 47 34 45" stroke="#2a2a2a" stroke-width="1.6" fill="none"/>'+
+  '<g stroke="#2a2a2a" stroke-width="1"><line x1="19" y1="43" x2="10" y2="42"/><line x1="19" y1="45" x2="10" y2="47"/><line x1="45" y1="43" x2="54" y2="42"/><line x1="45" y1="45" x2="54" y2="47"/></g>'+
+  '<path d="M21 31 Q32 18 43 31 Z" fill="#2e9e5b"/>';}
+function robotFace(){return '<rect x="17" y="27" width="30" height="27" rx="7" fill="#a7bccf" stroke="#6b7f95" stroke-width="2"/>'+
+  '<rect x="22" y="34" width="8" height="8" rx="2" fill="#1f6feb"/><rect x="34" y="34" width="8" height="8" rx="2" fill="#1f6feb"/>'+
+  '<rect x="25" y="47" width="14" height="3" rx="1.5" fill="#5a6b7d"/>'+
+  '<line x1="32" y1="27" x2="32" y2="19" stroke="#6b7f95" stroke-width="2"/><circle cx="32" cy="17" r="3" fill="#c81d25"/>';}
+function crown(){return '<path d="M18 27 L24 17 L32 25 L40 17 L46 27 Z" fill="#ffcf3f" stroke="#d9a400" stroke-width="1.5"/><rect x="18" y="26" width="28" height="4" rx="1" fill="#ffcf3f"/>';}
+function pandaParts(cx,cy,r,mood){
+  var earR=r*0.34, s='';
+  s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#22242b"/>';
+  s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#22242b"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#ffffff" stroke="#e6e6e6" stroke-width="1"/>';
+  s+='<ellipse cx="'+(cx-r*0.42)+'" cy="'+(cy-r*0.05)+'" rx="'+(r*0.30)+'" ry="'+(r*0.37)+'" fill="#22242b" transform="rotate(-18 '+(cx-r*0.42)+' '+(cy-r*0.05)+')"/>';
+  s+='<ellipse cx="'+(cx+r*0.42)+'" cy="'+(cy-r*0.05)+'" rx="'+(r*0.30)+'" ry="'+(r*0.37)+'" fill="#22242b" transform="rotate(18 '+(cx+r*0.42)+' '+(cy-r*0.05)+')"/>';
+  var eyeY=cy-r*0.05;
+  if(mood==='sad'){
+    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.37)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#22242b"/>';
+    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.43)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#22242b"/>';
+  } else {
+    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#22242b"/>';
+    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#22242b"/>';
+  }
+  s+='<ellipse cx="'+cx+'" cy="'+(cy+r*0.2)+'" rx="'+(r*0.13)+'" ry="'+(r*0.10)+'" fill="#22242b"/>';
+  if(mood==='happy'){
+    s+='<path d="M'+(cx-r*0.24)+' '+(cy+r*0.36)+' Q'+cx+' '+(cy+r*0.62)+' '+(cx+r*0.24)+' '+(cy+r*0.36)+'" stroke="#22242b" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
+  } else if(mood==='sad'){
+    s+='<path d="M'+(cx-r*0.18)+' '+(cy+r*0.44)+' Q'+cx+' '+(cy+r*0.28)+' '+(cx+r*0.18)+' '+(cy+r*0.44)+'" stroke="#22242b" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
+  } else {
+    s+='<line x1="'+(cx-r*0.16)+'" y1="'+(cy+r*0.36)+'" x2="'+(cx+r*0.16)+'" y2="'+(cy+r*0.36)+'" stroke="#22242b" stroke-width="'+(r*0.065)+'" stroke-linecap="round"/>';
+  }
+  return s;
+}
+function avatarSVG(id,size){
+  size=size||64; var inner;
+  if(id==='a1') inner=ballFace()+cap('#2e9e5b');
+  else if(id==='a2') inner=ballFace()+cap('#c81d25');
+  else if(id==='a3') inner=ballFace()+cap('#eab308');
+  else if(id==='a4') inner=ballFace()+cap('#1f6feb')+'<rect x="21" y="36" width="22" height="7" rx="3.5" fill="#2a2a2a" opacity=".9"/>';
+  else if(id==='a5') inner=catFace();
+  else if(id==='a6') inner=ballFace()+cap('#8b5cf6')+'<g fill="#ffd54d"><polygon points="'+starPts(15,18,5)+'"/><polygon points="'+starPts(49,20,5)+'"/></g>';
+  else if(id==='a7') inner=robotFace();
+  else if(id==='a8') inner=ballFace()+crown();
+  else if(id==='a9') inner=pandaParts(32,36,22,'happy');
+  else inner=ballFace()+cap('#2e9e5b');
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="34" r="30" fill="#eaf7e1"/>'+inner+'</svg>';
+}
+function starSVG(filled,size,pop){size=size||18;var c=filled?'#ffcf3f':'#eadfc2',s=filled?'#e0a800':'#d6cba8';return '<svg class="'+(pop?'starpop':'')+'" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="'+starPts(12,12,10)+'" fill="'+c+'" stroke="'+s+'" stroke-width="1"/></svg>';}
+function starRow(n){var h='';for(var i=0;i<3;i++)h+=starSVG(i<n,15,false);return h;}
+function miniFlag(color){return '<svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true"><ellipse cx="8" cy="33" rx="6" ry="2" fill="#000" opacity=".12"/><line x1="8" y1="4" x2="8" y2="33" stroke="#20301f" stroke-width="2.4"/><path d="M8 4 L26 9 L8 15 Z" fill="'+color+'" stroke="#20301f" stroke-width="1"/></svg>';}
+function lockSVG(c){return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="'+(c||'#7a6a3a')+'" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';}
+
+/* panda coach illustre, avec bulle de dialogue optionnelle */
+function pandaCoach(mood,size,text,extraCls){
+  size=size||74;
+  var r=size*0.30, cx=size/2, cy=size*0.42;
+  var extra='';
+  if(mood==='happy'){
+    extra='<g transform="translate('+(cx+r*0.95)+','+(cy+r*0.2)+') rotate(-18)"><rect x="-3" y="-34" width="6" height="34" rx="3" fill="#8a5a2a"/><ellipse cx="0" cy="-38" rx="8" ry="5" fill="#e9e4d6" stroke="#c9c2ac"/></g>'+
+      '<g fill="#ffd23f"><polygon points="'+starPts(size*0.14,size*0.16,4)+'"/><polygon points="'+starPts(size*0.9,size*0.1,3.4)+'"/></g>';
+  } else if(mood==='sad'){
+    extra='<path d="M'+(cx+r*0.8)+' '+(cy-r*0.6)+' q4 6 0 11" stroke="#7fd0ff" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  }
+  var body='<ellipse cx="'+cx+'" cy="'+(cy+r*1.62)+'" rx="'+(r*0.92)+'" ry="'+(r*0.62)+'" fill="#ffffff" stroke="#e6e6e6"/>'+
+    '<ellipse cx="'+(cx-r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#22242b"/>'+
+    '<ellipse cx="'+(cx+r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#22242b"/>'+
+    '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.7)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="#7fd1a3" stroke="#5cb84a"/>';
+  var mk='<svg width="'+size+'" height="'+(size*1.35)+'" viewBox="0 0 '+size+' '+(size*1.35)+'" xmlns="http://www.w3.org/2000/svg">'+
+    body+pandaParts(cx,cy,r,mood==='sad'?'sad':(mood==='happy'?'happy':'neutral'))+extra+'</svg>';
+  var cls='rina'+(mood==='happy'?' happy':(mood==='sad'?' sad':''))+(extraCls?' '+extraCls:'');
+  var html='<div class="'+cls+'">'+mk+'</div>';
+  if(text) html='<div class="rina-wrap">'+html+'<div class="bubble">'+text+'</div></div>';
+  return html;
+}
+
+/* decor de parcours (banniere animee) */
+function decorBanner(){
+  return '<div class="decor"><svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice" width="100%" height="120" xmlns="http://www.w3.org/2000/svg">'+
+    '<defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ed4ff"/><stop offset="1" stop-color="#dff3e8"/></linearGradient></defs>'+
+    '<rect width="400" height="120" fill="url(#skyg)"/>'+
+    '<circle cx="334" cy="30" r="16" fill="#ffe08a"/>'+
+    '<g fill="#ffffff" opacity=".85"><ellipse cx="90" cy="34" rx="20" ry="10"/><ellipse cx="110" cy="30" rx="16" ry="9"/></g>'+
+    '<path d="M0 88 Q100 60 200 84 T400 80 L400 120 L0 120 Z" fill="#a7d977"/>'+
+    '<path d="M0 102 Q120 82 260 100 T400 98 L400 120 L0 120 Z" fill="#7cc255"/>'+
+    '<g class="flagwig">'+flag(56,100)+'</g><g class="flagwig">'+flag(300,104)+'</g>'+
+    '<circle cx="150" cy="112" r="4" fill="#fff" stroke="#cfcabb"/>'+
+  '</svg></div>';
+}
+
+/* ============================================================
+   DOM racine
+   ============================================================ */
+var view=document.getElementById('view');
+var progWrap=document.getElementById('prog');
+var progTxt=document.getElementById('progtxt');
+var progBar=document.getElementById('progbar');
+function hideProg(){progWrap.style.display='none';}
+function showProg(){progWrap.style.display='block';}
+function setView(html){ view.innerHTML='<div class="fadein">'+html+'</div>'; }
+
+document.getElementById('mutebtn').onclick=function(){
+  ensureAudio(); profile.muted=!profile.muted; persist(); updateMuteBtn();
+  if(!profile.muted) sndClick();
+};
+
+/* ============================================================
+   ECRAN PROFIL
+   ============================================================ */
+var pendingAvatar='a1';
+function screenProfile(){
+  hideProg();
+  pendingAvatar=profile.avatar||'a1';
+  var grid='';
+  for(var i=0;i<MASCOTS.length;i++){
+    var m=MASCOTS[i], unlocked=mascotUnlocked(m), selCls=(m.id===pendingAvatar?' sel':'');
+    if(unlocked){
+      grid+='<button class="avataropt'+selCls+'" data-av="'+m.id+'">'+avatarSVG(m.id,54)+'</button>';
+    } else {
+      grid+='<div class="avataropt locked">'+avatarSVG(m.id,54)+'<div class="lock">'+lockSVG()+'<span>'+m.need+' etoiles</span></div></div>';
+    }
+  }
+  setView(
+    '<div class="body">'+decorBanner()+'<div class="pad profile">'+
+      '<h1>Cree ton golfeur</h1>'+
+      pandaCoach('happy',70,'Salut, moi c\'est <b>Rina</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?')+
+      '<label class="lbl">Ton prenom</label>'+
+      '<input id="pname" class="nameinput" maxlength="14" placeholder="Ecris ton prenom" value="'+esc(profile.name)+'">'+
+      '<label class="lbl">Choisis ton avatar de golfeur</label>'+
+      '<div class="avatargrid" id="ag">'+grid+'</div>'+
+      '<p class="subhead" style="margin-top:10px">D\'autres avatars se debloquent en gagnant des etoiles !</p>'+
+      '<button class="btn big" id="go">C\'est parti !</button>'+
+    '</div></div>'
+  );
+  var opts=view.querySelectorAll('.avataropt[data-av]');
+  for(var k=0;k<opts.length;k++){opts[k].onclick=function(){
+    sndClick();
+    pendingAvatar=this.getAttribute('data-av');
+    var all=view.querySelectorAll('.avataropt');
+    for(var j=0;j<all.length;j++)all[j].classList.remove('sel');
+    this.classList.add('sel');
+  };}
+  document.getElementById('go').onclick=function(){
+    var v=(document.getElementById('pname').value||'').trim();
+    if(!v){ var el=document.getElementById('pname'); el.focus(); el.classList.add('shake'); setTimeout(function(){el.classList.remove('shake');},450); return; }
+    ensureAudio();
+    profile.name=v; profile.avatar=pendingAvatar; persist(); sndGood(); screenHome();
+  };
+}
+
+/* ============================================================
+   ECRAN ACCUEIL (carte des etapes)
+   ============================================================ */
+function nextStageToPlay(){
+  for(var i=0;i<FLAG_ORDER.length;i++){var f=FLAG_ORDER[i]; if(stageUnlocked(f) && (profile.stars[f]||0)<3) return f;}
+  return null;
+}
+function screenHome(){
+  hideProg();
+  var next=nextStageToPlay();
+  var rows='';
+  for(var i=0;i<FLAG_ORDER.length;i++){
+    var f=FLAG_ORDER[i], L=FLAGS[f], unlocked=stageUnlocked(f);
+    var rec=profile.best[f]?(' &middot; record '+profile.best[f]+'/5'):'';
+    var stateCls=unlocked?'':' locked'; if(unlocked && f===next) stateCls+=' next';
+    var node='<div class="node" style="background:'+(unlocked?L.grad:'linear-gradient(135deg,#cfd6d0,#a9b3ac)')+'">'+
+        (unlocked?miniFlag('#ffffff'):'')+
+      '</div>';
+    if(!unlocked){
+      node='<div class="node" style="background:linear-gradient(135deg,#cfd6d0,#a9b3ac)">'+
+        '<div class="lockbadge">'+lockSVG('#fff')+'</div></div>';
+    }
+    rows+='<div class="stage'+stateCls+'" data-flag="'+f+'" data-unlocked="'+(unlocked?1:0)+'">'+
+      node+
+      '<div class="sinfo"><b>'+L.name+'</b><span>'+(unlocked?L.sub+rec:'Gagne 1 etoile a l\'etape precedente')+'</span>'+
+      (unlocked?'<div class="sstars">'+starRow(profile.stars[f]||0)+'</div>':'')+
+      '</div></div>';
+  }
+  var mixOn=mixUnlocked();
+  var pandaMsg = next
+    ? 'Direction le <b>'+FLAGS[next].name.toLowerCase()+'</b> ! Tu es pret ?'
+    : 'Bravo, tu as debloque toutes les etapes ! Tente le Grand Melange.';
+  setView(
+    '<div class="body">'+decorBanner()+'<div class="pad home">'+
+      '<div class="playercard"><div class="pc-av">'+avatarSVG(profile.avatar,52)+'</div>'+
+        '<div class="pc-txt"><b>'+esc(profile.name)+'</b><span>'+rankName()+'</span></div>'+
+        '<div class="pc-stars">'+starSVG(true,18)+totalStars()+' / 15</div></div>'+
+      pandaCoach(next?'happy':'happy',56,pandaMsg)+
+      '<div class="sectitle">Ton parcours en 5 etapes</div>'+
+      '<div class="roadmap">'+rows+'</div>'+
+      '<button class="mixcard" id="mix" '+(mixOn?'':'disabled')+'>'+
+        '<span style="font-size:26px">'+(mixOn?'&#127942;':'&#128274;')+'</span>'+
+        '<span class="mixtxt">Grand melange<span>'+(mixOn?'Toutes les etapes melangees - le defi ultime !':'Debloque en reussissant les 5 etapes')+'</span></span>'+
+      '</button>'+
+      '<div class="homebtns"><button class="btn orange big" id="coll">Mes avatars</button>'+
+      '<button class="btn ghost big" id="edit">Modifier mon profil</button></div>'+
+    '</div></div>'
+  );
+  var ms=view.querySelectorAll('.stage[data-unlocked="1"]');
+  for(var k=0;k<ms.length;k++){ms[k].onclick=function(){sndClick();startRound(this.getAttribute('data-flag'));};}
+  var locked=view.querySelectorAll('.stage.locked');
+  for(var k2=0;k2<locked.length;k2++){locked[k2].onclick=function(){doShake();};}
+  document.getElementById('mix').onclick=function(){ if(mixOn){sndClick();startRound('all');} else { doShake(); } };
+  document.getElementById('coll').onclick=function(){sndClick();screenCollection();};
+  document.getElementById('edit').onclick=function(){sndClick();screenProfile();};
+}
+
+/* ============================================================
+   ECRAN AVATARS
+   ============================================================ */
+function screenCollection(){
+  hideProg();
+  var grid='';
+  for(var i=0;i<MASCOTS.length;i++){
+    var m=MASCOTS[i], unlocked=mascotUnlocked(m), sel=(m.id===profile.avatar);
+    if(unlocked){
+      grid+='<button class="mascot'+(sel?' sel':'')+'" data-av="'+m.id+'">'+avatarSVG(m.id,46)+
+        '<div class="mtx"><b>'+m.name+'</b><span>'+(sel?'Equipe':'Toucher pour equiper')+'</span></div></button>';
+    } else {
+      grid+='<div class="mascot locked">'+avatarSVG(m.id,46)+'<div class="mtx"><b>'+m.name+'</b><span>&nbsp;</span></div>'+
+        '<div class="mlock">'+lockSVG()+m.need+' etoiles</div></div>';
+    }
+  }
+  setView(
+    '<div class="body">'+decorBanner()+'<div class="pad collection">'+
+      '<h1>Mes avatars</h1>'+
+      pandaCoach('happy',56,'Tu as '+totalStars()+' / 15 etoiles. Continue a jouer pour tout debloquer !')+
+      '<div class="mascotgrid">'+grid+'</div>'+
+      '<button class="btn ghost big" id="back" style="margin-top:16px">Retour</button>'+
+    '</div></div>'
+  );
+  var ms=view.querySelectorAll('.mascot[data-av]');
+  for(var k=0;k<ms.length;k++){ms[k].onclick=function(){sndClick();profile.avatar=this.getAttribute('data-av');persist();screenCollection();};}
+  document.getElementById('back').onclick=function(){sndClick();screenHome();};
+}
+
+/* ============================================================
+   JEU
+   ============================================================ */
+function startRound(flag){
+  curFlag=flag;
+  order=buildRound(flag);
+  ROUND=order.length; current=0; score=0; results=[]; streak=0; maxStreak=0;
+  bonusQ=pickBonus();
+  showProg();
+  renderQuestion();
+}
+function playHeader(){
+  return '<div class="playbar"><div class="pb-av">'+avatarSVG(profile.avatar,30)+'</div>'+
+    '<div class="pb-name">'+esc(profile.name)+'</div>'+
+    '<div class="pb-score">Score '+score+'</div>'+
+    (streak>=2?'<div class="pb-streak">&#128293; Serie x'+streak+'</div>':'')+'</div>';
+}
+function flagBadge(){
+  if(curFlag==='all')return '<span class="leveldot"><i style="background:linear-gradient(90deg,#2e9e5b,#c81d25,#1f6feb,#eab308,#dfe3e0)"></i>Grand melange</span>';
+  var L=FLAGS[curFlag];return '<span class="leveldot"><i style="background:'+L.color+'"></i>'+L.name+'</span>';
+}
+function renderQuestion(){
+  answered=false;
+  var qd=order[current];
+  progTxt.textContent='Question '+(current+1)+' / '+ROUND;
+  progBar.style.width=(current/ROUND*100)+'%';
+  var idx=shuffle([0,1,2,3].slice(0,qd.choices.length));
+  var letters=['A','B','C','D'], ch='';
+  for(var i=0;i<idx.length;i++){var oi=idx[i];ch+='<button class="choice" data-oi="'+oi+'"><span class="letter">'+letters[i]+'</span><span>'+qd.choices[oi]+'</span></button>';}
+  var refBadge=qd.ref?'<span class="badge ref">'+qd.ref+'</span>':'';
+  setView(
+    '<div class="pad">'+playHeader()+
+    '<div class="meta"><span class="badge theme">'+qd.theme+'</span>'+refBadge+flagBadge()+'</div>'+
+    (qd.scene||'')+
+    '<div class="qtext">'+qd.q+'</div>'+
+    '<div class="choices">'+ch+'</div>'+
+    '<div class="tools"><button class="hintbtn" id="hintbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10c.7.7 1 1.5 1 2h6c0-.5.3-1.3 1-2a6 6 0 0 0-4-10z"/></svg>Demande un tuyau a Rina</button></div>'+
+    '<div class="hintzone" id="hintzone"></div>'+
+    '<div class="explain" id="explain"><div class="ebadge"></div><div class="ebubble"><b id="verdict"></b><span id="exptxt"></span></div></div>'+
+    '<div class="nextrow" id="nextrow"><button class="btn" id="nextbtn"></button></div></div>'
+  );
+  var btns=view.querySelectorAll('.choice');
+  for(var b=0;b<btns.length;b++)btns[b].onclick=onAnswer;
+  document.getElementById('hintbtn').onclick=function(){
+    sndClick();
+    document.getElementById('hintzone').innerHTML=pandaCoach('happy',52,qd.hint);
+    document.getElementById('hintzone').classList.add('show');
+    this.style.opacity='.5'; this.disabled=true;
+  };
+}
+function onAnswer(){
+  if(answered)return; answered=true;
+  var qd=order[current];
+  var chosen=parseInt(this.getAttribute('data-oi'),10);
+  var good=(chosen===qd.correct);
+  if(good)score++;
+  results.push({ok:good,theme:qd.theme});
+  var btns=view.querySelectorAll('.choice');
+  for(var i=0;i<btns.length;i++){var oi=parseInt(btns[i].getAttribute('data-oi'),10);btns[i].setAttribute('disabled','disabled');if(oi===qd.correct)btns[i].className='choice correct';else if(btns[i]===this)btns[i].className='choice wrong';}
+  var exp=document.getElementById('explain'); exp.className='explain show '+(good?'good':'bad');
+  var vtxt;
+  if(good){streak++;if(streak>maxStreak)maxStreak=streak;celebrate();sndGood();vtxt=pick(GOOD);if(streak>=2)vtxt+=' <span class="pb-streak">&#128293; x'+streak+'</span>';}
+  else{streak=0;doShake();sndBad();vtxt=pick(BAD);}
+  exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+pandaCoach(good?'happy':'sad',52)+'</div>';
+  document.getElementById('verdict').innerHTML=vtxt;
+  document.getElementById('exptxt').textContent=qd.explain;
+  document.getElementById('nextrow').classList.add('show');
+  var nb=document.getElementById('nextbtn');
+  var last=(current+1>=ROUND);
+  nb.textContent=last?(bonusQ?'Question bonus de Rina':'Mon resultat'):'Question suivante';
+  nb.onclick=function(){ sndClick(); if(!last){current++;renderQuestion();} else if(bonusQ){renderBonus();} else {resultScreen();} };
+}
+function renderBonus(){
+  var qd=bonusQ;
+  progTxt.textContent='Bonus de Rina'; progBar.style.width='100%';
+  var idx=shuffle([0,1,2,3].slice(0,qd.choices.length)), letters=['A','B','C','D'], ch='';
+  for(var i=0;i<idx.length;i++){var oi=idx[i];ch+='<button class="choice" data-oi="'+oi+'"><span class="letter">'+letters[i]+'</span><span>'+qd.choices[oi]+'</span></button>';}
+  setView(
+    '<div class="pad">'+playHeader()+
+    '<div class="meta"><span class="badge theme" style="background:#8a6d1f">Bonus</span><span class="badge ref">Culture golf</span><span class="leveldot"><i style="background:#8a6d1f"></i>Pour le fun</span></div>'+
+    pandaCoach('happy',54,'Celle-la, c\'est pour le plaisir, elle ne compte pas dans ton score !')+
+    '<div class="qtext">'+qd.q+'</div>'+
+    '<div class="choices">'+ch+'</div>'+
+    '<div class="explain" id="explain"><div class="ebadge"></div><div class="ebubble"><b id="verdict"></b><span id="exptxt"></span></div></div>'+
+    '<div class="nextrow" id="nextrow"><button class="btn" id="nextbtn">Mon resultat</button></div></div>'
+  );
+  var btns=view.querySelectorAll('.choice');
+  for(var b=0;b<btns.length;b++)btns[b].onclick=onBonusAnswer;
+  document.getElementById('nextbtn').onclick=function(){sndClick();resultScreen();};
+}
+function onBonusAnswer(){
+  var qd=bonusQ;
+  var chosen=parseInt(this.getAttribute('data-oi'),10), good=(chosen===qd.correct);
+  var btns=view.querySelectorAll('.choice');
+  for(var i=0;i<btns.length;i++){var oi=parseInt(btns[i].getAttribute('data-oi'),10);btns[i].setAttribute('disabled','disabled');if(oi===qd.correct)btns[i].className='choice correct';else if(btns[i]===this)btns[i].className='choice wrong';}
+  var exp=document.getElementById('explain'); exp.className='explain show '+(good?'good':'bad');
+  if(good){celebrate();sndGood();} else {doShake();sndBad();}
+  exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+pandaCoach(good?'happy':'sad',52)+'</div>';
+  document.getElementById('verdict').textContent=good?'Un vrai champion de la culture golf !':'Pas grave, c\'etait juste pour le fun.';
+  document.getElementById('exptxt').textContent=qd.explain;
+  document.getElementById('nextrow').classList.add('show');
+}
+
+/* ============================================================
+   RESULTAT + ETOILES + SAUVEGARDE
+   ============================================================ */
+function starsFromScore(s,total){ if(s>=total)return 3; if(s>=total-1)return 2; if(s>=Math.ceil(total*0.6))return 1; return 0; }
+function animateCount(el,to,dur){
+  if(reduceMotion){ el.textContent=to; return; }
+  var t0=performance.now();
+  function step(t){
+    var p=Math.min(1,(t-t0)/dur);
+    el.textContent=Math.round(p*to);
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function resultScreen(){
+  progTxt.textContent='Partie terminee'; progBar.style.width='100%';
+  var earned=starsFromScore(score,ROUND);
+  var unlockMsg='';
+  if(curFlag!=='all'){
+    var before=totalStars();
+    profile.played=(profile.played||0)+1;
+    if(score>(profile.best[curFlag]||0)) profile.best[curFlag]=score;
+    if(earned>(profile.stars[curFlag]||0)) profile.stars[curFlag]=earned;
+    var after=totalStars();
+    for(var i=0;i<MASCOTS.length;i++){ if(MASCOTS[i].need>before && MASCOTS[i].need<=after){ unlockMsg='Nouvel avatar debloque : '+MASCOTS[i].name+' !'; } }
+    var idxFlag=FLAG_ORDER.indexOf(curFlag);
+    if(earned>=1 && idxFlag>=0 && idxFlag<FLAG_ORDER.length-1){
+      var nextF=FLAG_ORDER[idxFlag+1];
+      if((before<1 || (profile.stars[curFlag]===earned && earned===1)) && stageUnlocked(nextF) && !unlockMsg){
+        /* etape suivante deverrouillee (informatif, pas bloquant si deja debloquee) */
+      }
+    }
+    persist();
+  }
+  var starsHtml='';
+  for(var s=0;s<3;s++)starsHtml+=starSVG(s<earned,34,s<earned);
+  var msg,sub,mood;
+  if(score===ROUND){msg='Sans-faute total !';sub='Parfait du debut a la fin. Rina applaudit tres fort !';mood='happy';celebrate(true);sndStar();}
+  else if(earned===2){msg='Superbe partie !';sub='Il ne manque presque rien pour le sans-faute.';mood='happy';celebrate();sndStar();}
+  else if(earned===1){msg='Bien joue !';sub='Continue a t\'entrainer pour decrocher les 3 etoiles.';mood='happy';}
+  else {msg='On continue de s\'entrainer.';sub='Personne ne reussit du premier coup. Rina croit en toi, on retente !';mood='sad';}
+  var rows='';
+  for(var r=0;r<results.length;r++){rows+='<div class="row"><div class="n">'+(r+1)+'</div><div class="t">'+results[r].theme+'</div><div class="m '+(results[r].ok?'y':'x')+'">'+(results[r].ok?'&#10003;':'&#10007;')+'</div></div>';}
+  var lvl=(curFlag==='all')?'Grand melange':FLAGS[curFlag].name;
+  var bestLine=(maxStreak>=2)?'<div style="text-align:center"><span class="bestrow">&#128293; Meilleure serie : '+maxStreak+' d\'affilee</span></div>':'';
+  var unlockLine=unlockMsg?'<div class="unlock">'+starSVG(true,18)+unlockMsg+'</div>':'';
+  var starBlock=(curFlag!=='all')?'<div class="starsbig">'+starsHtml+'</div>':'';
+  setView(
+    '<div class="pad result"><h2>'+msg+'</h2>'+
+    '<div class="rina-wrap center">'+pandaCoach(mood,84)+'</div>'+
+    starBlock+
+    '<div class="scorebig"><span id="scnum">0</span><small>/'+ROUND+'</small></div>'+
+    '<div class="verdict">'+lvl+' &middot; '+sub+'</div>'+
+    unlockLine+bestLine+
+    '<div class="scorecard">'+rows+'</div>'+
+    '<button class="btn big" id="again">Rejouer cette etape</button>'+
+    '<button class="btn ghost big" id="home" style="margin-top:10px">Retour a l\'academie</button>'+
+    '<div class="footer">Un jeu imagine avec Coach Rina, pour progresser sur les regles et l\'etiquette du golf.<br>Inspire du programme des Drapeaux ffgolf / PGA France et des Regles du Golf. Outil de revision.</div></div>'
+  );
+  animateCount(document.getElementById('scnum'),score,700);
+  document.getElementById('again').onclick=function(){sndClick();startRound(curFlag);};
+  document.getElementById('home').onclick=function(){sndClick();screenHome();};
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function boot(){
+  var s=loadSave();
+  if(s && s.name){ profile=s;
+    if(!profile.stars)profile.stars={vert:0,rouge:0,bleu:0,jaune:0,blanc:0};
+    if(!profile.best)profile.best={vert:0,rouge:0,bleu:0,jaune:0,blanc:0};
+    if(typeof profile.muted!=='boolean')profile.muted=false;
+    updateMuteBtn();
+    screenHome();
+  } else { profile=blankProfile(); updateMuteBtn(); screenProfile(); }
+}
+boot();
+
+</script>
+</body>
+</html>
