@@ -1208,12 +1208,13 @@ function crown(){return '<path d="M18 27 L24 17 L32 25 L40 17 L46 27 Z" fill="#f
 /* --- personnages invites : Ace le lion, Milo le renard, Nova l'aigle --- */
 function lionFace(){
   var pts=[[54,34],[47,19],[32,12],[17,19],[10,34],[17,49],[32,56],[47,49]], mane='';
-  for(var i=0;i<pts.length;i++){mane+='<circle cx="'+pts[i][0]+'" cy="'+pts[i][1]+'" r="7" fill="#d9791f"/>';}
+  for(var i=0;i<pts.length;i++){mane+='<circle cx="'+pts[i][0]+'" cy="'+pts[i][1]+'" r="7" fill="#c8461f"/>';}
   return mane+
     '<circle cx="32" cy="36" r="16" fill="#f6c35c"/>'+
     '<circle cx="26" cy="34" r="2.3" fill="#2a1a08"/><circle cx="38" cy="34" r="2.3" fill="#2a1a08"/>'+
     '<ellipse cx="32" cy="40" rx="2.6" ry="2" fill="#6b3a12"/>'+
-    '<path d="M29 44 Q32 47 35 44" stroke="#2a1a08" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    '<path d="M29 44 Q32 47 35 44" stroke="#2a1a08" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+    '<polygon points="'+starPts(50,50,5)+'" fill="#ffd23f" stroke="#c9a227" stroke-width="1"/>';
 }
 function foxFace(){return '<path d="M14 22 L24 38 L10 36 Z" fill="#e8792f"/><path d="M50 22 L40 38 L54 36 Z" fill="#e8792f"/>'+
   '<path d="M17 25 L22 34 L14 33 Z" fill="#fff" opacity=".85"/><path d="M47 25 L42 34 L50 33 Z" fill="#fff" opacity=".85"/>'+
@@ -1221,14 +1222,17 @@ function foxFace(){return '<path d="M14 22 L24 38 L10 36 Z" fill="#e8792f"/><pat
   '<path d="M19 46 Q32 55 45 46 Q32 50 19 46 Z" fill="#fff"/>'+
   '<circle cx="25" cy="38" r="2.3" fill="#2a1a08"/><circle cx="39" cy="38" r="2.3" fill="#2a1a08"/>'+
   '<path d="M30 46 L32 49 L34 46 Z" fill="#2a1a08"/>'+
-  '<path d="M26 56 L32 52 L38 56 L32 60 Z" fill="#20232a"/><circle cx="32" cy="56" r="1.8" fill="#eab308"/>';}
-function eagleFace(){return '<circle cx="32" cy="40" r="19" fill="#8a6a4e"/>'+
+  '<path d="M26 56 L32 52 L38 56 L32 60 Z" fill="#20232a"/><circle cx="32" cy="56" r="1.8" fill="#eab308"/>'+
+  '<line x1="48" y1="14" x2="52" y2="24" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>'+
+  '<circle cx="52" cy="26" r="5" fill="#ffd23f" stroke="#c9a227" stroke-width="1.5"/>';}
+function eagleFace(){return '<circle cx="32" cy="40" r="19" fill="#22a355"/>'+
+  '<ellipse cx="32" cy="48" rx="9" ry="5" fill="#ff9d3f"/>'+
   '<circle cx="32" cy="30" r="15" fill="#f7f4ec"/>'+
   '<path d="M20 20 L26 12 L28 22 Z" fill="#f7f4ec"/><path d="M44 20 L38 12 L36 22 Z" fill="#f7f4ec"/>'+
   '<path d="M22 27 Q26 22 30 27" stroke="#2a1a08" stroke-width="2" fill="none" stroke-linecap="round"/>'+
   '<path d="M34 27 Q38 22 42 27" stroke="#2a1a08" stroke-width="2" fill="none" stroke-linecap="round"/>'+
   '<circle cx="26" cy="31" r="2.4" fill="#2a1a08"/><circle cx="38" cy="31" r="2.4" fill="#2a1a08"/>'+
-  '<path d="M27 37 L32 44 L37 37 Z" fill="#eab308" stroke="#a97c06" stroke-width="1"/>';}
+  '<path d="M27 37 L32 44 L37 37 Z" fill="#ff9d3f" stroke="#c9711a" stroke-width="1"/>';}
 function pandaParts(cx,cy,r,mood){
   var earR=r*0.34, s='';
   s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#22242b"/>';
@@ -1277,9 +1281,9 @@ function avatarSVG(id,size){
    presentateurs des questions bonus "culture golf")
    ============================================================ */
 var GUESTS=[
-  {id:'g_ace', name:'Ace',  role:'le cogneur',     line:'Moi c\'est Ace, le roi de la longueur ! Une petite question de pro, juste pour le fun :'},
-  {id:'g_milo',name:'Milo', role:'le technicien',  line:'Milo, tout en finesse. Une petite question de culture golf :'},
-  {id:'g_nova',name:'Nova', role:'la flamboyante', line:'Nova, prete a briller ! Une question rien que pour le plaisir :'}
+  {id:'g_ace', name:'Ace',  role:'le recordman de la longueur', line:'Moi c\'est Ace ! Toujours a la recherche du prochain record de distance. Une petite question de pro, juste pour le fun :'},
+  {id:'g_milo',name:'Milo', role:'l\'elegant technicien',        line:'Milo, calme et regulier, habitue des grandes competitions par equipes. Une petite question de culture golf :'},
+  {id:'g_nova',name:'Nova', role:'la flamboyante showwoman',     line:'Nova, prete a briller sur les plus grands coups ! Une question rien que pour le plaisir :'}
 ];
 function pickGuest(){return GUESTS[Math.floor(Math.random()*GUESTS.length)];}
 function guestBubble(g,size,text){
