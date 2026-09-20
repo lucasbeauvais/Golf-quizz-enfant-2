@@ -310,11 +310,20 @@
    BRIQUES SVG (scenes de jeu)
    ============================================================ */
 var VB='0 0 400 230';
-function svg(i){return '<svg class="scene" viewBox="'+VB+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+i+'</svg>';}
-function grass(){return '<rect x="0" y="0" width="400" height="230" fill="#7cb342"/><rect x="0" y="0" width="400" height="230" fill="#000" opacity="0.03"/>';}
-function fairway(){return '<path d="M120 230 Q150 120 175 30 L245 30 Q235 130 280 230 Z" fill="#8bc34a"/>';}
-function ball(x,y){return '<ellipse cx="'+x+'" cy="'+(y+6)+'" rx="8" ry="3" fill="#000" opacity=".18"/><circle cx="'+x+'" cy="'+y+'" r="7" fill="#fff" stroke="#b7b7a6"/><circle cx="'+(x-2)+'" cy="'+(y-2)+'" r="1.4" fill="#e6e6da"/>';}
-function flag(x,y){return '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-38)+'" stroke="#e8e8e8" stroke-width="2.4"/><path d="M'+x+' '+(y-38)+' l 20 6 l -20 6 z" fill="#e0435f"/><ellipse cx="'+x+'" cy="'+(y+1)+'" rx="7" ry="3" fill="#12261a"/>';}
+var SCENE_DEFS='<defs>'+
+  '<pattern id="mow" width="34" height="230" patternUnits="userSpaceOnUse"><rect width="34" height="230" fill="#6fa83a"/><rect width="17" height="230" fill="#7cb943"/></pattern>'+
+  '<pattern id="mowGreen" width="22" height="230" patternUnits="userSpaceOnUse"><rect width="22" height="230" fill="#9ad35f"/><rect width="11" height="230" fill="#a6dd6c"/></pattern>'+
+  '<linearGradient id="waterG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a6fa8"/><stop offset=".55" stop-color="#3a95c9"/><stop offset="1" stop-color="#1a5a85"/></linearGradient>'+
+  '<linearGradient id="poleG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f4f2"/><stop offset=".5" stop-color="#c7c8ce"/><stop offset="1" stop-color="#8a8b8e"/></linearGradient>'+
+  '<linearGradient id="flagG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5c78"/><stop offset="1" stop-color="#c21138"/></linearGradient>'+
+  '<radialGradient id="sandG" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#f0e2b8"/><stop offset="1" stop-color="#d9c48f"/></radialGradient>'+
+  '<filter id="softSh" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2"/></filter>'+
+  '</defs>';
+function svg(i){return '<svg class="scene" viewBox="'+VB+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+SCENE_DEFS+i+'</svg>';}
+function grass(){return '<rect x="0" y="0" width="400" height="230" fill="url(#mow)"/><rect x="0" y="0" width="400" height="230" fill="#000" opacity="0.05"/>';}
+function fairway(){return '<path d="M120 230 Q150 120 175 30 L245 30 Q235 130 280 230 Z" fill="url(#mow)"/>';}
+function ball(x,y){return '<ellipse cx="'+x+'" cy="'+(y+2)+'" rx="8" ry="3.4" fill="#000" opacity=".3" filter="url(#softSh)"/><circle cx="'+x+'" cy="'+y+'" r="7" fill="#fff" stroke="#b7b7a6"/><circle cx="'+(x-2)+'" cy="'+(y-2)+'" r="1.4" fill="#e6e6da"/>';}
+function flag(x,y){return '<ellipse cx="'+x+'" cy="'+(y+2)+'" rx="8" ry="3.2" fill="#000" opacity=".28" filter="url(#softSh)"/><line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y-38)+'" stroke="url(#poleG)" stroke-width="2.6"/><path d="M'+x+' '+(y-38)+' l 20 6 l -20 6 z" fill="url(#flagG)"/><ellipse cx="'+x+'" cy="'+(y+1)+'" rx="7" ry="3" fill="#12261a"/>';}
 function markX(x,y){return '<g stroke="#c81d25" stroke-width="3" stroke-linecap="round"><line x1="'+(x-7)+'" y1="'+(y-7)+'" x2="'+(x+7)+'" y2="'+(y+7)+'"/><line x1="'+(x+7)+'" y1="'+(y-7)+'" x2="'+(x-7)+'" y2="'+(y+7)+'"/></g>';}
 function label(x,y,t,f){return '<text x="'+x+'" y="'+y+'" font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="'+(f||'#fff')+'" text-anchor="middle">'+t+'</text>';}
 function marker(x,y){return '<ellipse cx="'+x+'" cy="'+(y+3)+'" rx="6" ry="2" fill="#000" opacity=".15"/><circle cx="'+x+'" cy="'+y+'" r="5.5" fill="#d33" stroke="#7a1010"/><circle cx="'+x+'" cy="'+y+'" r="2" fill="#fff"/>';}
@@ -332,23 +341,23 @@ function person(x,y){return '<g stroke="#20301f" stroke-width="3" stroke-linecap
   '<line x1="'+x+'" y1="'+(y+2)+'" x2="'+(x-6)+'" y2="'+(y+14)+'"/><line x1="'+x+'" y1="'+(y+2)+'" x2="'+(x+6)+'" y2="'+(y+14)+'"/></g>';}
 
 function sceneGreen(bx,by,extra){return svg(grass()+
-  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="url(#mowGreen)"/>'+
   '<ellipse cx="200" cy="120" rx="150" ry="95" fill="none" stroke="#7cb342" stroke-width="3"/>'+
   flag(250,96)+'<circle cx="250" cy="96" r="6" fill="#12261a"/>'+(extra||'')+ball(bx,by));}
 function sceneWaterRed(bx,by,extra){return svg(grass()+fairway()+
-  '<path d="M250 40 Q360 60 355 150 Q350 220 250 215 Q300 130 250 40 Z" fill="#4fc3f7"/>'+
+  '<path d="M250 40 Q360 60 355 150 Q350 220 250 215 Q300 130 250 40 Z" fill="url(#waterG)"/>'+
   '<path d="M250 40 Q360 60 355 150 Q350 220 250 215 Q300 130 250 40 Z" fill="none" stroke="#c81d25" stroke-width="3" stroke-dasharray="9 6"/>'+
   '<g stroke="#c81d25" stroke-width="3"><line x1="252" y1="42" x2="252" y2="30"/><line x1="300" y1="118" x2="308" y2="110"/><line x1="252" y1="214" x2="252" y2="226"/></g>'+
   label(300,150,"Zone rouge","#0d3b52")+(extra||'')+(bx!==null?ball(bx,by):''));}
 function sceneWaterYellow(bx,by,extra){return svg(grass()+fairway()+
-  '<path d="M60 150 Q200 120 340 150 L340 210 Q200 185 60 210 Z" fill="#4fc3f7"/>'+
+  '<path d="M60 150 Q200 120 340 150 L340 210 Q200 185 60 210 Z" fill="url(#waterG)"/>'+
   '<path d="M60 150 Q200 120 340 150" fill="none" stroke="#f2c400" stroke-width="3" stroke-dasharray="9 6"/>'+
   '<g stroke="#e0b000" stroke-width="3"><line x1="90" y1="150" x2="90" y2="138"/><line x1="200" y1="127" x2="200" y2="115"/><line x1="310" y1="150" x2="310" y2="138"/></g>'+
   label(200,190,"Zone jaune","#5a4a00")+(extra||'')+(bx!==null?ball(bx,by):''));}
 function sceneBunker(bx,by,extra){return svg(grass()+
-  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="#e9d8a6"/>'+
+  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="url(#sandG)"/>'+
   '<ellipse cx="200" cy="150" rx="150" ry="70" fill="none" stroke="#cbb877" stroke-width="3"/>'+
-  '<ellipse cx="200" cy="60" rx="120" ry="45" fill="#aed76a"/>'+flag(210,52)+
+  '<ellipse cx="200" cy="60" rx="120" ry="45" fill="url(#mowGreen)"/>'+flag(210,52)+
   label(200,150,"Bunker","#8a6d1f")+(extra||'')+ball(bx,by));}
 function sceneTee(bx,by,extra){return svg(grass()+
   '<ellipse cx="200" cy="120" rx="140" ry="80" fill="#8bc34a"/>'+
@@ -377,25 +386,25 @@ function sceneEmbedded(bx,by){return svg(grass()+fairway()+
   '<circle cx="'+bx+'" cy="'+by+'" r="7" fill="#fff" stroke="#b7b7a6"/>'+
   label(bx,by-18,"balle enfoncee","#20301f"));}
 function sceneFairway(bx,by,extra){return svg(grass()+fairway()+
-  '<ellipse cx="210" cy="45" rx="55" ry="26" fill="#aed76a"/>'+flag(225,40)+(extra||'')+ball(bx,by));}
+  '<ellipse cx="210" cy="45" rx="55" ry="26" fill="url(#mowGreen)"/>'+flag(225,40)+(extra||'')+ball(bx,by));}
 
 /* --- scenes specifiques --- */
 function sceneSafety(){return svg(grass()+
-  '<ellipse cx="240" cy="90" rx="120" ry="58" fill="#aed76a"/>'+flag(285,78)+
+  '<ellipse cx="240" cy="90" rx="120" ry="58" fill="url(#mowGreen)"/>'+flag(285,78)+
   person(250,120)+label(250,145,"joueur devant","#20301f")+
   ball(80,180)+label(80,205,"toi","#20301f"));}
 function sceneBag(){return svg(grass()+
-  '<ellipse cx="190" cy="110" rx="120" ry="66" fill="#aed76a"/>'+flag(190,90)+'<circle cx="190" cy="90" r="6" fill="#12261a"/>'+
+  '<ellipse cx="190" cy="110" rx="120" ry="66" fill="url(#mowGreen)"/>'+flag(190,90)+'<circle cx="190" cy="90" r="6" fill="#12261a"/>'+
   '<line x1="320" y1="55" x2="366" y2="34" stroke="#20301f" stroke-width="2"/><path d="M366 34 l-9 1 l4 6 z" fill="#20301f"/>'+label(350,24,"trou suivant","#20301f")+
   bag(190,118,'#c81d25')+label(190,150,"A","#20301f")+
   bag(340,120,'#2d6a4f')+label(340,152,"B","#20301f")+
   bag(60,185,'#1f6feb')+label(60,214,"C","#20301f"));}
 function sceneOrder(){return svg(grass()+
-  '<ellipse cx="200" cy="115" rx="145" ry="82" fill="#aed76a"/>'+flag(200,95)+'<circle cx="200" cy="95" r="6" fill="#12261a"/>'+
+  '<ellipse cx="200" cy="115" rx="145" ry="82" fill="url(#mowGreen)"/>'+flag(200,95)+'<circle cx="200" cy="95" r="6" fill="#12261a"/>'+
   ball(238,122)+label(238,144,"balle A","#20301f")+
   ball(85,178)+label(85,200,"balle B","#20301f"));}
 function scenePitch(bx,by,noLabel){return svg(grass()+
-  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="url(#mowGreen)"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
   '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="#6f8f4a"/>'+
   '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="none" stroke="#4f6a32" stroke-width="1.5"/>'+
   (noLabel?'':label(bx-26,by-13,"pitch","#20301f"))+ball(bx,by));}
@@ -414,7 +423,7 @@ function sceneDivot(){return svg(grass()+fairway()+
   '<ellipse cx="248" cy="162" rx="17" ry="8" fill="none" stroke="#4f6a32" stroke-width="1"/>'+
   label(185,135,"trou","#20301f")+label(255,182,"la motte","#20301f"));}
 function sceneRake(){return svg(grass()+
-  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="#e9d8a6"/>'+
+  '<ellipse cx="200" cy="150" rx="150" ry="70" fill="url(#sandG)"/>'+
   '<ellipse cx="200" cy="150" rx="150" ry="70" fill="none" stroke="#cbb877" stroke-width="3"/>'+
   '<g stroke="#cbb877" stroke-width="2"><line x1="120" y1="138" x2="175" y2="138"/><line x1="120" y1="150" x2="175" y2="150"/><line x1="120" y1="162" x2="175" y2="162"/></g>'+
   '<line x1="248" y1="105" x2="298" y2="176" stroke="#8a5a2a" stroke-width="4"/>'+
@@ -422,7 +431,7 @@ function sceneRake(){return svg(grass()+
   '<g stroke="#8a5a2a" stroke-width="2"><line x1="290" y1="184" x2="293" y2="192"/><line x1="297" y1="180" x2="300" y2="188"/><line x1="304" y1="175" x2="307" y2="183"/><line x1="311" y1="170" x2="314" y2="178"/></g>'+
   label(150,150,"traces dans le sable","#8a6d1f"));}
 function sceneMarker(){return svg(grass()+
-  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
+  '<ellipse cx="200" cy="120" rx="150" ry="95" fill="url(#mowGreen)"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
   ball(170,150)+marker(191,155)+label(191,176,"marqueur","#20301f"));}
 
 /* ============================================================
