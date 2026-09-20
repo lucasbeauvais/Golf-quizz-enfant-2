@@ -1514,6 +1514,7 @@ function screenProfile(){
       '<div class="avatargrid" id="ag">'+grid+'</div>'+
       '<p class="subhead" style="margin-top:10px">D\'autres avatars se debloquent en gagnant des etoiles, et ton golfeur evolue avec ta progression !</p>'+
       '<button class="btn big" id="go">C\'est parti !</button>'+
+      (totalStars()>0?'<button class="btn ghost big" id="resetBtn" style="margin-top:22px;border-color:var(--ko);color:var(--ko)">Reinitialiser ma progression</button>':'')+
     '</div></div>'
   );
   var opts=view.querySelectorAll('.avataropt[data-av]');
@@ -1530,6 +1531,28 @@ function screenProfile(){
     ensureAudio();
     profile.name=v; profile.avatar=pendingAvatar; persist(); sndGood(); screenHome();
   };
+  var resetBtn=document.getElementById('resetBtn');
+  if(resetBtn){
+    var resetArmed=false, resetTimer=null;
+    resetBtn.onclick=function(){
+      sndClick();
+      if(!resetArmed){
+        resetArmed=true;
+        this.textContent='Sur de toi ? Touche encore pour tout remettre a zero';
+        var self=this;
+        resetTimer=setTimeout(function(){resetArmed=false;self.textContent='Reinitialiser ma progression';},4000);
+        return;
+      }
+      clearTimeout(resetTimer);
+      profile.stars={vert:0,rouge:0,bleu:0,jaune:0,blanc:0};
+      profile.best={vert:0,rouge:0,bleu:0,jaune:0,blanc:0};
+      profile.played=0;
+      profile.avatar='a1'; pendingAvatar='a1';
+      persist();
+      doShake();
+      screenProfile();
+    };
+  }
 }
 
 /* ============================================================
