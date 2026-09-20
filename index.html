@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237fd1a3'/%3E%3Ccircle cx='19' cy='16' r='9' fill='%2320232a'/%3E%3Ccircle cx='45' cy='16' r='9' fill='%2320232a'/%3E%3Ccircle cx='32' cy='34' r='22' fill='%23fff'/%3E%3Cellipse cx='23' cy='30' rx='7' ry='9' fill='%2320232a'/%3E%3Cellipse cx='41' cy='30' rx='7' ry='9' fill='%2320232a'/%3E%3Ccircle cx='23' cy='31' r='3' fill='%23fff'/%3E%3Ccircle cx='41' cy='31' r='3' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --panel:#1c1d1f; --panel2:#27282a; --panel3:#141415;
@@ -30,7 +30,7 @@
     padding:16px 12px 44px; position:relative; overflow-x:hidden;
     background:linear-gradient(180deg,#3a3b3c 0%, #232324 45%, #131313 100%);
   }
-  h1,h2,.brand,.scorebig{font-family:'Bangers',cursive;letter-spacing:.5px;font-weight:400}
+  h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 
   /* ===================== ANIMATED BACKGROUND (spray + skyline) ===================== */
   .bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
@@ -52,14 +52,13 @@
     position:relative;transition:background .5s ease;box-shadow:0 3px 0 #000,0 4px 12px rgba(0,0,0,.5)}
   .topbar svg.flagicon{flex:0 0 auto;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
   .topbar.topbar-light{color:#1a1a1f;box-shadow:0 3px 0 var(--outline)}
-  .topbar.topbar-light .brand{color:#1a1a1f;-webkit-text-stroke:1.5px var(--outline);text-shadow:2px 2px 0 var(--outline)}
+  .topbar.topbar-light .brand{color:#1a1a1f}
   .topbar.topbar-light .brand small{color:#1a1a1f;opacity:.75}
   .topbar.topbar-light .track{background:rgba(0,0,0,.2)}
   .topbar.topbar-light .mutebtn{color:#1a1a1f;background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.3)}
   .topbar.topbar-light svg.flagicon line{stroke:#1a1a1f}
-  .brand{font-size:23px;letter-spacing:1px;line-height:1.1;color:#eceee6;-webkit-text-stroke:1.5px var(--outline);
-    text-shadow:2px 2px 0 var(--outline)}
-  .brand small{display:block;font-family:'Rubik',sans-serif;font-size:10px;font-weight:800;opacity:.85;letter-spacing:1.4px;text-transform:uppercase;margin-top:4px;color:var(--inkSoft);-webkit-text-stroke:0}
+  .brand{font-size:19px;letter-spacing:.2px;line-height:1.15;color:#fff}
+  .brand small{display:block;font-family:'Rubik',sans-serif;font-size:10px;font-weight:700;opacity:.8;letter-spacing:1.2px;text-transform:uppercase;margin-top:4px;color:var(--inkSoft)}
   .progress{margin-left:auto;font-size:12px;text-align:right;font-weight:700}
   .track{height:7px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:6px;width:100px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
   .track > i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--pink));width:0;transition:width .4s cubic-bezier(.3,.9,.3,1);border-radius:99px}
@@ -110,7 +109,7 @@
   @media (prefers-reduced-motion: reduce){.rina,.rina.happy,.rina.sad{animation:none}}
 
   /* ===================== PROFILE ===================== */
-  .profile h1,.home h1,.collection h1{font-size:30px;margin:6px 0 4px;text-align:center;color:var(--yellow);-webkit-text-stroke:1.5px var(--outline);text-shadow:2px 2px 0 var(--outline)}
+  .profile h1,.home h1,.collection h1{font-size:22px;margin:6px 0 4px;text-align:center;color:var(--ink);font-weight:800}
   .subhead{text-align:center;font-size:13px;color:var(--inkSoft);font-weight:600;margin:0 0 14px}
   .lbl{display:block;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--inkSoft);font-weight:800;margin:16px 0 8px}
   .nameinput{width:100%;font:inherit;font-family:'Rubik',sans-serif;font-size:19px;font-weight:700;padding:14px 16px;border-radius:14px;
@@ -226,9 +225,9 @@
 
   /* ===================== RESULT ===================== */
   .result{text-align:center;padding:4px 2px}
-  .result h2{font-size:30px;margin:10px 0 4px;color:var(--yellow);-webkit-text-stroke:1.5px var(--outline);text-shadow:2px 2px 0 var(--outline)}
+  .result h2{font-size:22px;margin:10px 0 4px;color:var(--ink);font-weight:800}
   .starsbig{display:flex;justify-content:center;gap:8px;margin:12px 0 4px}
-  .scorebig{font-weight:400;font-size:52px;color:var(--green);line-height:1;margin:6px 0;-webkit-text-stroke:1.5px var(--outline);text-shadow:2px 2px 0 var(--outline)}
+  .scorebig{font-weight:800;font-size:46px;color:var(--green);line-height:1;margin:6px 0}
   .scorebig small{font-size:20px;color:var(--inkSoft);font-weight:700;-webkit-text-stroke:0;text-shadow:none}
   .verdict{font-size:14.5px;color:var(--inkSoft);max-width:430px;margin:8px auto 4px;line-height:1.55;font-weight:600}
   .unlock{margin:12px auto 2px;background:linear-gradient(120deg,#3a2f0a,#4a3c0c);border:2.5px solid var(--outline);color:var(--yellow);font-weight:800;
@@ -259,8 +258,8 @@
   .starpop{animation:pop .5s cubic-bezier(.3,1.5,.5,1) both}
   .fadein{animation:fadeInUp .35s ease both}
   @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  .pluspop{position:fixed;z-index:61;font-family:'Bangers',cursive;font-weight:400;font-size:26px;color:var(--yellow);
-    -webkit-text-stroke:1.5px var(--outline);text-shadow:2px 2px 0 var(--outline);pointer-events:none;animation:plusFloat .9s ease-out forwards}
+  .pluspop{position:fixed;z-index:61;font-family:'Rubik',sans-serif;font-weight:800;font-size:22px;color:var(--green);
+    text-shadow:0 2px 0 var(--outline);pointer-events:none;animation:plusFloat .9s ease-out forwards}
   @keyframes plusFloat{0%{opacity:0;transform:translateY(0) scale(.5) rotate(-6deg)}18%{opacity:1;transform:translateY(-8px) scale(1.2) rotate(4deg)}100%{opacity:0;transform:translateY(-52px) scale(1) rotate(0)}}
   @media (prefers-reduced-motion: reduce){.shake{animation:none}.confetti{display:none}.starpop{animation:none}.fadein{animation:none}.card{animation:none}.pluspop{display:none}}
 
@@ -381,7 +380,7 @@ function sceneCartPath(bx,by,extra){return svg(grass()+fairway()+
   '<path d="M40 0 Q120 100 60 230" fill="none" stroke="#a7a79e" stroke-width="2"/>'+
   label(75,120,"Chemin","#4a4a45")+(extra||'')+ball(bx,by));}
 function sceneGUR(bx,by,mode,extra){var z=(mode==='water')
-  ? '<ellipse cx="200" cy="130" rx="80" ry="45" fill="#7fc9e8" opacity=".85"/><ellipse cx="200" cy="130" rx="80" ry="45" fill="none" stroke="#3a8db0" stroke-width="2"/>'+label(200,133,"Eau temporaire","#0d3b52")
+  ? '<ellipse cx="200" cy="130" rx="80" ry="45" fill="#7fc9e8" opacity=".85"/><ellipse cx="200" cy="130" rx="80" ry="45" fill="none" stroke="#3a8db0" stroke-width="2"/>'+label(200,133,"Flaque","#0d3b52")
   : '<ellipse cx="200" cy="130" rx="80" ry="45" fill="#7cb342"/><ellipse cx="200" cy="130" rx="80" ry="45" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="7 5"/>'+label(200,127,"G.U.R.","#fff")+label(200,142,"terrain en reparation","#20301f");
   return svg(grass()+fairway()+z+(extra||'')+ball(bx,by));}
 function sceneEmbedded(bx,by){return svg(grass()+fairway()+
@@ -434,9 +433,9 @@ function sceneRake(){return svg(grass()+
   '<line x1="288" y1="188" x2="316" y2="164" stroke="#8a5a2a" stroke-width="4"/>'+
   '<g stroke="#8a5a2a" stroke-width="2"><line x1="290" y1="184" x2="293" y2="192"/><line x1="297" y1="180" x2="300" y2="188"/><line x1="304" y1="175" x2="307" y2="183"/><line x1="311" y1="170" x2="314" y2="178"/></g>'+
   label(150,150,"traces dans le sable","#8a6d1f"));}
-function sceneMarker(){return svg(grass()+
+function sceneMarker(noLabel){return svg(grass()+
   '<ellipse cx="200" cy="120" rx="150" ry="95" fill="url(#mowGreen)"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
-  ball(170,150)+marker(191,155)+label(191,176,"marqueur","#20301f"));}
+  ball(170,150)+marker(191,155)+(noLabel?'':label(191,176,"marqueur","#20301f")));}
 
 /* ============================================================
    BANQUE DE QUESTIONS
@@ -496,7 +495,7 @@ var BANK = [
    choices:["Je pars sans rien dire","Je les remercie (et je leur serre la main)","Je range vite mon sac","Je recompte tout"],
    correct:1,hint:"C'est une belle tradition au golf.",
    explain:"A la fin, on remercie ses partenaires et on se serre la main. C'est la politesse de fin de partie au golf."},
-  {flag:"vert",theme:"Materiel",scene:sceneMarker(),
+  {flag:"vert",theme:"Materiel",scene:sceneMarker(true),
    q:"Qu'est-ce qu'il faut toujours avoir dans sa poche pour le green ?",
    choices:["Un tee et une balle","Un releve-pitch et un marqueur","Des lunettes","Un telephone"],
    correct:1,hint:"Un pour reparer, un pour marquer la balle.",
@@ -523,7 +522,7 @@ var BANK = [
    explain:"Si un adulte te demande d'attendre, tu attends : il voit peut-etre un joueur ou un danger. La securite passe avant l'envie de jouer."},
 
   /* =======================  DRAPEAU ROUGE  ======================= */
-  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(),
+  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(true),
    q:"Ta balle est sur le green et tu veux la ramasser. Que fais-tu d'abord ?",
    choices:["Je la prends directement","Je pose un marqueur juste derriere, puis je la releve","Je la pousse du pied","Je la lance"],
    correct:1,hint:"Il faut pouvoir la remettre exactement au meme endroit.",
@@ -568,7 +567,7 @@ var BANK = [
    choices:["Au bord du green","Sur la ligne entre la balle des autres et le trou","Derriere sa propre balle","Vers le drapeau"],
    correct:1,hint:"C'est le chemin que va suivre la balle des autres.",
    explain:"On evite de marcher sur la 'ligne de putt' des autres (entre leur balle et le trou) : nos pas y laissent des marques qui devient leur balle."},
-  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(),
+  {flag:"rouge",theme:"Green & pitch",scene:sceneMarker(true),
    q:"Le marqueur, qu'est-ce que c'est ?",
    choices:["Un stylo","Un petit jeton pour marquer la place de la balle sur le green","Un club special","Un tee en metal"],
    correct:1,hint:"Souvent une petite piece ou un jeton plat.",
@@ -1420,8 +1419,8 @@ function levelBadge(n,size){
   return '<svg width="'+size+'" height="'+Math.round(size*1.08)+'" viewBox="0 0 60 65" xmlns="http://www.w3.org/2000/svg">'+
     '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#faff85"/><stop offset="1" stop-color="#d4d800"/></linearGradient></defs>'+
     '<path d="M30 2 L56 12 L56 33 Q56 53 30 63 Q4 53 4 33 L4 12 Z" fill="url(#'+gid+')" stroke="#0a0a0c" stroke-width="3.5"/>'+
-    '<text x="30" y="27" font-family="Bangers, cursive" font-size="11" font-weight="400" fill="#4a4a06" text-anchor="middle" letter-spacing="1">NIV</text>'+
-    '<text x="30" y="48" font-family="Bangers, cursive" font-size="24" font-weight="400" fill="#2a2a06" text-anchor="middle">'+n+'</text>'+
+    '<text x="30" y="26" font-family="Rubik, sans-serif" font-size="10" font-weight="800" fill="#4a4a06" text-anchor="middle" letter-spacing="1">NIV</text>'+
+    '<text x="30" y="48" font-family="Rubik, sans-serif" font-size="22" font-weight="800" fill="#2a2a06" text-anchor="middle">'+n+'</text>'+
     '</svg>';
 }
 function miniFlag(color){return '<svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true"><ellipse cx="8" cy="33" rx="6" ry="2" fill="#000" opacity=".3"/><line x1="8" y1="4" x2="8" y2="33" stroke="#0a0a0c" stroke-width="2.4"/><path d="M8 4 L26 9 L8 15 Z" fill="'+color+'" stroke="#0a0a0c" stroke-width="1"/></svg>';}
