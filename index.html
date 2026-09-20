@@ -48,7 +48,7 @@
   .card{background:var(--panel);border-radius:20px;box-shadow:0 4px 0 var(--outline),var(--shadow);overflow:hidden;border:3px solid var(--outline);
     animation:cardIn .45s cubic-bezier(.2,.9,.25,1.2)}
   @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-  .topbar{background:linear-gradient(120deg,#000 0%,#1c1d1f 55%,#000 100%);color:var(--ink);padding:13px 16px;display:flex;align-items:center;gap:10px;
+  .topbar{background:linear-gradient(120deg,#000 0%,#1c1d1f 55%,#000 100%);color:var(--ink);padding:13px 14px;display:flex;align-items:center;gap:7px;
     position:relative;transition:background .5s ease;box-shadow:0 3px 0 #000,0 4px 12px rgba(0,0,0,.5)}
   .topbar svg.flagicon{flex:0 0 auto;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
   .topbar.topbar-light{color:#1a1a1f;box-shadow:0 3px 0 var(--outline)}
@@ -57,10 +57,11 @@
   .topbar.topbar-light .track{background:rgba(0,0,0,.2)}
   .topbar.topbar-light .mutebtn{color:#1a1a1f;background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.3)}
   .topbar.topbar-light svg.flagicon line{stroke:#1a1a1f}
-  .brand{font-size:19px;letter-spacing:.2px;line-height:1.15;color:#fff}
-  .brand small{display:block;font-family:'Rubik',sans-serif;font-size:10px;font-weight:700;opacity:.8;letter-spacing:1.2px;text-transform:uppercase;margin-top:4px;color:var(--inkSoft)}
-  .progress{margin-left:auto;font-size:12px;text-align:right;font-weight:700}
-  .track{height:7px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:6px;width:100px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+  .brand{font-size:19px;letter-spacing:.2px;line-height:1.15;color:#fff;flex:1 1 auto;min-width:0}
+  .brand .brandtitle{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand small{display:block;font-family:'Rubik',sans-serif;font-size:10px;font-weight:700;opacity:.8;letter-spacing:1.2px;text-transform:uppercase;margin-top:4px;color:var(--inkSoft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .progress{margin-left:auto;font-size:12px;text-align:right;font-weight:700;flex:0 0 auto}
+  .track{height:7px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:6px;width:66px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
   .track > i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--pink));width:0;transition:width .4s cubic-bezier(.3,.9,.3,1);border-radius:99px}
   .mutebtn{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.35);
     color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -297,11 +298,14 @@
         <path d="M4 3 L22 8 L4 13 Z" fill="#ffd23f"/>
         <ellipse cx="4" cy="32" rx="4" ry="2" fill="#ffffff" opacity=".35"/>
       </svg>
-      <div class="brand">Golf Academy<small>L'aventure des drapeaux</small></div>
+      <div class="brand"><span class="brandtitle">Golf Academy</span><small>L'aventure des drapeaux</small></div>
       <div class="progress" id="prog" style="display:none">
         <span id="progtxt">Question 1 / 5</span>
         <div class="track"><i id="progbar"></i></div>
       </div>
+      <button class="mutebtn" id="quitbtn" title="Retour au menu" aria-label="Quitter le questionnaire et retourner au menu" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
       <button class="mutebtn" id="mutebtn" title="Son" aria-label="Activer ou couper le son"></button>
     </div>
     <div class="body" id="view"></div>
@@ -1449,10 +1453,16 @@ var view=document.getElementById('view');
 var progWrap=document.getElementById('prog');
 var progTxt=document.getElementById('progtxt');
 var progBar=document.getElementById('progbar');
-function hideProg(){progWrap.style.display='none';}
-function showProg(){progWrap.style.display='block';}
+function hideProg(){progWrap.style.display='none';document.getElementById('quitbtn').style.display='none';}
+function showProg(){progWrap.style.display='block';document.getElementById('quitbtn').style.display='flex';}
 function setView(html){ view.innerHTML='<div class="fadein">'+html+'</div>'; }
 
+document.getElementById('quitbtn').onclick=function(){
+  sndClick();
+  if(confirm('Quitter ce questionnaire et retourner au menu ?')){
+    screenHome();
+  }
+};
 document.getElementById('mutebtn').onclick=function(){
   ensureAudio(); profile.muted=!profile.muted; persist(); updateMuteBtn();
   if(!profile.muted) sndClick();
