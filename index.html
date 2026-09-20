@@ -234,6 +234,10 @@
   .unlock{margin:12px auto 2px;background:linear-gradient(120deg,#3a2f0a,#4a3c0c);border:2.5px solid var(--outline);color:var(--yellow);font-weight:800;
     font-size:13.5px;padding:11px 15px;border-radius:14px;display:inline-flex;align-items:center;gap:9px;box-shadow:0 3px 0 var(--outline);animation:unlockPop .5s ease}
   @keyframes unlockPop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+  .evorow{margin:14px auto 2px;background:linear-gradient(120deg,#3a2f0a,#4a3c0c);border:2.5px solid var(--outline);border-radius:16px;
+    padding:14px 15px;box-shadow:0 3px 0 var(--outline);animation:unlockPop .5s ease;max-width:320px}
+  .evolabel{color:var(--yellow);font-weight:800;font-size:14px;margin-bottom:8px}
+  .evorow-imgs{display:flex;align-items:center;justify-content:center;gap:12px}
   .scorecard{margin:16px 0 6px;border:2.5px solid var(--outline);border-radius:14px;overflow:hidden;background:var(--panel2);box-shadow:0 3px 0 var(--outline)}
   .scorecard .row{display:flex;font-size:12.5px;border-bottom:1px solid var(--line)}
   .scorecard .row:last-child{border-bottom:0}
@@ -1297,10 +1301,21 @@ function golferBucket(c,cDk){
 function golferHair(c){return '<path d="M14 26 Q16 12 32 11 Q48 12 50 26 Q46 16 32 15 Q18 16 14 26 Z" fill="'+c+'"/>';}
 function golferChain(){return '<path d="M24 51 Q32 57 40 51" stroke="#e8c94a" stroke-width="2" fill="none"/><circle cx="32" cy="56" r="2" fill="#e8c94a" stroke="#a8891f"/>';}
 function golferFreckles(){return '<g fill="#a86a3a" opacity=".7"><circle cx="21" cy="38" r=".7"/><circle cx="24" cy="40" r=".7"/><circle cx="40" cy="39" r=".7"/><circle cx="43" cy="37" r=".7"/></g>';}
-function golfer1(){return golferBase('#d8a06a','#c78a52','#1f7a3c','#155c2c','M25 45 Q32 49 39 44')+golferEyes()+golferSnapback('#1f7a3c','#155c2c');}
-function golfer2(){return golferBase('#8a5a34','#6e4527','#2c2d31','#1a1b1e','M25 45 Q32 49 39 44')+golferEyes()+golferShades()+golferSnapback('#c23b4a','#8a1830');}
-function golfer3(){return golferBase('#f0c9a0','#dbb082','#d97a2e','#a85a1a','M24 44 Q32 51 40 44')+golferEyes()+golferFreckles()+golferBucket('#d9c34a','#a8901f');}
-function golfer4(){return golferBase('#c48a52','#a86e3a','#202126','#101013','M25 45 Q32 50 39 45')+golferHair('#1a120c')+golferEyes()+golferShades()+golferChain();}
+function tierFor(stars){stars=(typeof stars==='number')?stars:totalStars();return stars>=10?3:(stars>=5?2:1);}
+function evoOverlay(tier){
+  tier=tier||1; var s='';
+  if(tier>=2){ s+='<g fill="#ffd23f" opacity=".9"><polygon points="'+starPts(51,11,3.2)+'"/></g>'; }
+  if(tier>=3){
+    s+='<circle cx="32" cy="30" r="27" fill="none" stroke="#ffd23f" stroke-width="1.4" opacity=".4"/>'+
+      '<g fill="#ffd23f" opacity=".95"><polygon points="'+starPts(13,11,2.8)+'"/><polygon points="'+starPts(53,23,2.4)+'"/></g>'+
+      '<path d="M24 51 Q32 57 40 51" stroke="#e8c94a" stroke-width="2" fill="none"/><circle cx="32" cy="56" r="2" fill="#e8c94a" stroke="#a8891f"/>';
+  }
+  return s;
+}
+function golfer1(tier){return golferBase('#d8a06a','#c78a52','#1f7a3c','#155c2c','M25 45 Q32 49 39 44')+golferEyes()+golferSnapback('#1f7a3c','#155c2c')+evoOverlay(tier);}
+function golfer2(tier){return golferBase('#8a5a34','#6e4527','#2c2d31','#1a1b1e','M25 45 Q32 49 39 44')+golferEyes()+golferShades()+golferSnapback('#c23b4a','#8a1830')+evoOverlay(tier);}
+function golfer3(tier){return golferBase('#f0c9a0','#dbb082','#d97a2e','#a85a1a','M24 44 Q32 51 40 44')+golferEyes()+golferFreckles()+golferBucket('#d9c34a','#a8901f')+evoOverlay(tier);}
+function golfer4(tier){return golferBase('#c48a52','#a86e3a','#202126','#101013','M25 45 Q32 50 39 45')+golferHair('#1a120c')+golferEyes()+golferShades()+golferChain()+evoOverlay(tier);}
 function catFace(){return '<path d="M17 27 L23 40 L15 38 Z" fill="#f6a13c"/><path d="M47 27 L41 40 L49 38 Z" fill="#f6a13c"/>'+
   '<circle cx="32" cy="40" r="17" fill="#f7b25a"/>'+
   '<circle cx="26" cy="39" r="2.3" fill="#2a2a2a"/><circle cx="38" cy="39" r="2.3" fill="#2a2a2a"/>'+
@@ -1365,12 +1380,12 @@ function pandaParts(cx,cy,r,mood){
   }
   return s;
 }
-function avatarSVG(id,size){
+function avatarSVG(id,size,tier){
   size=size||64; var inner;
-  if(id==='a1') inner=golfer1();
-  else if(id==='a2') inner=golfer2();
-  else if(id==='a3') inner=golfer3();
-  else if(id==='a4') inner=golfer4();
+  if(id==='a1') inner=golfer1(tier||tierFor());
+  else if(id==='a2') inner=golfer2(tier||tierFor());
+  else if(id==='a3') inner=golfer3(tier||tierFor());
+  else if(id==='a4') inner=golfer4(tier||tierFor());
   else if(id==='a5') inner=catFace();
   else if(id==='a6') inner=ballFace()+cap('#8b5cf6')+'<g fill="#ffd54d"><polygon points="'+starPts(15,18,5)+'"/><polygon points="'+starPts(49,20,5)+'"/></g>';
   else if(id==='a7') inner=robotFace();
@@ -1498,7 +1513,7 @@ function screenProfile(){
       '<input id="pname" class="nameinput" maxlength="14" placeholder="Ecris ton prenom" value="'+esc(profile.name)+'">'+
       '<label class="lbl">Choisis ton avatar de golfeur</label>'+
       '<div class="avatargrid" id="ag">'+grid+'</div>'+
-      '<p class="subhead" style="margin-top:10px">D\'autres avatars se debloquent en gagnant des etoiles !</p>'+
+      '<p class="subhead" style="margin-top:10px">D\'autres avatars se debloquent en gagnant des etoiles, et ton golfeur evolue avec ta progression !</p>'+
       '<button class="btn big" id="go">C\'est parti !</button>'+
     '</div></div>'
   );
@@ -1768,13 +1783,21 @@ function animateCount(el,to,dur){
 function resultScreen(){
   progTxt.textContent='Partie terminee'; progBar.style.width='100%';
   var earned=starsFromScore(score,ROUND);
-  var unlockMsg='';
+  var unlockMsg=''; var evoHtml='';
   if(curFlag!=='all'){
     var before=totalStars();
     profile.played=(profile.played||0)+1;
     if(score>(profile.best[curFlag]||0)) profile.best[curFlag]=score;
     if(earned>(profile.stars[curFlag]||0)) profile.stars[curFlag]=earned;
     var after=totalStars();
+    var tierBefore=tierFor(before), tierAfter=tierFor(after);
+    if(tierAfter>tierBefore && ['a1','a2','a3','a4'].indexOf(profile.avatar)!==-1){
+      evoHtml='<div class="evorow"><div class="evolabel">Ton golfeur evolue !</div>'+
+        '<div class="evorow-imgs">'+avatarSVG(profile.avatar,64,tierBefore)+
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9c34a" stroke-width="3"><path d="M4 12h14M12 6l6 6-6 6"/></svg>'+
+        avatarSVG(profile.avatar,72,tierAfter)+'</div></div>';
+      celebrate(); sndStar();
+    }
     for(var i=0;i<MASCOTS.length;i++){ if(MASCOTS[i].need>before && MASCOTS[i].need<=after){ unlockMsg='Nouvel avatar debloque : '+MASCOTS[i].name+' !'; } }
     var idxFlag=FLAG_ORDER.indexOf(curFlag);
     if(earned>=1 && idxFlag>=0 && idxFlag<FLAG_ORDER.length-1){
@@ -1804,7 +1827,7 @@ function resultScreen(){
     starBlock+
     '<div class="scorebig"><span id="scnum">0</span><small>/'+ROUND+'</small></div>'+
     '<div class="verdict">'+lvl+' &middot; '+sub+'</div>'+
-    unlockLine+bestLine+
+    evoHtml+unlockLine+bestLine+
     '<div class="scorecard">'+rows+'</div>'+
     '<button class="btn big" id="again">Rejouer cette etape</button>'+
     '<button class="btn ghost big" id="home" style="margin-top:10px">Retour a l\'academie</button>'+
