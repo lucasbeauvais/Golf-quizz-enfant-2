@@ -394,11 +394,11 @@ function sceneOrder(){return svg(grass()+
   '<ellipse cx="200" cy="115" rx="145" ry="82" fill="#aed76a"/>'+flag(200,95)+'<circle cx="200" cy="95" r="6" fill="#12261a"/>'+
   ball(238,122)+label(238,144,"balle A","#20301f")+
   ball(85,178)+label(85,200,"balle B","#20301f"));}
-function scenePitch(bx,by){return svg(grass()+
+function scenePitch(bx,by,noLabel){return svg(grass()+
   '<ellipse cx="200" cy="120" rx="150" ry="95" fill="#aed76a"/>'+flag(255,96)+'<circle cx="255" cy="96" r="6" fill="#12261a"/>'+
   '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="#6f8f4a"/>'+
   '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="none" stroke="#4f6a32" stroke-width="1.5"/>'+
-  label(bx-26,by-13,"pitch","#20301f")+ball(bx,by));}
+  (noLabel?'':label(bx-26,by-13,"pitch","#20301f"))+ball(bx,by));}
 function sceneTool(){var cx=200,cy=62;
   var t='<g stroke="#2b2b2b" stroke-width="7" fill="none" stroke-linecap="round">'+
     '<line x1="'+cx+'" y1="'+(cy+80)+'" x2="'+cx+'" y2="'+(cy+18)+'"/>'+
@@ -448,7 +448,7 @@ var BANK = [
    choices:["Je lui parle pour l'encourager","Je bouge devant lui","Je reste silencieux et immobile","Je tape en meme temps"],
    correct:2,hint:"Au golf, on laisse le calme a celui qui joue.",
    explain:"Quand quelqu'un joue, on reste silencieux et immobile, un peu en retrait. Le bruit ou le mouvement peuvent le gener."},
-  {flag:"vert",theme:"Green & pitch",scene:scenePitch(210,150),
+  {flag:"vert",theme:"Green & pitch",scene:scenePitch(210,150,true),
    q:"Comment appelle-t-on la petite marque que la balle laisse en tombant sur le green ?",
    choices:["Un divot","Un pitch","Un bunker","Un birdie"],
    correct:1,hint:"C'est un mot court, tres utilise sur le green.",
