@@ -1260,41 +1260,8 @@ var MASCOTS=[
 function mascotById(id){for(var i=0;i<MASCOTS.length;i++)if(MASCOTS[i].id===id)return MASCOTS[i];return MASCOTS[0];}
 function mascotUnlocked(m){return totalStars()>=m.need;}
 function starPts(cx,cy,r){var p='';for(var i=0;i<5;i++){var a=-Math.PI/2+i*2*Math.PI/5;var a2=a+Math.PI/5;p+=(cx+Math.cos(a)*r).toFixed(1)+','+(cy+Math.sin(a)*r).toFixed(1)+' '+(cx+Math.cos(a2)*r*0.46).toFixed(1)+','+(cy+Math.sin(a2)*r*0.46).toFixed(1)+' ';}return p;}
-function ballFace(){return '<circle cx="32" cy="38" r="18" fill="#ffffff" stroke="#cfcabb" stroke-width="2"/>'+
-  '<circle cx="24" cy="34" r="1.5" fill="#ddd7c6"/><circle cx="40" cy="34" r="1.5" fill="#ddd7c6"/><circle cx="32" cy="47" r="1.5" fill="#ddd7c6"/>'+
-  '<circle cx="27" cy="39" r="2.3" fill="#2a2a2a"/><circle cx="37" cy="39" r="2.3" fill="#2a2a2a"/>'+
-  '<path d="M27 45 Q32 49 37 45" stroke="#2a2a2a" stroke-width="2" fill="none" stroke-linecap="round"/>';}
-function cap(c){return '<path d="M15 33 Q32 11 49 33 Z" fill="'+c+'"/>'+'<path d="M15 33 Q7 34 6 39 L20 35 Z" fill="'+c+'"/>'+'<circle cx="32" cy="15" r="2.3" fill="'+c+'" stroke="#00000022"/>';}
-
-/* --- animaux golfeurs : avatars non genres, le pelage/la crete tient lieu de "coiffure" --- */
-function furSpikes(cx,cy,r,color,n){
-  n=n||8; var s='<g fill="'+color+'">';
-  for(var i=0;i<n;i++){
-    var a=i*2*Math.PI/n;
-    var b1x=cx+Math.cos(a-0.26)*r, b1y=cy+Math.sin(a-0.26)*r;
-    var b2x=cx+Math.cos(a+0.26)*r, b2y=cy+Math.sin(a+0.26)*r;
-    var tx=cx+Math.cos(a)*(r+7), ty=cy+Math.sin(a)*(r+7);
-    s+='<polygon points="'+b1x.toFixed(1)+','+b1y.toFixed(1)+' '+tx.toFixed(1)+','+ty.toFixed(1)+' '+b2x.toFixed(1)+','+b2y.toFixed(1)+'"/>';
-  }
-  return s+'</g>';
-}
-function golferSnapback(c,cDk){
-  return '<path d="M12 26 Q32 6 52 26 Q52 20 32 16 Q12 20 12 26 Z" fill="'+c+'" stroke="#0a0a0a" stroke-width="1.5"/>'+
-    '<path d="M32 16 Q46 18 53 25 L60 23 Q51 13 32 12 Z" fill="'+cDk+'" stroke="#0a0a0a" stroke-width="1.5"/>'+
-    '<circle cx="32" cy="13" r="2" fill="'+cDk+'" stroke="#0a0a0a"/>';
-}
-function golferBucket(c,cDk){
-  return '<path d="M11 24 Q32 5 53 24 Q54 17 32 12 Q10 17 11 24 Z" fill="'+c+'" stroke="#0a0a0a" stroke-width="1.5"/>'+
-    '<path d="M8 24 Q32 27 56 24 Q55 19 32 17 Q9 19 8 24 Z" fill="'+cDk+'" stroke="#0a0a0a" stroke-width="1.5"/>';
-}
-function golferShades(){
-  return '<path d="M18 31 Q24 27 30 31 L30 34 Q24 37 18 34 Z" fill="#181818" stroke="#000" stroke-width="1"/>'+
-    '<path d="M34 31 Q40 27 46 31 L46 34 Q40 37 34 34 Z" fill="#181818" stroke="#000" stroke-width="1"/>'+
-    '<line x1="30" y1="31" x2="34" y2="31" stroke="#000" stroke-width="1.5"/>'+
-    '<ellipse cx="22" cy="31" rx="2.5" ry="1.4" fill="#fff" opacity=".35"/>'+
-    '<ellipse cx="38" cy="31" rx="2.5" ry="1.4" fill="#fff" opacity=".35"/>';
-}
-function golferHeadband(c){return '<path d="M14 26 Q32 14 50 26" fill="none" stroke="'+c+'" stroke-width="4" stroke-linecap="round"/>';}
+var AVATAR_FILES={a1:'a1_lion.png',a2:'a2_renard.png',a3:'a3_ours.png',a4:'a4_elephant.png',a5:'a5_chat.png',a6:'a6_koala.png',a7:'a7_chouette.png',a8:'a8_aigle.png',a9:'a9_tigre.png'};
+var AVATAR_EVOLVES=['a1','a2','a3','a4'];
 function tierFor(stars){stars=(typeof stars==='number')?stars:totalStars();return stars>=10?3:(stars>=5?2:1);}
 function evoOverlay(tier){
   tier=tier||1; var s='';
@@ -1306,123 +1273,14 @@ function evoOverlay(tier){
   }
   return s;
 }
-function lionFace(tier){
-  return furSpikes(32,37,15,'#c9821e',9)+
-    '<circle cx="32" cy="37" r="16" fill="#e8a23a"/>'+
-    '<circle cx="32" cy="39" r="13" fill="#f6c877"/>'+
-    '<ellipse cx="32" cy="45" rx="7" ry="5" fill="#fbe3b8"/>'+
-    '<circle cx="27" cy="36" r="2" fill="#2a2a2a"/><circle cx="37" cy="36" r="2" fill="#2a2a2a"/>'+
-    '<ellipse cx="32" cy="41.5" rx="2" ry="1.4" fill="#6b3f16"/>'+
-    '<path d="M29 44.5 Q32 47 35 44.5" stroke="#6b3f16" stroke-width="1.5" fill="none" stroke-linecap="round"/>'+
-    golferSnapback('#1f7a3c','#155c2c')+evoOverlay(tier);
-}
-function foxFace(tier){
-  return '<polygon points="14,24 24,14 26,32" fill="#e8722e"/><polygon points="50,24 40,14 38,32" fill="#e8722e"/>'+
-    '<polygon points="17,25 24,18 25,30" fill="#fff3e6"/><polygon points="47,25 40,18 39,30" fill="#fff3e6"/>'+
-    '<circle cx="32" cy="38" r="15" fill="#e8722e"/>'+
-    '<path d="M20 40 Q32 52 44 40 Q44 48 32 50 Q20 48 20 40 Z" fill="#fff3e6"/>'+
-    '<circle cx="26" cy="36" r="2" fill="#2a2a2a"/><circle cx="38" cy="36" r="2" fill="#2a2a2a"/>'+
-    '<ellipse cx="32" cy="43" rx="1.8" ry="1.4" fill="#2a2a2a"/>'+
-    golferSnapback('#c23b4a','#8a1830')+evoOverlay(tier);
-}
-function bearFace(tier){
-  return '<circle cx="15" cy="24" r="7" fill="#8a5a34"/><circle cx="49" cy="24" r="7" fill="#8a5a34"/>'+
-    '<circle cx="15" cy="24" r="3.5" fill="#c99a6e"/><circle cx="49" cy="24" r="3.5" fill="#c99a6e"/>'+
-    '<circle cx="32" cy="38" r="17" fill="#8a5a34"/>'+
-    '<ellipse cx="32" cy="44" rx="8" ry="6" fill="#c99a6e"/>'+
-    '<circle cx="26" cy="36" r="2.1" fill="#2a2a2a"/><circle cx="38" cy="36" r="2.1" fill="#2a2a2a"/>'+
-    '<ellipse cx="32" cy="42" rx="2" ry="1.5" fill="#3a2313"/>'+
-    '<path d="M29 46 Q32 48 35 46" stroke="#3a2313" stroke-width="1.5" fill="none" stroke-linecap="round"/>'+
-    golferBucket('#d9c34a','#a8901f')+evoOverlay(tier);
-}
-function elephantFace(tier){
-  return '<ellipse cx="12" cy="34" rx="10" ry="13" fill="#9aa5ab"/><ellipse cx="52" cy="34" rx="10" ry="13" fill="#9aa5ab"/>'+
-    '<ellipse cx="12" cy="34" rx="6" ry="9" fill="#b7c0c5"/><ellipse cx="52" cy="34" rx="6" ry="9" fill="#b7c0c5"/>'+
-    '<circle cx="32" cy="36" r="16" fill="#aab5bb"/>'+
-    '<path d="M28 46 Q26 58 30 62 Q33 63 32 58 Q30 52 32 46 Z" fill="#aab5bb"/>'+
-    golferShades()+evoOverlay(tier);
-}
-function catFace(){return '<path d="M17 27 L23 40 L15 38 Z" fill="#f6a13c"/><path d="M47 27 L41 40 L49 38 Z" fill="#f6a13c"/>'+
-  '<circle cx="32" cy="40" r="17" fill="#f7b25a"/>'+
-  '<circle cx="26" cy="39" r="2.3" fill="#2a2a2a"/><circle cx="38" cy="39" r="2.3" fill="#2a2a2a"/>'+
-  '<path d="M30 45 Q32 47 34 45" stroke="#2a2a2a" stroke-width="1.6" fill="none"/>'+
-  '<g stroke="#2a2a2a" stroke-width="1"><line x1="19" y1="43" x2="10" y2="42"/><line x1="19" y1="45" x2="10" y2="47"/><line x1="45" y1="43" x2="54" y2="42"/><line x1="45" y1="45" x2="54" y2="47"/></g>'+
-  '<path d="M21 31 Q32 18 43 31 Z" fill="#2e9e5b"/>';}
-function koalaFace(){
-  return '<circle cx="10" cy="30" r="9" fill="#b7bcc0"/><circle cx="54" cy="30" r="9" fill="#b7bcc0"/>'+
-    '<circle cx="10" cy="30" r="5" fill="#8a9195"/><circle cx="54" cy="30" r="5" fill="#8a9195"/>'+
-    '<circle cx="32" cy="38" r="17" fill="#c7ccd0"/>'+
-    '<ellipse cx="32" cy="44" rx="9" ry="7" fill="#e6e9eb"/>'+
-    '<circle cx="26" cy="36" r="2.1" fill="#2a2a2a"/><circle cx="38" cy="36" r="2.1" fill="#2a2a2a"/>'+
-    '<ellipse cx="32" cy="43" rx="3" ry="2.2" fill="#2a2a2a"/>'+
-    golferHeadband('#8b5cf6')+
-    '<g fill="#ffd54d"><polygon points="'+starPts(15,18,5)+'"/><polygon points="'+starPts(49,20,5)+'"/></g>';
-}
-function owlFace(){
-  return '<polygon points="14,20 24,14 22,30" fill="#8a5a34"/><polygon points="50,20 40,14 42,30" fill="#8a5a34"/>'+
-    '<circle cx="32" cy="38" r="18" fill="#a8763f"/>'+
-    '<circle cx="24" cy="35" r="8" fill="#fff3e6"/><circle cx="40" cy="35" r="8" fill="#fff3e6"/>'+
-    '<circle cx="24" cy="35" r="4.5" fill="#2a2a2a"/><circle cx="40" cy="35" r="4.5" fill="#2a2a2a"/>'+
-    '<circle cx="25.5" cy="33.5" r="1.3" fill="#fff"/><circle cx="41.5" cy="33.5" r="1.3" fill="#fff"/>'+
-    '<polygon points="29,42 35,42 32,48" fill="#e8a23a"/>';
-}
-function crown(){return '<path d="M18 27 L24 17 L32 25 L40 17 L46 27 Z" fill="#ffcf3f" stroke="#d9a400" stroke-width="1.5"/><rect x="18" y="26" width="28" height="4" rx="1" fill="#ffcf3f"/>';}
-function eagleFace(){
-  return '<polygon points="12,30 4,22 16,20" fill="#5c6470"/><polygon points="52,30 60,22 48,20" fill="#5c6470"/>'+
-    '<circle cx="32" cy="38" r="17" fill="#e9edf0"/>'+
-    '<circle cx="26" cy="36" r="2.3" fill="#2a2a2a"/><circle cx="38" cy="36" r="2.3" fill="#2a2a2a"/>'+
-    '<polygon points="27,42 37,42 32,50" fill="#e8a23a"/>'+
-    crown();
-}
-function tigerParts(cx,cy,r,mood){
-  var earR=r*0.34, s='';
-  s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#f0862e" stroke="#20232a" stroke-width="'+(r*0.05)+'"/>';
-  s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#f0862e" stroke="#20232a" stroke-width="'+(r*0.05)+'"/>';
-  s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+(earR*0.5)+'" fill="#fff6ea"/>';
-  s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+(earR*0.5)+'" fill="#fff6ea"/>';
-  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#f0862e" stroke="#d9711f" stroke-width="1"/>';
-  s+='<ellipse cx="'+cx+'" cy="'+(cy+r*0.28)+'" rx="'+(r*0.62)+'" ry="'+(r*0.46)+'" fill="#fff6ea"/>';
-  s+='<path d="M'+(cx-r*0.18)+' '+(cy-r*0.85)+' q'+(r*0.05)+' '+(r*0.35)+' 0 '+(r*0.55)+'" stroke="#20232a" stroke-width="'+(r*0.08)+'" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M'+(cx+r*0.18)+' '+(cy-r*0.85)+' q'+(-r*0.05)+' '+(r*0.35)+' 0 '+(r*0.55)+'" stroke="#20232a" stroke-width="'+(r*0.08)+'" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M'+(cx-r*0.78)+' '+(cy-r*0.02)+' q'+(r*0.22)+' '+(r*0.08)+' '+(r*0.3)+' '+(r*0.3)+'" stroke="#20232a" stroke-width="'+(r*0.07)+'" fill="none" stroke-linecap="round"/>';
-  s+='<path d="M'+(cx+r*0.78)+' '+(cy-r*0.02)+' q'+(-r*0.22)+' '+(r*0.08)+' '+(-r*0.3)+' '+(r*0.3)+'" stroke="#20232a" stroke-width="'+(r*0.07)+'" fill="none" stroke-linecap="round"/>';
-  var eyeY=cy-r*0.05;
-  if(mood==='sad'){
-    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.37)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#20232a"/>';
-    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.43)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#20232a"/>';
-  } else {
-    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#20232a"/>';
-    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#20232a"/>';
-  }
-  s+='<g stroke="#20232a" stroke-width="'+(r*0.035)+'" opacity=".5">'+
-    '<line x1="'+(cx-r*0.32)+'" y1="'+(cy+r*0.3)+'" x2="'+(cx-r*0.78)+'" y2="'+(cy+r*0.2)+'"/>'+
-    '<line x1="'+(cx-r*0.32)+'" y1="'+(cy+r*0.4)+'" x2="'+(cx-r*0.78)+'" y2="'+(cy+r*0.4)+'"/>'+
-    '<line x1="'+(cx+r*0.32)+'" y1="'+(cy+r*0.3)+'" x2="'+(cx+r*0.78)+'" y2="'+(cy+r*0.2)+'"/>'+
-    '<line x1="'+(cx+r*0.32)+'" y1="'+(cy+r*0.4)+'" x2="'+(cx+r*0.78)+'" y2="'+(cy+r*0.4)+'"/>'+
-    '</g>';
-  s+='<ellipse cx="'+cx+'" cy="'+(cy+r*0.2)+'" rx="'+(r*0.13)+'" ry="'+(r*0.10)+'" fill="#20232a"/>';
-  if(mood==='happy'){
-    s+='<path d="M'+(cx-r*0.24)+' '+(cy+r*0.36)+' Q'+cx+' '+(cy+r*0.62)+' '+(cx+r*0.24)+' '+(cy+r*0.36)+'" stroke="#20232a" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
-  } else if(mood==='sad'){
-    s+='<path d="M'+(cx-r*0.18)+' '+(cy+r*0.44)+' Q'+cx+' '+(cy+r*0.28)+' '+(cx+r*0.18)+' '+(cy+r*0.44)+'" stroke="#20232a" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
-  } else {
-    s+='<line x1="'+(cx-r*0.16)+'" y1="'+(cy+r*0.36)+'" x2="'+(cx+r*0.16)+'" y2="'+(cy+r*0.36)+'" stroke="#20232a" stroke-width="'+(r*0.065)+'" stroke-linecap="round"/>';
-  }
-  return s;
-}
 function avatarSVG(id,size,tier){
-  size=size||64; var inner;
-  if(id==='a1') inner=lionFace(tier||tierFor());
-  else if(id==='a2') inner=foxFace(tier||tierFor());
-  else if(id==='a3') inner=bearFace(tier||tierFor());
-  else if(id==='a4') inner=elephantFace(tier||tierFor());
-  else if(id==='a5') inner=catFace();
-  else if(id==='a6') inner=koalaFace();
-  else if(id==='a7') inner=owlFace();
-  else if(id==='a8') inner=eagleFace();
-  else if(id==='a9') inner=tigerParts(32,36,22,'happy');
-  else inner=ballFace()+cap('#2e9e5b');
-  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="34" r="30" fill="#2c2d2e"/>'+inner+'</svg>';
+  size=size||64;
+  var file=AVATAR_FILES[id]||AVATAR_FILES.a1;
+  var overlay=(AVATAR_EVOLVES.indexOf(id)!==-1)?evoOverlay(tier||tierFor()):'';
+  return '<span style="position:relative;display:inline-block;width:'+size+'px;height:'+size+'px;flex:0 0 auto">'+
+    '<img src="assets/avatars/'+file+'" width="'+size+'" height="'+size+'" alt="" style="display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;background:#2c2d2e">'+
+    (overlay?'<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" style="position:absolute;inset:0;pointer-events:none">'+overlay+'</svg>':'')+
+    '</span>';
 }
 
 /* ============================================================
@@ -1430,14 +1288,9 @@ function avatarSVG(id,size,tier){
    ============================================================ */
 function cultureBadge(size){
   size=size||64;
-  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'+
-    '<circle cx="32" cy="34" r="30" fill="#d9c34a" stroke="#0a0a0a" stroke-width="3"/>'+
-    ballFace()+
-    '<polygon points="10,19 32,9 54,19 32,29" fill="#20232a"/>'+
-    '<rect x="23" y="19" width="18" height="6" rx="2" fill="#20232a"/>'+
-    '<line x1="46" y1="17" x2="46" y2="29" stroke="#eef0e6" stroke-width="2"/>'+
-    '<circle cx="46" cy="30" r="2.4" fill="#eef0e6"/>'+
-    '</svg>';
+  return '<span style="position:relative;display:inline-block;width:'+size+'px;height:'+size+'px;flex:0 0 auto">'+
+    '<img src="assets/avatars/badge_culture_golf.png" width="'+size+'" height="'+size+'" alt="" style="display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;background:#d9c34a">'+
+    '</span>';
 }
 function cultureBanner(text){
   return '<div class="tiger-wrap"><div class="tiger">'+cultureBadge(66)+'</div>'+
@@ -1461,21 +1314,8 @@ function lockSVG(c){return '<svg width="15" height="15" viewBox="0 0 24 24" fill
 /* tiger coach illustre, avec bulle de dialogue optionnelle */
 function tigerCoach(mood,size,text,extraCls){
   size=size||74;
-  var r=size*0.30, cx=size/2, cy=size*0.42;
-  var extra='';
-  if(mood==='happy'){
-    extra='<g transform="translate('+(cx+r*0.95)+','+(cy+r*0.2)+') rotate(-18)"><rect x="-3" y="-34" width="6" height="34" rx="3" fill="#8a5a2a"/><ellipse cx="0" cy="-38" rx="8" ry="5" fill="#e9e4d6" stroke="#c9c2ac"/></g>'+
-      '<g fill="#ffd23f"><polygon points="'+starPts(size*0.14,size*0.16,4)+'"/><polygon points="'+starPts(size*0.9,size*0.1,3.4)+'"/></g>';
-  } else if(mood==='sad'){
-    extra='<path d="M'+(cx+r*0.8)+' '+(cy-r*0.6)+' q4 6 0 11" stroke="#7fd0ff" stroke-width="3" fill="none" stroke-linecap="round"/>';
-  }
-  var body='<ellipse cx="'+cx+'" cy="'+(cy+r*1.62)+'" rx="'+(r*0.92)+'" ry="'+(r*0.62)+'" fill="#fff6ea" stroke="#e8d9c2"/>'+
-    '<ellipse cx="'+(cx-r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#f0862e"/>'+
-    '<ellipse cx="'+(cx+r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#f0862e"/>'+
-    '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.7)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="#17181d" stroke="#0a0a0c"/>'+
-    '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.86)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="none" stroke="#39ff6a" stroke-width="2"/>';
-  var mk='<svg width="'+size+'" height="'+(size*1.35)+'" viewBox="0 0 '+size+' '+(size*1.35)+'" xmlns="http://www.w3.org/2000/svg">'+
-    body+tigerParts(cx,cy,r,mood==='sad'?'sad':(mood==='happy'?'happy':'neutral'))+extra+'</svg>';
+  var file=mood==='happy'?'coach_tiger_happy.png':(mood==='sad'?'coach_tiger_sad.png':'coach_tiger_neutral.png');
+  var mk='<img src="assets/avatars/'+file+'" width="'+size+'" height="'+(size*1.35)+'" alt="" style="display:block;width:'+size+'px;height:'+(size*1.35)+'px;object-fit:contain">';
   var cls='tiger'+(mood==='happy'?' happy':(mood==='sad'?' sad':''))+(extraCls?' '+extraCls:'');
   var html='<div class="'+cls+'">'+mk+'</div>';
   if(text) html='<div class="tiger-wrap">'+html+'<div class="bubble">'+text+'</div></div>';
