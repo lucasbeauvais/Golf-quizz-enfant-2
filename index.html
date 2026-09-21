@@ -1251,6 +1251,8 @@ var MASCOTS=[
   {id:'a2',name:'Casquette rouge', need:0},
   {id:'a3',name:'Bob jaune',   need:0},
   {id:'a4',name:'Lunettes de soleil',need:0},
+  {id:'a10',name:'Visiere & couette', need:0},
+  {id:'a11',name:'Bandeau surfeuse', need:0},
   {id:'a5',name:'Chat golfeur',     need:3},
   {id:'a6',name:'Balle disco',    need:6},
   {id:'a7',name:'Golf-bot',         need:9},
@@ -1304,6 +1306,21 @@ function golferBucket(c,cDk){
 function golferHair(c){return '<path d="M14 26 Q16 12 32 11 Q48 12 50 26 Q46 16 32 15 Q18 16 14 26 Z" fill="'+c+'"/>';}
 function golferChain(){return '<path d="M24 51 Q32 57 40 51" stroke="#e8c94a" stroke-width="2" fill="none"/><circle cx="32" cy="56" r="2" fill="#e8c94a" stroke="#a8891f"/>';}
 function golferFreckles(){return '<g fill="#a86a3a" opacity=".7"><circle cx="21" cy="38" r=".7"/><circle cx="24" cy="40" r=".7"/><circle cx="40" cy="39" r=".7"/><circle cx="43" cy="37" r=".7"/></g>';}
+function golferPonytail(c,cDk){
+  return '<path d="M15 24 Q17 12 26 10 Q19 16 20 24 Z" fill="'+c+'"/>'+
+    '<path d="M49 24 Q47 12 38 10 Q45 16 44 24 Z" fill="'+c+'"/>'+
+    '<path d="M48 32 Q59 35 57 46 Q55 53 49 50 Q54 45 50 36 Z" fill="'+c+'" stroke="'+cDk+'" stroke-width="1"/>'+
+    '<ellipse cx="49" cy="34" rx="3" ry="2" fill="'+cDk+'"/>';
+}
+function golferVisor(c,cDk){
+  return '<path d="M13 27 Q32 14 51 27" fill="none" stroke="'+c+'" stroke-width="6" stroke-linecap="round"/>'+
+    '<path d="M42 23 Q51 24 56 28 L61 26 Q53 19 40 20 Z" fill="'+cDk+'" stroke="#0a0a0a" stroke-width="1.2"/>';
+}
+function golferHairLong(c){
+  return '<path d="M13 30 Q13 12 32 11 Q51 12 51 30 Q53 42 47 52 Q51 40 47 27 Q44 15 32 15 Q20 15 17 27 Q13 40 17 52 Q11 42 13 30 Z" fill="'+c+'"/>';
+}
+function golferHeadband(c){return '<path d="M14 26 Q32 14 50 26" fill="none" stroke="'+c+'" stroke-width="4" stroke-linecap="round"/>';}
+function golferEarrings(){return '<circle cx="13" cy="41" r="1.6" fill="#e8c94a" stroke="#a8891f" stroke-width=".6"/><circle cx="51" cy="41" r="1.6" fill="#e8c94a" stroke="#a8891f" stroke-width=".6"/>';}
 function tierFor(stars){stars=(typeof stars==='number')?stars:totalStars();return stars>=10?3:(stars>=5?2:1);}
 function evoOverlay(tier){
   tier=tier||1; var s='';
@@ -1319,6 +1336,8 @@ function golfer1(tier){return golferBase('#d8a06a','#c78a52','#1f7a3c','#155c2c'
 function golfer2(tier){return golferBase('#8a5a34','#6e4527','#2c2d31','#1a1b1e','M25 45 Q32 49 39 44')+golferEyes()+golferShades()+golferSnapback('#c23b4a','#8a1830')+evoOverlay(tier);}
 function golfer3(tier){return golferBase('#f0c9a0','#dbb082','#d97a2e','#a85a1a','M24 44 Q32 51 40 44')+golferEyes()+golferFreckles()+golferBucket('#d9c34a','#a8901f')+evoOverlay(tier);}
 function golfer4(tier){return golferBase('#c48a52','#a86e3a','#202126','#101013','M25 45 Q32 50 39 45')+golferHair('#1a120c')+golferEyes()+golferShades()+golferChain()+evoOverlay(tier);}
+function golfer5(tier){return golferBase('#e0a878','#c98f5e','#7a3fae','#5c2f86','M25 45 Q32 49 39 44')+golferEyes()+golferPonytail('#4a2e1c','#2e1c10')+golferVisor('#e0435f','#a8283f')+golferEarrings()+evoOverlay(tier);}
+function golfer6(tier){return golferBase('#6b4226','#54331d','#e0435f','#a8283f','M25 45 Q32 49 39 44')+golferEyes()+golferHairLong('#1a1210')+golferHeadband('#f0862e')+golferEarrings()+evoOverlay(tier);}
 function catFace(){return '<path d="M17 27 L23 40 L15 38 Z" fill="#f6a13c"/><path d="M47 27 L41 40 L49 38 Z" fill="#f6a13c"/>'+
   '<circle cx="32" cy="40" r="17" fill="#f7b25a"/>'+
   '<circle cx="26" cy="39" r="2.3" fill="#2a2a2a"/><circle cx="38" cy="39" r="2.3" fill="#2a2a2a"/>'+
@@ -1372,6 +1391,8 @@ function avatarSVG(id,size,tier){
   else if(id==='a2') inner=golfer2(tier||tierFor());
   else if(id==='a3') inner=golfer3(tier||tierFor());
   else if(id==='a4') inner=golfer4(tier||tierFor());
+  else if(id==='a10') inner=golfer5(tier||tierFor());
+  else if(id==='a11') inner=golfer6(tier||tierFor());
   else if(id==='a5') inner=catFace();
   else if(id==='a6') inner=ballFace()+cap('#8b5cf6')+'<g fill="#ffd54d"><polygon points="'+starPts(15,18,5)+'"/><polygon points="'+starPts(49,20,5)+'"/></g>';
   else if(id==='a7') inner=robotFace();
@@ -1807,7 +1828,7 @@ function resultScreen(){
     if(earned>(profile.stars[curFlag]||0)) profile.stars[curFlag]=earned;
     var after=totalStars();
     var tierBefore=tierFor(before), tierAfter=tierFor(after);
-    if(tierAfter>tierBefore && ['a1','a2','a3','a4'].indexOf(profile.avatar)!==-1){
+    if(tierAfter>tierBefore && ['a1','a2','a3','a4','a10','a11'].indexOf(profile.avatar)!==-1){
       evoHtml='<div class="evorow"><div class="evolabel">Ton golfeur evolue !</div>'+
         '<div class="evorow-imgs">'+avatarSVG(profile.avatar,64,tierBefore)+
         '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9c34a" stroke-width="3"><path d="M4 12h14M12 6l6 6-6 6"/></svg>'+
