@@ -7,14 +7,99 @@ les intégrer dans le code (`index.html`), sans confusion possible.
 
 ## Comment procéder
 
-1. Copie le **bloc de style** ci-dessous au début de chaque prompt (colle-le
-   une fois dans Gemini puis enchaîne les prompts un par un dans la même
-   conversation, si l'outil le permet — sinon recolle-le à chaque fois).
-2. Génère chaque image en **carré**, fond plein (pas transparent) si possible.
-3. Renomme le fichier téléchargé exactement comme indiqué dans la colonne
-   **Nom de fichier**.
-4. Envoie-moi les fichiers (tous d'un coup ou au fur et à mesure) — je les
+**Option rapide (un seul message) :** colle le méga-prompt de la section
+ci-dessous tel quel dans Gemini — il contient déjà le style + les 13
+personnages avec leur nom de fichier, Gemini gère la suite tout seul
+(génère les images une par une dans la conversation).
+
+**Option détaillée (un prompt à la fois) :** si Gemini ne sort qu'une
+image par message ou mélange les styles, utilise plutôt les prompts
+individuels plus bas (un par personnage), en recollant le bloc de style
+à chaque fois si besoin.
+
+Dans les deux cas :
+1. Génère chaque image en **carré**, fond plein (pas transparent) si possible.
+2. Renomme le fichier téléchargé exactement comme indiqué (colonne
+   **Nom de fichier** / libellé dans le méga-prompt).
+3. Envoie-moi les fichiers (tous d'un coup ou au fur et à mesure) — je les
    intègre directement grâce au nom.
+
+---
+
+## Méga-prompt (à coller en un seul message dans Gemini)
+
+```
+Tu es un illustrateur spécialisé dans les mascottes 2D pour applications
+enfants. Génère-moi 13 illustrations séparées, une par une, en gardant
+EXACTEMENT le même style visuel sur toutes les images (cohérence de
+proportions, épaisseur de contour, palette de couleurs, rendu) :
+
+STYLE COMMUN A TOUTES LES IMAGES :
+Illustration 2D flat "kawaii chibi", contours épais noir/anthracite,
+couleurs vives et pastel saturées, très grands yeux ronds brillants avec
+un petit reflet blanc, petites joues roses, proportions rondes et douces
+(tête large, corps petit), rendu vectoriel propre façon icône d'application
+mobile pour enfants. Fond : cercle uni gris anthracite foncé (#2c2d2e),
+pas de décor, sans texte, sans watermark, sans signature. Contenu 100%
+adapté aux enfants de 7-12 ans : aucune violence, aucun élément
+effrayant, aucune connotation adulte. Format carré, haute résolution.
+
+Pour chaque image ci-dessous, indique en légende le nom de fichier donné
+(ex: "a1_lion.png") pour que je m'y retrouve.
+
+1. a1_lion.png — Portrait buste vue 3/4 : un lion mignon avec une crinière
+dorée bien fournie et douce, portant une casquette de golf verte, grand
+sourire chaleureux.
+
+2. a2_renard.png — Portrait buste vue 3/4 : un renard orange avec des
+oreilles pointues et une bavette blanche sur le museau, portant une
+casquette de golf rouge, sourire malicieux.
+
+3. a3_ours.png — Portrait buste vue 3/4 : un ourson brun avec de petites
+oreilles rondes et un museau plus clair, portant un bob de golf jaune,
+expression douce et joviale.
+
+4. a4_elephant.png — Portrait buste vue 3/4 : un éléphanteau gris avec de
+grandes oreilles tombantes et une petite trompe recourbée, portant des
+lunettes de soleil noires stylées, sourire cool.
+
+5. a5_chat.png — Portrait buste vue 3/4 : un chaton orange avec des
+moustaches fines et des oreilles pointues, portant une petite visière de
+golf verte, sourire malicieux.
+
+6. a6_koala.png — Portrait buste vue 3/4 : un koala gris avec de grandes
+oreilles rondes et duveteuses et un gros nez noir, portant un bandeau de
+sport violet, entouré de petites étoiles dorées scintillantes.
+
+7. a7_chouette.png — Portrait buste vue 3/4 : une chouette brune avec de
+très grands yeux ronds expressifs et de petites aigrettes, bec orange,
+expression studieuse.
+
+8. a8_aigle.png — Portrait buste vue 3/4 : un aiglon blanc et gris avec
+un bec orange, portant une couronne dorée de champion, expression fière
+et joyeuse.
+
+9. a9_tigre.png — Portrait buste vue 3/4 : un tigreau orange avec des
+rayures noires douces et un ventre crème, portant une casquette de golf
+verte, sourire éclatant.
+
+10. coach_tiger_happy.png — Personnage EN PIED (corps entier) : le même
+tigre que a9 mais en version mascotte complète, debout, un bras levé en
+signe d'encouragement, très grand sourire joyeux, pose dynamique.
+
+11. coach_tiger_sad.png — Même personnage en pied que le 10, mais
+expression triste et déçue, sourcils tombants, posture légèrement
+affaissée — reste doux, jamais effrayant.
+
+12. coach_tiger_neutral.png — Même personnage en pied que le 10, mais
+expression neutre et attentive, sourire léger, posture de repos.
+
+13. badge_culture_golf.png — Une balle de golf blanche ronde avec un
+visage kawaii mignon, portant un petit chapeau de diplômé noir (mortier
+de graduation) incliné sur le dessus, sur un badge circulaire doré.
+```
+
+---
 
 > ⚠️ Changement d'archi à anticiper : le jeu est aujourd'hui 100% en SVG
 > généré par code, sans aucune image externe (fichier unique, très léger).
