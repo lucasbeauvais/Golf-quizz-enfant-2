@@ -94,20 +94,20 @@
   .mixcard[disabled]:active{transform:none}
   .mixcard .mixtxt span{display:block;font-family:'Rubik',sans-serif;font-weight:600;font-size:12px;color:var(--inkSoft);margin-top:2px}
 
-  /* ===================== PANDA COACH ===================== */
-  .rina-wrap{display:flex;align-items:flex-end;gap:10px;margin:2px 0 14px}
-  .rina-wrap.center{justify-content:center}
-  .rina{flex:0 0 auto;animation:pandaBob 2.8s ease-in-out infinite}
-  .rina.happy{animation:pandaJump .6s ease}
-  .rina.sad{animation:pandaShake .5s ease}
-  @keyframes pandaBob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
-  @keyframes pandaJump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-16px) scale(1.05)}55%{transform:translateY(0) scale(.98)}75%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-  @keyframes pandaShake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-5px) rotate(-4deg)}40%{transform:translateX(5px) rotate(4deg)}60%{transform:translateX(-3px) rotate(-2deg)}80%{transform:translateX(3px) rotate(2deg)}}
+  /* ===================== TIGER COACH ===================== */
+  .tiger-wrap{display:flex;align-items:flex-end;gap:10px;margin:2px 0 14px}
+  .tiger-wrap.center{justify-content:center}
+  .tiger{flex:0 0 auto;animation:tigerBob 2.8s ease-in-out infinite}
+  .tiger.happy{animation:tigerJump .6s ease}
+  .tiger.sad{animation:tigerShake .5s ease}
+  @keyframes tigerBob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+  @keyframes tigerJump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-16px) scale(1.05)}55%{transform:translateY(0) scale(.98)}75%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  @keyframes tigerShake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-5px) rotate(-4deg)}40%{transform:translateX(5px) rotate(4deg)}60%{transform:translateX(-3px) rotate(-2deg)}80%{transform:translateX(3px) rotate(2deg)}}
   .bubble{position:relative;background:var(--panel2);border:2.5px solid var(--outline);border-radius:16px;padding:10px 13px;font-size:13.5px;line-height:1.4;
     color:var(--ink);font-weight:600;box-shadow:0 3px 0 var(--outline);flex:1;min-width:0}
   .bubble:before{content:'';position:absolute;left:-9px;bottom:14px;width:0;height:0;border:8px solid transparent;border-right-color:var(--panel2)}
   .bubble:after{content:'';position:absolute;left:-12px;bottom:12px;width:0;height:0;border:9px solid transparent;border-right-color:var(--outline);z-index:-1}
-  @media (prefers-reduced-motion: reduce){.rina,.rina.happy,.rina.sad{animation:none}}
+  @media (prefers-reduced-motion: reduce){.tiger,.tiger.happy,.tiger.sad{animation:none}}
 
   /* ===================== PROFILE ===================== */
   .profile h1,.home h1,.collection h1{font-size:22px;margin:6px 0 4px;text-align:center;color:var(--ink);font-weight:800}
@@ -1219,19 +1219,22 @@ function updateMuteBtn(){
 /* ============================================================
    SAUVEGARDE (localStorage)
    ============================================================ */
-var SAVE_KEY='golf_academy_rina_v1';
-var OLD_SAVE_KEY='golf_drapeaux_v6';
+var SAVE_KEY='golf_academy_tiger_v1';
+var LEGACY_SAVE_KEYS=['golf_academy_rina_v1','golf_drapeaux_v6'];
 var profile=null;
 function blankProfile(){return {name:'',avatar:'a1',stars:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},best:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},played:0,muted:false,createdAt:Date.now()};}
 function loadSave(){
   try{
     var s=localStorage.getItem(SAVE_KEY);
     if(s) return JSON.parse(s);
-    var old=localStorage.getItem(OLD_SAVE_KEY);
-    if(old){ var o=JSON.parse(old); var p=blankProfile();
-      p.name=o.name||''; p.avatar=o.avatar||'a1';
-      if(o.stars) p.stars=o.stars; if(o.best) p.best=o.best; p.played=o.played||0;
-      return p;
+    for(var i=0;i<LEGACY_SAVE_KEYS.length;i++){
+      var old=localStorage.getItem(LEGACY_SAVE_KEYS[i]);
+      if(old){ var o=JSON.parse(old); var p=blankProfile();
+        p.name=o.name||''; p.avatar=o.avatar||'a1';
+        if(o.stars) p.stars=o.stars; if(o.best) p.best=o.best; p.played=o.played||0;
+        if(typeof o.muted==='boolean') p.muted=o.muted;
+        return p;
+      }
     }
     return null;
   }catch(e){return null;}
@@ -1327,7 +1330,7 @@ function robotFace(){return '<rect x="17" y="27" width="30" height="27" rx="7" f
   '<rect x="25" y="47" width="14" height="3" rx="1.5" fill="#5a6b7d"/>'+
   '<line x1="32" y1="27" x2="32" y2="19" stroke="#6b7f95" stroke-width="2"/><circle cx="32" cy="17" r="3" fill="#c81d25"/>';}
 function crown(){return '<path d="M18 27 L24 17 L32 25 L40 17 L46 27 Z" fill="#ffcf3f" stroke="#d9a400" stroke-width="1.5"/><rect x="18" y="26" width="28" height="4" rx="1" fill="#ffcf3f"/>';}
-function pandaParts(cx,cy,r,mood){
+function tigerParts(cx,cy,r,mood){
   var earR=r*0.34, s='';
   s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#f0862e" stroke="#20232a" stroke-width="'+(r*0.05)+'"/>';
   s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#f0862e" stroke="#20232a" stroke-width="'+(r*0.05)+'"/>';
@@ -1373,7 +1376,7 @@ function avatarSVG(id,size,tier){
   else if(id==='a6') inner=ballFace()+cap('#8b5cf6')+'<g fill="#ffd54d"><polygon points="'+starPts(15,18,5)+'"/><polygon points="'+starPts(49,20,5)+'"/></g>';
   else if(id==='a7') inner=robotFace();
   else if(id==='a8') inner=ballFace()+crown();
-  else if(id==='a9') inner=pandaParts(32,36,22,'happy');
+  else if(id==='a9') inner=tigerParts(32,36,22,'happy');
   else inner=ballFace()+cap('#2e9e5b');
   return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="34" r="30" fill="#2c2d2e"/>'+inner+'</svg>';
 }
@@ -1393,7 +1396,7 @@ function cultureBadge(size){
     '</svg>';
 }
 function cultureBanner(text){
-  return '<div class="rina-wrap"><div class="rina">'+cultureBadge(66)+'</div>'+
+  return '<div class="tiger-wrap"><div class="tiger">'+cultureBadge(66)+'</div>'+
     '<div class="bubble"><b>Culture Golf</b><br>'+text+'</div></div>';
 }
 function starSVG(filled,size,pop){size=size||18;var c=filled?'#ffcf3f':'#eadfc2',s=filled?'#e0a800':'#d6cba8';return '<svg class="'+(pop?'starpop':'')+'" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="'+starPts(12,12,10)+'" fill="'+c+'" stroke="'+s+'" stroke-width="1"/></svg>';}
@@ -1411,8 +1414,8 @@ function levelBadge(n,size){
 function miniFlag(color){return '<svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true"><ellipse cx="8" cy="33" rx="6" ry="2" fill="#000" opacity=".3"/><line x1="8" y1="4" x2="8" y2="33" stroke="#0a0a0c" stroke-width="2.4"/><path d="M8 4 L26 9 L8 15 Z" fill="'+color+'" stroke="#0a0a0c" stroke-width="1"/></svg>';}
 function lockSVG(c){return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="'+(c||'#7a6a3a')+'" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';}
 
-/* panda coach illustre, avec bulle de dialogue optionnelle */
-function pandaCoach(mood,size,text,extraCls){
+/* tiger coach illustre, avec bulle de dialogue optionnelle */
+function tigerCoach(mood,size,text,extraCls){
   size=size||74;
   var r=size*0.30, cx=size/2, cy=size*0.42;
   var extra='';
@@ -1428,10 +1431,10 @@ function pandaCoach(mood,size,text,extraCls){
     '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.7)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="#17181d" stroke="#0a0a0c"/>'+
     '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.86)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="none" stroke="#39ff6a" stroke-width="2"/>';
   var mk='<svg width="'+size+'" height="'+(size*1.35)+'" viewBox="0 0 '+size+' '+(size*1.35)+'" xmlns="http://www.w3.org/2000/svg">'+
-    body+pandaParts(cx,cy,r,mood==='sad'?'sad':(mood==='happy'?'happy':'neutral'))+extra+'</svg>';
-  var cls='rina'+(mood==='happy'?' happy':(mood==='sad'?' sad':''))+(extraCls?' '+extraCls:'');
+    body+tigerParts(cx,cy,r,mood==='sad'?'sad':(mood==='happy'?'happy':'neutral'))+extra+'</svg>';
+  var cls='tiger'+(mood==='happy'?' happy':(mood==='sad'?' sad':''))+(extraCls?' '+extraCls:'');
   var html='<div class="'+cls+'">'+mk+'</div>';
-  if(text) html='<div class="rina-wrap">'+html+'<div class="bubble">'+text+'</div></div>';
+  if(text) html='<div class="tiger-wrap">'+html+'<div class="bubble">'+text+'</div></div>';
   return html;
 }
 
@@ -1498,7 +1501,7 @@ function screenProfile(){
   setView(
     '<div class="body">'+decorBanner()+'<div class="pad profile">'+
       '<h1>Cree ton golfeur</h1>'+
-      pandaCoach('happy',70,'Salut, moi c\'est <b>Tiger</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?')+
+      tigerCoach('happy',70,'Salut, moi c\'est <b>Tiger</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?')+
       '<label class="lbl">Ton prenom</label>'+
       '<input id="pname" class="nameinput" maxlength="14" placeholder="Ecris ton prenom" value="'+esc(profile.name)+'">'+
       '<label class="lbl">Choisis ton avatar de golfeur</label>'+
@@ -1575,7 +1578,7 @@ function screenHome(){
       '</div></div>';
   }
   var mixOn=mixUnlocked();
-  var pandaMsg = next
+  var tigerMsg = next
     ? 'Direction le <b>'+FLAGS[next].name.toLowerCase()+'</b> ! Tu es pret ?'
     : 'Bravo, tu as debloque toutes les etapes ! Tente le Grand Melange.';
   setView(
@@ -1584,7 +1587,7 @@ function screenHome(){
         '<div class="pc-lvl">'+levelBadge(totalStars(),30)+'</div></div>'+
         '<div class="pc-txt"><b>'+esc(profile.name)+'</b><span>'+rankName()+'</span></div>'+
         '<div class="pc-stars">'+starSVG(true,18)+totalStars()+' / 15</div></div>'+
-      pandaCoach(next?'happy':'happy',56,pandaMsg)+
+      tigerCoach(next?'happy':'happy',56,tigerMsg)+
       '<div class="sectitle">Ton parcours en 5 etapes</div>'+
       '<div class="roadmap">'+rows+'</div>'+
       '<button class="mixcard" id="mix" '+(mixOn?'':'disabled')+'>'+
@@ -1623,7 +1626,7 @@ function screenCollection(){
   setView(
     '<div class="body">'+decorBanner()+'<div class="pad collection">'+
       '<h1>Mes avatars</h1>'+
-      pandaCoach('happy',56,'Tu as '+totalStars()+' / 15 etoiles. Continue a jouer pour tout debloquer !')+
+      tigerCoach('happy',56,'Tu as '+totalStars()+' / 15 etoiles. Continue a jouer pour tout debloquer !')+
       '<div class="mascotgrid">'+grid+'</div>'+
       '<button class="btn ghost big" id="back" style="margin-top:16px">Retour</button>'+
     '</div></div>'
@@ -1689,7 +1692,7 @@ function renderQuestion(){
   }
   document.getElementById('hintbtn').onclick=function(){
     sndClick();
-    document.getElementById('hintzone').innerHTML=pandaCoach('happy',52,qd.hint);
+    document.getElementById('hintzone').innerHTML=tigerCoach('happy',52,qd.hint);
     document.getElementById('hintzone').classList.add('show');
     this.style.opacity='.5'; this.disabled=true;
   };
@@ -1700,7 +1703,7 @@ function finishAnswer(good,qd){
   var vtxt;
   if(good){streak++;if(streak>maxStreak)maxStreak=streak;celebrate();sndGood();vtxt=pick(GOOD);if(streak>=2)vtxt+=' <span class="pb-streak">&#128293; x'+streak+'</span>';}
   else{streak=0;doShake();sndBad();vtxt=pick(BAD);}
-  exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+pandaCoach(good?'happy':'sad',52)+'</div>';
+  exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+tigerCoach(good?'happy':'sad',52)+'</div>';
   document.getElementById('verdict').innerHTML=vtxt;
   document.getElementById('exptxt').textContent=qd.explain;
   document.getElementById('nextrow').classList.add('show');
@@ -1773,7 +1776,7 @@ function onBonusAnswer(){
   for(var i=0;i<btns.length;i++){var oi=parseInt(btns[i].getAttribute('data-oi'),10);btns[i].setAttribute('disabled','disabled');if(oi===qd.correct)btns[i].className='choice correct';else if(btns[i]===this)btns[i].className='choice wrong';}
   var exp=document.getElementById('explain'); exp.className='explain show '+(good?'good':'bad');
   if(good){celebrate();sndGood();} else {doShake();sndBad();}
-  exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+pandaCoach(good?'happy':'sad',52)+'</div>';
+  exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+tigerCoach(good?'happy':'sad',52)+'</div>';
   document.getElementById('verdict').textContent=good?'Un vrai champion de la culture golf !':'Pas grave, c\'etait juste pour le fun.';
   document.getElementById('exptxt').textContent=qd.explain;
   document.getElementById('nextrow').classList.add('show');
@@ -1836,7 +1839,7 @@ function resultScreen(){
   var starBlock=(curFlag!=='all')?'<div class="starsbig">'+starsHtml+'</div>':'';
   setView(
     '<div class="pad result"><h2>'+msg+'</h2>'+
-    '<div class="rina-wrap center">'+pandaCoach(mood,84)+'</div>'+
+    '<div class="tiger-wrap center">'+tigerCoach(mood,84)+'</div>'+
     starBlock+
     '<div class="scorebig"><span id="scnum">0</span><small>/'+ROUND+'</small></div>'+
     '<div class="verdict">'+lvl+' &middot; '+sub+'</div>'+
