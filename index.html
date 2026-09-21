@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Golf Academy - L'aventure des Drapeaux avec Coach Rina</title>
-<meta name="description" content="Un jeu pour s'entrainer aux regles et a l'etiquette du golf, avec Coach Rina le panda.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237fd1a3'/%3E%3Ccircle cx='19' cy='16' r='9' fill='%2320232a'/%3E%3Ccircle cx='45' cy='16' r='9' fill='%2320232a'/%3E%3Ccircle cx='32' cy='34' r='22' fill='%23fff'/%3E%3Cellipse cx='23' cy='30' rx='7' ry='9' fill='%2320232a'/%3E%3Cellipse cx='41' cy='30' rx='7' ry='9' fill='%2320232a'/%3E%3Ccircle cx='23' cy='31' r='3' fill='%23fff'/%3E%3Ccircle cx='41' cy='31' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<title>Golf Academy - L'aventure des Drapeaux avec Coach Tiger</title>
+<meta name="description" content="Un jeu pour s'entrainer aux regles et a l'etiquette du golf, avec Coach Tiger le tigre.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237fd1a3'/%3E%3Ccircle cx='19' cy='16' r='9' fill='%23f0862e'/%3E%3Ccircle cx='45' cy='16' r='9' fill='%23f0862e'/%3E%3Ccircle cx='32' cy='34' r='22' fill='%23f0862e'/%3E%3Cpath d='M26 14 q3 8 0 14' stroke='%2320232a' stroke-width='3' fill='none'/%3E%3Cpath d='M38 14 q-3 8 0 14' stroke='%2320232a' stroke-width='3' fill='none'/%3E%3Ccircle cx='23' cy='31' r='4' fill='%23fff'/%3E%3Ccircle cx='41' cy='31' r='4' fill='%23fff'/%3E%3Ccircle cx='23' cy='32' r='2' fill='%2320232a'/%3E%3Ccircle cx='41' cy='32' r='2' fill='%2320232a'/%3E%3Cellipse cx='32' cy='40' rx='3' ry='2' fill='%2320232a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -473,7 +473,7 @@ var BANK = [
    q:"Cet objet a deux dents (une fourchette). A quoi sert-il ?",
    choices:["A planter la balle","A reparer les pitchs sur le green","A ratisser le bunker","A porter le sac"],
    correct:1,hint:"On s'en sert sur le green, la ou tombe la balle.",
-   explain:"C'est un releve-pitch. Il sert a reparer la marque de balle (le pitch) sur le green. On doit toujours en avoir un dans la poche. C'est le geste prefere du coach Rina : releve ton pitch... et parfois celui des autres !"},
+   explain:"C'est un releve-pitch. Il sert a reparer la marque de balle (le pitch) sur le green. On doit toujours en avoir un dans la poche. C'est le geste prefere du coach Tiger : releve ton pitch... et parfois celui des autres !"},
   {flag:"vert",theme:"Materiel",scene:sceneTee(200,115),
    q:"Pour surelever la balle au depart, on la pose sur un petit objet. C'est...",
    choices:["Un tee","Un marqueur","Un pitch","Un club"],
@@ -704,7 +704,7 @@ var BANK = [
    q:"Ta balle est dans le bunker. Qu'est-ce qui est interdit avant de jouer ?",
    choices:["Enlever une feuille","Toucher le sable pour le tester","Regarder la balle","Poser son sac dehors"],
    correct:1,hint:"On ne 'teste' jamais le sable.",
-   explain:"Dans le bunker, tu ne dois pas tester le sable ni le toucher juste derriere ta balle avant de jouer. Sinon, penalite. (Enlever une feuille est permis.) Et souviens-toi : pour Rina, le bunker est le coup le plus facile du golf !"},
+   explain:"Dans le bunker, tu ne dois pas tester le sable ni le toucher juste derriere ta balle avant de jouer. Sinon, penalite. (Enlever une feuille est permis.) Et souviens-toi : pour Tiger, le bunker est le coup le plus facile du golf !"},
   {flag:"jaune",theme:"Etiquette",scene:sceneRake(),
    q:"Apres ton coup dans le bunker, quel est le bon reflexe ?",
    choices:["Partir vite","Ratisser le sable derriere soi","Sauter dehors","Laisser le rateau dans le trou"],
@@ -1148,10 +1148,10 @@ function pickBonus(){
 }
 
 /* ============================================================
-   VOIX DE COACH RINA + EFFETS
+   VOIX DE COACH TIGER + EFFETS
    ============================================================ */
-var GOOD=["Dans le mille, champion !","Rina est fiere de toi !","Beau swing de reponse !","Birdie de logique, bravo !","Tu assures a fond !","Superbe, comme une pro !","Coup parfait, bien joue !","Rina te fait un high-five !"];
-var BAD=["Oups, un petit passage par le rough...","Pas grave, meme les pros ratent parfois !","Presque ! On retient la bonne reponse pour la prochaine fois.","Une petite balle perdue, on en reprend une !","Ce n'est qu'un entrainement, on progresse a chaque coup.","Rina te glisse un tuyau pour la prochaine question."];
+var GOOD=["Dans le mille, champion !","Tiger est fier de toi !","Beau swing de reponse !","Birdie de logique, bravo !","Tu assures a fond !","Superbe, comme une pro !","Coup parfait, bien joue !","Tiger te fait un high-five !"];
+var BAD=["Oups, un petit passage par le rough...","Pas grave, meme les pros ratent parfois !","Presque ! On retient la bonne reponse pour la prochaine fois.","Une petite balle perdue, on en reprend une !","Ce n'est qu'un entrainement, on progresse a chaque coup.","Tiger te glisse un tuyau pour la prochaine question."];
 var reduceMotion=(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 var CONF_COLORS=['#5fd66a','#d9c34a','#e0435f','#4a86e0','#c9c9c9','#8a63c9'];
 var CONF_SHAPES=['circle','square','flag'];
@@ -1238,7 +1238,7 @@ function loadSave(){
 }
 function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(profile));}catch(e){}}
 function totalStars(){var t=0;for(var i=0;i<FLAG_ORDER.length;i++)t+=(profile.stars[FLAG_ORDER[i]]||0);return t;}
-function rankName(){var t=totalStars(); if(t>=15)return'Legende de Coach Rina'; if(t>=12)return'Champion du club'; if(t>=8)return'Pro en herbe'; if(t>=4)return'Espoir du parcours'; return'Bourgeon du practice';}
+function rankName(){var t=totalStars(); if(t>=15)return'Legende de Coach Tiger'; if(t>=12)return'Champion du club'; if(t>=8)return'Pro en herbe'; if(t>=4)return'Espoir du parcours'; return'Bourgeon du practice';}
 
 /* ============================================================
    AVATARS / MASCOTTES
@@ -1252,7 +1252,7 @@ var MASCOTS=[
   {id:'a6',name:'Balle disco',    need:6},
   {id:'a7',name:'Golf-bot',         need:9},
   {id:'a8',name:'Champion couronne', need:12},
-  {id:'a9',name:'Mini Rina',        need:15}
+  {id:'a9',name:'Mini Tiger',        need:15}
 ];
 function mascotById(id){for(var i=0;i<MASCOTS.length;i++)if(MASCOTS[i].id===id)return MASCOTS[i];return MASCOTS[0];}
 function mascotUnlocked(m){return totalStars()>=m.need;}
@@ -1329,26 +1329,37 @@ function robotFace(){return '<rect x="17" y="27" width="30" height="27" rx="7" f
 function crown(){return '<path d="M18 27 L24 17 L32 25 L40 17 L46 27 Z" fill="#ffcf3f" stroke="#d9a400" stroke-width="1.5"/><rect x="18" y="26" width="28" height="4" rx="1" fill="#ffcf3f"/>';}
 function pandaParts(cx,cy,r,mood){
   var earR=r*0.34, s='';
-  s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#22242b"/>';
-  s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#22242b"/>';
-  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#ffffff" stroke="#e6e6e6" stroke-width="1"/>';
-  s+='<ellipse cx="'+(cx-r*0.42)+'" cy="'+(cy-r*0.05)+'" rx="'+(r*0.30)+'" ry="'+(r*0.37)+'" fill="#22242b" transform="rotate(-18 '+(cx-r*0.42)+' '+(cy-r*0.05)+')"/>';
-  s+='<ellipse cx="'+(cx+r*0.42)+'" cy="'+(cy-r*0.05)+'" rx="'+(r*0.30)+'" ry="'+(r*0.37)+'" fill="#22242b" transform="rotate(18 '+(cx+r*0.42)+' '+(cy-r*0.05)+')"/>';
+  s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#f0862e" stroke="#20232a" stroke-width="'+(r*0.05)+'"/>';
+  s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+earR+'" fill="#f0862e" stroke="#20232a" stroke-width="'+(r*0.05)+'"/>';
+  s+='<circle cx="'+(cx-r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+(earR*0.5)+'" fill="#fff6ea"/>';
+  s+='<circle cx="'+(cx+r*0.72)+'" cy="'+(cy-r*0.7)+'" r="'+(earR*0.5)+'" fill="#fff6ea"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#f0862e" stroke="#d9711f" stroke-width="1"/>';
+  s+='<ellipse cx="'+cx+'" cy="'+(cy+r*0.28)+'" rx="'+(r*0.62)+'" ry="'+(r*0.46)+'" fill="#fff6ea"/>';
+  s+='<path d="M'+(cx-r*0.18)+' '+(cy-r*0.85)+' q'+(r*0.05)+' '+(r*0.35)+' 0 '+(r*0.55)+'" stroke="#20232a" stroke-width="'+(r*0.08)+'" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M'+(cx+r*0.18)+' '+(cy-r*0.85)+' q'+(-r*0.05)+' '+(r*0.35)+' 0 '+(r*0.55)+'" stroke="#20232a" stroke-width="'+(r*0.08)+'" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M'+(cx-r*0.78)+' '+(cy-r*0.02)+' q'+(r*0.22)+' '+(r*0.08)+' '+(r*0.3)+' '+(r*0.3)+'" stroke="#20232a" stroke-width="'+(r*0.07)+'" fill="none" stroke-linecap="round"/>';
+  s+='<path d="M'+(cx+r*0.78)+' '+(cy-r*0.02)+' q'+(-r*0.22)+' '+(r*0.08)+' '+(-r*0.3)+' '+(r*0.3)+'" stroke="#20232a" stroke-width="'+(r*0.07)+'" fill="none" stroke-linecap="round"/>';
   var eyeY=cy-r*0.05;
   if(mood==='sad'){
-    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.37)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#22242b"/>';
-    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.43)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#22242b"/>';
+    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.37)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#20232a"/>';
+    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.43)+'" cy="'+(eyeY+r*0.05)+'" r="'+(r*0.07)+'" fill="#20232a"/>';
   } else {
-    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#22242b"/>';
-    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#22242b"/>';
+    s+='<circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx-r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#20232a"/>';
+    s+='<circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.14)+'" fill="#fff"/><circle cx="'+(cx+r*0.40)+'" cy="'+eyeY+'" r="'+(r*0.075)+'" fill="#20232a"/>';
   }
-  s+='<ellipse cx="'+cx+'" cy="'+(cy+r*0.2)+'" rx="'+(r*0.13)+'" ry="'+(r*0.10)+'" fill="#22242b"/>';
+  s+='<g stroke="#20232a" stroke-width="'+(r*0.035)+'" opacity=".5">'+
+    '<line x1="'+(cx-r*0.32)+'" y1="'+(cy+r*0.3)+'" x2="'+(cx-r*0.78)+'" y2="'+(cy+r*0.2)+'"/>'+
+    '<line x1="'+(cx-r*0.32)+'" y1="'+(cy+r*0.4)+'" x2="'+(cx-r*0.78)+'" y2="'+(cy+r*0.4)+'"/>'+
+    '<line x1="'+(cx+r*0.32)+'" y1="'+(cy+r*0.3)+'" x2="'+(cx+r*0.78)+'" y2="'+(cy+r*0.2)+'"/>'+
+    '<line x1="'+(cx+r*0.32)+'" y1="'+(cy+r*0.4)+'" x2="'+(cx+r*0.78)+'" y2="'+(cy+r*0.4)+'"/>'+
+    '</g>';
+  s+='<ellipse cx="'+cx+'" cy="'+(cy+r*0.2)+'" rx="'+(r*0.13)+'" ry="'+(r*0.10)+'" fill="#20232a"/>';
   if(mood==='happy'){
-    s+='<path d="M'+(cx-r*0.24)+' '+(cy+r*0.36)+' Q'+cx+' '+(cy+r*0.62)+' '+(cx+r*0.24)+' '+(cy+r*0.36)+'" stroke="#22242b" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M'+(cx-r*0.24)+' '+(cy+r*0.36)+' Q'+cx+' '+(cy+r*0.62)+' '+(cx+r*0.24)+' '+(cy+r*0.36)+'" stroke="#20232a" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
   } else if(mood==='sad'){
-    s+='<path d="M'+(cx-r*0.18)+' '+(cy+r*0.44)+' Q'+cx+' '+(cy+r*0.28)+' '+(cx+r*0.18)+' '+(cy+r*0.44)+'" stroke="#22242b" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
+    s+='<path d="M'+(cx-r*0.18)+' '+(cy+r*0.44)+' Q'+cx+' '+(cy+r*0.28)+' '+(cx+r*0.18)+' '+(cy+r*0.44)+'" stroke="#20232a" stroke-width="'+(r*0.065)+'" fill="none" stroke-linecap="round"/>';
   } else {
-    s+='<line x1="'+(cx-r*0.16)+'" y1="'+(cy+r*0.36)+'" x2="'+(cx+r*0.16)+'" y2="'+(cy+r*0.36)+'" stroke="#22242b" stroke-width="'+(r*0.065)+'" stroke-linecap="round"/>';
+    s+='<line x1="'+(cx-r*0.16)+'" y1="'+(cy+r*0.36)+'" x2="'+(cx+r*0.16)+'" y2="'+(cy+r*0.36)+'" stroke="#20232a" stroke-width="'+(r*0.065)+'" stroke-linecap="round"/>';
   }
   return s;
 }
@@ -1411,9 +1422,9 @@ function pandaCoach(mood,size,text,extraCls){
   } else if(mood==='sad'){
     extra='<path d="M'+(cx+r*0.8)+' '+(cy-r*0.6)+' q4 6 0 11" stroke="#7fd0ff" stroke-width="3" fill="none" stroke-linecap="round"/>';
   }
-  var body='<ellipse cx="'+cx+'" cy="'+(cy+r*1.62)+'" rx="'+(r*0.92)+'" ry="'+(r*0.62)+'" fill="#ffffff" stroke="#e6e6e6"/>'+
-    '<ellipse cx="'+(cx-r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#22242b"/>'+
-    '<ellipse cx="'+(cx+r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#22242b"/>'+
+  var body='<ellipse cx="'+cx+'" cy="'+(cy+r*1.62)+'" rx="'+(r*0.92)+'" ry="'+(r*0.62)+'" fill="#fff6ea" stroke="#e8d9c2"/>'+
+    '<ellipse cx="'+(cx-r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#f0862e"/>'+
+    '<ellipse cx="'+(cx+r*0.7)+'" cy="'+(cy+r*1.35)+'" rx="'+(r*0.28)+'" ry="'+(r*0.4)+'" fill="#f0862e"/>'+
     '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.7)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="#17181d" stroke="#0a0a0c"/>'+
     '<path d="M'+(cx-r*0.9)+' '+(cy+r*1.05)+' Q'+cx+' '+(cy+r*0.86)+' '+(cx+r*0.9)+' '+(cy+r*1.05)+'" fill="none" stroke="#39ff6a" stroke-width="2"/>';
   var mk='<svg width="'+size+'" height="'+(size*1.35)+'" viewBox="0 0 '+size+' '+(size*1.35)+'" xmlns="http://www.w3.org/2000/svg">'+
@@ -1487,7 +1498,7 @@ function screenProfile(){
   setView(
     '<div class="body">'+decorBanner()+'<div class="pad profile">'+
       '<h1>Cree ton golfeur</h1>'+
-      pandaCoach('happy',70,'Salut, moi c\'est <b>Rina</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?')+
+      pandaCoach('happy',70,'Salut, moi c\'est <b>Tiger</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?')+
       '<label class="lbl">Ton prenom</label>'+
       '<input id="pname" class="nameinput" maxlength="14" placeholder="Ecris ton prenom" value="'+esc(profile.name)+'">'+
       '<label class="lbl">Choisis ton avatar de golfeur</label>'+
@@ -1665,7 +1676,7 @@ function renderQuestion(){
     '<div class="pad">'+playHeader()+
     '<div class="meta"><span class="badge theme">'+qd.theme+'</span>'+refBadge+flagBadge()+'</div>'+
     body+
-    '<div class="tools"><button class="hintbtn" id="hintbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10c.7.7 1 1.5 1 2h6c0-.5.3-1.3 1-2a6 6 0 0 0-4-10z"/></svg>Demande un tuyau a Rina</button></div>'+
+    '<div class="tools"><button class="hintbtn" id="hintbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10c.7.7 1 1.5 1 2h6c0-.5.3-1.3 1-2a6 6 0 0 0-4-10z"/></svg>Demande un tuyau a Tiger</button></div>'+
     '<div class="hintzone" id="hintzone"></div>'+
     '<div class="explain" id="explain"><div class="ebadge"></div><div class="ebubble"><b id="verdict"></b><span id="exptxt"></span></div></div>'+
     '<div class="nextrow" id="nextrow"><button class="btn" id="nextbtn"></button></div></div>'
@@ -1813,10 +1824,10 @@ function resultScreen(){
   var starsHtml='';
   for(var s=0;s<3;s++)starsHtml+=starSVG(s<earned,34,s<earned);
   var msg,sub,mood;
-  if(score===ROUND){msg='Sans-faute total !';sub='Parfait du debut a la fin. Rina applaudit tres fort !';mood='happy';celebrate(true);sndStar();}
+  if(score===ROUND){msg='Sans-faute total !';sub='Parfait du debut a la fin. Tiger applaudit tres fort !';mood='happy';celebrate(true);sndStar();}
   else if(earned===2){msg='Superbe partie !';sub='Il ne manque presque rien pour le sans-faute.';mood='happy';celebrate();sndStar();}
   else if(earned===1){msg='Bien joue !';sub='Continue a t\'entrainer pour decrocher les 3 etoiles.';mood='happy';}
-  else {msg='On continue de s\'entrainer.';sub='Personne ne reussit du premier coup. Rina croit en toi, on retente !';mood='sad';}
+  else {msg='On continue de s\'entrainer.';sub='Personne ne reussit du premier coup. Tiger croit en toi, on retente !';mood='sad';}
   var rows='';
   for(var r=0;r<results.length;r++){rows+='<div class="row"><div class="n">'+(r+1)+'</div><div class="t">'+results[r].theme+'</div><div class="m '+(results[r].ok?'y':'x')+'">'+(results[r].ok?'&#10003;':'&#10007;')+'</div></div>';}
   var lvl=(curFlag==='all')?'Grand melange':FLAGS[curFlag].name;
@@ -1833,7 +1844,7 @@ function resultScreen(){
     '<div class="scorecard">'+rows+'</div>'+
     '<button class="btn big" id="again">Rejouer cette etape</button>'+
     '<button class="btn ghost big" id="home" style="margin-top:10px">Retour a l\'academie</button>'+
-    '<div class="footer">Un jeu imagine avec Coach Rina, pour progresser sur les regles et l\'etiquette du golf.<br>Inspire du programme des Drapeaux ffgolf / PGA France et des Regles du Golf. Outil de revision.</div></div>'
+    '<div class="footer">Un jeu imagine avec Coach Tiger, pour progresser sur les regles et l\'etiquette du golf.<br>Inspire du programme des Drapeaux ffgolf / PGA France et des Regles du Golf. Outil de revision.</div></div>'
   );
   animateCount(document.getElementById('scnum'),score,700);
   document.getElementById('again').onclick=function(){sndClick();startRound(curFlag);};
