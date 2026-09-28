@@ -12,7 +12,7 @@
 var Putting = (function(){
   var W=340, H=520, R=9, HOLE_Y=70, HOLE_R=14, FRICTION=230, VMAX=560, PULLMAX=150, CAPTURE_SPEED=140;
   var GREEN_CX=W/2, GREEN_CY=280, GREEN_RX=155, GREEN_RY=270;
-  var AIM_VIS=95; /* la ligne de visee s'estompe avant la distance reelle : on doit sentir la puissance, pas juste viser le trou */
+  var AIM_VIS=130; /* la ligne de visee s'estompe avant la distance reelle : on doit sentir la puissance, pas juste viser le trou */
 
   /* textures d'herbe (fairway/green) chargees une fois, utilisees en motif repete sur le canvas */
   var texFairwayImg=new Image(), texGreenImg=new Image();
@@ -145,10 +145,13 @@ var Putting = (function(){
       var ang=Math.atan2(v.vy,v.vx);
       var visDist=Math.min(dist,AIM_VIS);
       var visX=ball.x+Math.cos(ang)*visDist, visY=ball.y+Math.sin(ang)*visDist;
+      ctx.lineCap='round';
+      ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.lineWidth=5.5;
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke();
       var grad=ctx.createLinearGradient(ball.x,ball.y,visX,visY);
-      grad.addColorStop(0,'rgba(255,255,255,.65)'); grad.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.setLineDash([5,6]); ctx.strokeStyle=grad; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke(); ctx.setLineDash([]);
+      grad.addColorStop(0,'rgba(255,255,255,1)'); grad.addColorStop(.65,'rgba(255,255,255,.92)'); grad.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.setLineDash([6,7]); ctx.strokeStyle=grad; ctx.lineWidth=3.2;
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke(); ctx.setLineDash([]); ctx.lineCap='butt';
       ctx.fillStyle='rgba(0,0,0,.4)'; ctx.fillRect(ball.x-24,ball.y+22,48,6);
       ctx.fillStyle=v.p>0.92?'#e0435f':'#e8c94a'; ctx.fillRect(ball.x-24,ball.y+22,48*v.p,6);
     }
@@ -379,10 +382,13 @@ var Putting = (function(){
       ctx.strokeStyle='rgba(232,201,74,.9)'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(ball.x-(v.vx/VMAX)*PULLMAX*.5,ball.y-(v.vy/VMAX)*PULLMAX*.5); ctx.stroke();
       var ang=Math.atan2(v.vy,v.vx), aimVis=club==='iron'?AIM_VIS*1.6:AIM_VIS;
       var visX=ball.x+Math.cos(ang)*aimVis, visY=ball.y+Math.sin(ang)*aimVis;
+      ctx.lineCap='round';
+      ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.lineWidth=5.5;
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke();
       var grad=ctx.createLinearGradient(ball.x,ball.y,visX,visY);
-      grad.addColorStop(0,'rgba(255,255,255,.65)'); grad.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.setLineDash([5,6]); ctx.strokeStyle=grad; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke(); ctx.setLineDash([]);
+      grad.addColorStop(0,'rgba(255,255,255,1)'); grad.addColorStop(.65,'rgba(255,255,255,.92)'); grad.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.setLineDash([6,7]); ctx.strokeStyle=grad; ctx.lineWidth=3.2;
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke(); ctx.setLineDash([]); ctx.lineCap='butt';
       ctx.fillStyle='rgba(0,0,0,.4)'; ctx.fillRect(ball.x-24,ball.y+22,48,6);
       ctx.fillStyle=v.p>0.92?'#e0435f':'#e8c94a'; ctx.fillRect(ball.x-24,ball.y+22,48*v.p,6);
     }
