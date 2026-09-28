@@ -11,7 +11,7 @@
    ============================================================ */
 var Putting = (function(){
   var W=340, H=520, R=9, HOLE_Y=70, HOLE_R=14, FRICTION=230, VMAX=560, PULLMAX=150, CAPTURE_SPEED=140;
-  var GREEN_CX=W/2, GREEN_CY=280, GREEN_RX=155, GREEN_RY=270;
+  var GREEN_CX=W/2, GREEN_CY=260, GREEN_RX=135, GREEN_RY=230;
   var AIM_VIS=130; /* la ligne de visee s'estompe avant la distance reelle : on doit sentir la puissance, pas juste viser le trou */
 
   /* textures d'herbe/sable/eau chargees une fois, utilisees en motif repete sur le canvas */
@@ -36,7 +36,7 @@ var Putting = (function(){
 
   function open(cfg){
     var putts=cfg.putts||[{x:0,dist:220,pts:2}], idx=0, total=0, made=0;
-    var root=document.createElement('div'); root.className='mg';
+    var root=document.createElement('div'); root.className='mg mg-practice';
     root.innerHTML=
       '<div class="mg-top"><div class="mg-title">'+(cfg.title||'Green de practice')+'</div><button class="mg-skip">Passer</button></div>'+
       '<div class="mg-wrap"><canvas class="mg-canvas"></canvas><div class="mg-help">Pose ton doigt sur la balle, tire vers l\'arriere, relache !</div></div>'+
@@ -46,7 +46,7 @@ var Putting = (function(){
     var scale=1, dpr=Math.min(window.devicePixelRatio||1,2), raf=0, closed=false;
 
     function resize(){
-      var maxW=Math.min(window.innerWidth-16,380), maxH=window.innerHeight-70;
+      var maxW=Math.min(window.innerWidth-56,330), maxH=window.innerHeight-140;
       var w=maxW, h=w*H/W; if(h>maxH){h=maxH;w=h*W/H;}
       canvas.style.width=w+'px'; canvas.style.height=h+'px';
       canvas.width=Math.round(w*dpr); canvas.height=Math.round(h*dpr); scale=w/W;
@@ -260,7 +260,7 @@ var Putting = (function(){
     function inWater(x,y){ var dx=(x-56)/36, dy=(y-395)/105; return dx*dx+dy*dy<=1; }
 
     var strokes=0, holed=false, totalPts=0;
-    var root=document.createElement('div'); root.className='mg';
+    var root=document.createElement('div'); root.className='mg mg-hole';
     root.innerHTML=
       '<div class="mg-top"><div class="mg-title">'+(cfg.title||'Trou par 3')+'</div><button class="mg-skip">Passer</button></div>'+
       '<div class="mg-wrap"><canvas class="mg-canvas"></canvas><div class="mg-help">Choisis ton club !</div>'+
@@ -274,7 +274,7 @@ var Putting = (function(){
     var scale=1, dpr=Math.min(window.devicePixelRatio||1,2), raf=0, closed=false;
 
     function resize(){
-      var maxW=Math.min(window.innerWidth-16,380), maxH=window.innerHeight-70;
+      var maxW=Math.min(window.innerWidth-48,320), maxH=window.innerHeight-120;
       var w=maxW, h=w*H2/W2; if(h>maxH){h=maxH;w=h*W2/H2;}
       canvas.style.width=w+'px'; canvas.style.height=h+'px';
       canvas.width=Math.round(w*dpr); canvas.height=Math.round(h*dpr); scale=w/W2;
