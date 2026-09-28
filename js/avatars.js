@@ -48,8 +48,13 @@ function avatarSVG(id,size,tier){
   size=size||64;
   var file=AVATAR_FILES[id]||AVATAR_FILES.a1;
   var overlay=(AVATAR_EVOLVES.indexOf(id)!==-1)?evoOverlay(tier||tierFor()):'';
-  return '<span style="position:relative;display:inline-block;width:'+size+'px;height:'+size+'px;flex:0 0 auto">'+
-    '<img src="assets/avatars/'+file+'" width="'+size+'" height="'+size+'" alt="" style="display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;background:#2c2d2e">'+
+  /* le fond du medaillon reprend le bas du fond de club house choisi, pour que l'avatar soit assorti au decor */
+  var bg=(typeof profile!=='undefined'&&profile&&profile.background)?bgById(profile.background):null;
+  var wrapBg=bg?('background-image:url(assets/backgrounds/'+bg.file+');background-size:cover;background-position:center bottom;')
+              :'background:#2c2d2e;';
+  var imgSize=Math.round(size*0.8);
+  return '<span style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:'+size+'px;height:'+size+'px;flex:0 0 auto;border-radius:50%;overflow:hidden;'+wrapBg+'">'+
+    '<img src="assets/avatars/'+file+'" width="'+imgSize+'" height="'+imgSize+'" alt="" style="display:block;width:'+imgSize+'px;height:'+imgSize+'px;border-radius:50%;object-fit:cover">'+
     (overlay?'<svg width="'+size+'" height="'+size+'" viewBox="0 0 64 64" style="position:absolute;inset:0;pointer-events:none">'+overlay+'</svg>':'')+
     '</span>';
 }
