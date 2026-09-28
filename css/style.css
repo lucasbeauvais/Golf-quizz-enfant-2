@@ -318,8 +318,10 @@ body.has-bgphoto .bgfx{opacity:0}
 .fx-title b{display:block;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-weight:900;font-size:clamp(38px,12vw,80px);color:var(--gold);line-height:1;-webkit-text-stroke:3px #0a0a0a;text-shadow:0 6px 0 #0a0a0a,0 0 30px rgba(232,201,74,.7);letter-spacing:1px}
 .fx-title span{display:inline-block;margin-top:10px;font-weight:900;font-size:clamp(13px,3.6vw,18px);background:#0a0a0a;padding:6px 14px;border-radius:99px;border:2px solid var(--gold);color:#fff}
 .fx-title.fire b{color:#fff3b0;text-shadow:0 6px 0 #6b0a0a,0 0 40px rgba(255,159,28,.9)}
-.fx-fireball{position:absolute;width:min(56vmin,320px);aspect-ratio:1;left:50%;top:42%;transform:translate(-50%,-50%);border-radius:16px;object-fit:cover;filter:drop-shadow(0 10px 30px rgba(255,140,20,.55))}
-.fx-burst-img{position:absolute;left:50%;top:44%;width:min(70vmin,380px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;object-fit:cover;filter:drop-shadow(0 0 40px rgba(232,201,74,.5))}
+.fx-fireball{position:absolute;width:min(56vmin,320px);aspect-ratio:1;left:50%;top:42%;transform:translate(-50%,-50%);border-radius:50%;object-fit:cover;filter:drop-shadow(0 10px 30px rgba(255,140,20,.55));
+  -webkit-mask-image:radial-gradient(circle,#000 56%,transparent 80%);mask-image:radial-gradient(circle,#000 56%,transparent 80%)}
+.fx-burst-img{position:absolute;left:50%;top:44%;width:min(70vmin,380px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;object-fit:cover;filter:drop-shadow(0 0 40px rgba(232,201,74,.5));
+  -webkit-mask-image:radial-gradient(circle,#000 54%,transparent 80%);mask-image:radial-gradient(circle,#000 54%,transparent 80%)}
 .fxphoto .fx-word{position:absolute;left:0;right:0;bottom:7%;text-align:center;pointer-events:none;margin:0}
 .fxphoto .fx-word b{display:inline-block;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-weight:900;font-size:clamp(26px,8vw,40px);color:var(--gold);-webkit-text-stroke:3px #0a0a0a;text-shadow:0 4px 0 #0a0a0a;letter-spacing:1px}
 .fx-stamp{position:absolute;left:50%;top:40%;margin-left:-110px;width:220px;text-align:center;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-size:52px;color:var(--ko);border:6px solid var(--ko);border-radius:14px;background:rgba(255,255,255,.88);padding:6px 0}
