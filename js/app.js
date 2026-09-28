@@ -221,12 +221,20 @@ function screenHome(){
   var tigerMsg = next
     ? 'Direction le <b>'+FLAGS[next].name.toLowerCase()+'</b> ! Tu es pret ?'
     : 'Bravo, tu as debloque toutes les etapes ! Tente le Grand Melange.';
+  var pcBgObj=profile.background?bgById(profile.background):null;
+  var pcBg=pcBgObj?'<div class="pc-bg" style="background-image:url(assets/backgrounds/'+pcBgObj.file+')"></div>':'';
+  var pcFooter=pcBgObj
+    ? '<div class="pc-footer">Fond : <b>'+pcBgObj.name+'</b> &middot; changer</div>'
+    : '<div class="pc-footer">Fond : <b>aucun</b> &middot; en choisir un</div>';
   setView(
     '<div class="body">'+decorBanner()+'<div class="pad home">'+
-      '<button class="playercard" id="pcard"><div class="pc-av-wrap"><div class="pc-av">'+avatarSVG(profile.avatar,52)+'</div>'+
+      '<button class="playercard" id="pcard">'+pcBg+
+        '<div class="pc-top"><div class="pc-av-wrap"><div class="pc-av">'+avatarSVG(profile.avatar,52)+'</div>'+
         '<div class="pc-lvl">'+levelBadge(totalStars(),30)+'</div></div>'+
         '<div class="pc-txt"><b>'+esc(profile.name)+'</b><span>'+rankName()+'</span><span class="pc-pts">'+(profile.careerPts||0)+' points en carriere</span></div>'+
-        '<div class="pc-stars">'+starSVG(true,18)+totalStars()+' / 15</div></button>'+
+        '<div class="pc-stars">'+starSVG(true,18)+totalStars()+' / 15</div></div>'+
+        pcFooter+
+      '</button>'+
       tigerCoach(next?'happy':'happy',56,tigerMsg)+
       '<div class="sectitle">Ton parcours en 5 etapes</div>'+
       '<div class="roadmap">'+rows+'</div>'+
