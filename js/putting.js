@@ -51,7 +51,7 @@ var Putting = (function(){
     }
     resize(); window.addEventListener('resize',resize);
 
-    var ball, state, drag=null, floatTxt=[], resultTimer=0, shotTime=0, scored=false, lipped=false, holeX=W/2;
+    var ball, state, drag=null, floatTxt=[], resultTimer=0, shotTime=0, scored=false, lipped=false, holeX=W/2, attempt=1;
     function cfgFor(){ return putts[idx]||putts[putts.length-1]; }
     function setupShot(){
       var p=cfgFor();
@@ -99,7 +99,7 @@ var Putting = (function(){
           lipped=true;
           var nx=(ball.x-holeX)/(dh||1), ny=(ball.y-HOLE_Y)/(dh||1);
           ball.vx=nx*sp*0.55; ball.vy=ny*sp*0.55;
-          floatTxt.push({x:holeX,y:HOLE_Y-14,t:0,txt:'PRESQUE !'});
+          floatTxt.push({x:holeX,y:HOLE_Y-14,t:0,txt:'TROP FORT !'});
           sndBad();
         }
       }
@@ -156,7 +156,7 @@ var Putting = (function(){
       ctx.fillStyle='rgba(10,10,12,.75)'; ctx.fillRect(10,10,W-20,38);
       ctx.strokeStyle='#e8c94a'; ctx.lineWidth=2; ctx.strokeRect(10,10,W-20,38);
       ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 13px Rubik,Arial';
-      ctx.fillText('Coup '+Math.min(idx+1,putts.length)+' / '+putts.length,22,33);
+      ctx.fillText('Coup '+Math.min(idx+1,putts.length)+' / '+putts.length+(attempt>1?' (essai 2/2)':''),22,33);
       ctx.textAlign='right'; ctx.fillStyle='#e8c94a'; ctx.font='900 17px Impact,Arial Black,Helvetica';
       ctx.fillText('+'+total+' PTS',W-22,35);
       if(state==='aim'){
@@ -190,7 +190,15 @@ var Putting = (function(){
         }
       } else if(state==='result'){
         resultTimer+=dt;
-        if(resultTimer>0.7){ idx++; if(idx>=putts.length){ finish(); return; } setupShot(); }
+        if(resultTimer>0.7){
+          if(!scored && attempt<2){
+            attempt++;
+            floatTxt.push({x:W/2,y:H*0.42,t:0,txt:'ENCORE UN ESSAI !'});
+            setupShot();
+          } else {
+            idx++; attempt=1; if(idx>=putts.length){ finish(); return; } setupShot();
+          }
+        }
       }
       ctx.setTransform(scale*dpr,0,0,scale*dpr,0,0);
       drawGreen(); drawHole();
@@ -317,7 +325,7 @@ var Putting = (function(){
           lipped=true;
           var nx=(ball.x-GX)/(dh||1), ny=(ball.y-HOLE_Y2)/(dh||1);
           ball.vx=nx*sp*0.55; ball.vy=ny*sp*0.55;
-          floatTxt.push({x:GX,y:HOLE_Y2-14,t:0,txt:'PRESQUE !'});
+          floatTxt.push({x:GX,y:HOLE_Y2-14,t:0,txt:'TROP FORT !'});
           sndBad();
         }
       }
