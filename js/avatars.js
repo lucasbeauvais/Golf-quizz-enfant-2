@@ -30,6 +30,22 @@ var BACKGROUNDS=[
 ];
 function bgById(id){for(var i=0;i<BACKGROUNDS.length;i++)if(BACKGROUNDS[i].id===id)return BACKGROUNDS[i];return null;}
 function bgUnlocked(b){return (profile.careerPts||0)>=b.need;}
+
+/* ============================================================
+   BALLES DE PUTTING : couleurs a debloquer avec les points en carriere
+   ============================================================ */
+var BALLS=[
+  {id:'white',name:'Classique',color:'#ffffff',need:0},
+  {id:'yellow',name:'Jaune fluo',color:'#f4d93e',need:30},
+  {id:'orange',name:'Orange',color:'#f0862e',need:80},
+  {id:'pink',name:'Rose',color:'#e85d9c',need:160},
+  {id:'blue',name:'Bleue',color:'#4a86e0',need:280},
+  {id:'green',name:'Verte',color:'#5fd66a',need:420},
+  {id:'red',name:'Rouge',color:'#e0435f',need:600},
+  {id:'gold',name:'En or',color:'#e8c94a',need:900}
+];
+function ballById(id){for(var i=0;i<BALLS.length;i++)if(BALLS[i].id===id)return BALLS[i];return BALLS[0];}
+function ballUnlocked(b){return (profile.careerPts||0)>=b.need;}
 function starPts(cx,cy,r){var p='';for(var i=0;i<5;i++){var a=-Math.PI/2+i*2*Math.PI/5;var a2=a+Math.PI/5;p+=(cx+Math.cos(a)*r).toFixed(1)+','+(cy+Math.sin(a)*r).toFixed(1)+' '+(cx+Math.cos(a2)*r*0.46).toFixed(1)+','+(cy+Math.sin(a2)*r*0.46).toFixed(1)+' ';}return p;}
 var AVATAR_FILES={a1:'a1_lion.png',a2:'a2_renard.png',a3:'a3_ours.png',a4:'a4_elephant.png',a5:'a5_chat.png',a6:'a6_koala.png',a7:'a7_chouette.png',a8:'a8_aigle.png',a9:'a9_tigre.png'};
 var AVATAR_EVOLVES=['a1','a2','a3','a4'];

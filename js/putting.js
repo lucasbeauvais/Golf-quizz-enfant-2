@@ -29,6 +29,10 @@ var Putting = (function(){
     var p=ctx.createPattern(oc,'repeat'); _patCache[key]=p; return p;
   }
 
+  function equippedBallColor(){
+    return (typeof profile!=='undefined'&&profile&&profile.ball)?ballById(profile.ball).color:'#ffffff';
+  }
+
   function inGreen(x,y){
     var dx=(x-GREEN_CX)/GREEN_RX, dy=(y-GREEN_CY)/GREEN_RY;
     return dx*dx+dy*dy<=1.05;
@@ -44,6 +48,7 @@ var Putting = (function(){
     document.body.appendChild(root);
     var canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), help=root.querySelector('.mg-help');
     var scale=1, dpr=Math.min(window.devicePixelRatio||1,2), raf=0, closed=false;
+    var ballColor=equippedBallColor();
 
     function resize(){
       var maxW=Math.min(window.innerWidth-56,330), maxH=window.innerHeight-140;
@@ -123,7 +128,7 @@ var Putting = (function(){
     function drawBall(x,y,gold){
       ctx.save(); ctx.translate(x,y);
       ctx.beginPath(); ctx.ellipse(0,3.5,R*0.9,R*0.35,0,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.fillStyle=gold?'#e8c94a':'#fff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.fillStyle=gold?'#e8c94a':ballColor; ctx.fill();
       ctx.lineWidth=1.2; ctx.strokeStyle=gold?'#a8891f':'#b7b7a6'; ctx.stroke();
       ctx.restore();
     }
@@ -272,6 +277,7 @@ var Putting = (function(){
     document.body.appendChild(root);
     var canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), help=root.querySelector('.mg-help'), clubsUI=root.querySelector('#mgclubs');
     var scale=1, dpr=Math.min(window.devicePixelRatio||1,2), raf=0, closed=false;
+    var ballColor=equippedBallColor();
 
     function resize(){
       var maxW=Math.min(window.innerWidth-48,320), maxH=window.innerHeight-120;
@@ -371,7 +377,7 @@ var Putting = (function(){
       ctx.beginPath(); ctx.ellipse(0,3.5+h*0.02,R*0.9*shrink,R*0.35*shrink,0,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fill();
       ctx.translate(0,-h);
       var sc=1+h/260;
-      ctx.beginPath(); ctx.arc(0,0,R*sc,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(0,0,R*sc,0,Math.PI*2); ctx.fillStyle=ballColor; ctx.fill();
       ctx.lineWidth=1.2; ctx.strokeStyle='#b7b7a6'; ctx.stroke();
       ctx.restore();
     }

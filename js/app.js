@@ -24,7 +24,7 @@ function floatPlusOne(target){
 var SAVE_KEY='golf_academy_tiger_v2';
 var LEGACY_SAVE_KEYS=['golf_academy_tiger_v1','golf_academy_rina_v1','golf_drapeaux_v6'];
 var profile=null;
-function blankProfile(){return {name:'',avatar:'a1',background:null,stars:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},best:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},
+function blankProfile(){return {name:'',avatar:'a1',background:null,ball:'white',stars:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},best:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},
   bestPts:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0,all:0},careerPts:0,played:0,muted:false,createdAt:Date.now()};}
 function loadSave(){
   try{
@@ -137,6 +137,22 @@ function screenProfile(){
         '</div>';
     }
   }
+  var ballGrid='';
+  for(var bli=0;bli<BALLS.length;bli++){
+    var bl=BALLS[bli], blunlocked=ballUnlocked(bl), blsel=(profile.ball===bl.id);
+    if(blunlocked){
+      ballGrid+='<button class="ballcard'+(blsel?' sel':'')+'" data-ball="'+bl.id+'">'+
+        (blsel?'<div class="bsel-tag">Equipe</div>':'')+
+        '<div class="ballswatch" style="background-color:'+bl.color+'"></div>'+
+        '<div class="bname">'+bl.name+'</div></button>';
+    } else {
+      ballGrid+='<div class="ballcard locked">'+
+        '<div class="ballswatch" style="background-color:'+bl.color+'"></div>'+
+        '<div class="bname">'+bl.name+'</div>'+
+        '<div class="blockicon">'+lockSVG('#e8c94a')+'<span>'+bl.need+' pts</span></div>'+
+        '</div>';
+    }
+  }
   setView(
     '<div class="body">'+decorBanner()+'<div class="pad profile">'+
       '<h1>'+(onboarding?'Cree ton golfeur':'Mon profil')+'</h1>'+
@@ -149,6 +165,8 @@ function screenProfile(){
       '<div class="mascotgrid">'+avGrid+'</div>'+
       '<div class="sectitle">Club house</div>'+
       '<div class="bggrid">'+bgGrid+'</div>'+
+      '<div class="sectitle">Balles de putting</div>'+
+      '<div class="ballgrid">'+ballGrid+'</div>'+
       '<button class="btn big" id="go" style="margin-top:18px">'+(onboarding?'C\'est parti !':'Retour a l\'accueil')+'</button>'+
       (totalStars()>0?'<button class="btn ghost big" id="resetBtn" style="margin-top:22px;border-color:var(--ko);color:var(--ko)">Reinitialiser ma progression</button>':'')+
     '</div></div>'
@@ -160,6 +178,10 @@ function screenProfile(){
   var bgOpts=view.querySelectorAll('.bgcard[data-bg]');
   for(var k2=0;k2<bgOpts.length;k2++){bgOpts[k2].onclick=function(){
     sndClick(); profile.background=this.getAttribute('data-bg')||null; persist(); applyBackground(); screenProfile();
+  };}
+  var ballOpts=view.querySelectorAll('.ballcard[data-ball]');
+  for(var k3=0;k3<ballOpts.length;k3++){ballOpts[k3].onclick=function(){
+    sndClick(); profile.ball=this.getAttribute('data-ball'); persist(); screenProfile();
   };}
   document.getElementById('go').onclick=function(){
     var v=(document.getElementById('pname').value||'').trim();
@@ -511,6 +533,8 @@ function resultScreen(){
   }
   var bgUnlockMsg='';
   for(var bi=0;bi<BACKGROUNDS.length;bi++){ if(BACKGROUNDS[bi].need>ptsBefore && BACKGROUNDS[bi].need<=profile.careerPts){ bgUnlockMsg='Nouveau fond de club house debloque : '+BACKGROUNDS[bi].name+' !'; } }
+  var ballUnlockMsg='';
+  for(var bli2=0;bli2<BALLS.length;bli2++){ if(BALLS[bli2].need>ptsBefore && BALLS[bli2].need<=profile.careerPts){ ballUnlockMsg='Nouvelle balle debloquee : '+BALLS[bli2].name+' !'; } }
   persist();
   var starsHtml='';
   for(var s=0;s<3;s++)starsHtml+=starSVG(s<earned,34,s<earned);
@@ -525,6 +549,7 @@ function resultScreen(){
   var bestLine=(maxStreak>=2)?'<div style="text-align:center"><span class="bestrow">&#128293; Meilleure serie : '+maxStreak+' d\'affilee</span></div>':'';
   var unlockLine=unlockMsg?'<div class="unlock">'+starSVG(true,18)+unlockMsg+'</div>':'';
   var bgUnlockLine=bgUnlockMsg?'<div class="unlock">&#127968; '+bgUnlockMsg+'</div>':'';
+  var ballUnlockLine=ballUnlockMsg?'<div class="unlock">&#9971; '+ballUnlockMsg+'</div>':'';
   var starBlock=(curFlag!=='all')?'<div class="starsbig">'+starsHtml+'</div>':'';
   var trophyHtml=(score===ROUND)?'<img src="assets/fx/fx_trophy.jpg" class="result-trophy starpop" alt="Trophee">':'';
   setView(
@@ -535,7 +560,7 @@ function resultScreen(){
     '<div class="ptsbig"><span id="ptsnum">0</span> points'+(record?' <span class="recordtag">NOUVEAU RECORD !</span>':'')+'</div>'+
     (puttPts>0?'<div class="bestrow" style="margin-bottom:6px">&#127967; dont '+puttPts+' pts au putting</div>':'')+
     '<div class="verdict">'+lvl+' &middot; '+sub+'</div>'+
-    evoHtml+unlockLine+bgUnlockLine+bestLine+
+    evoHtml+unlockLine+bgUnlockLine+ballUnlockLine+bestLine+
     '<div class="scorecard">'+rows+'</div>'+
     '<button class="btn big" id="again">Rejouer cette etape</button>'+
     '<button class="btn ghost big" id="home" style="margin-top:10px">Retour a l\'academie</button>'+
@@ -561,6 +586,7 @@ function boot(){
     if(typeof profile.careerPts!=='number')profile.careerPts=0;
     if(typeof profile.muted!=='boolean')profile.muted=false;
     if(typeof profile.background==='undefined')profile.background=null;
+    if(!profile.ball)profile.ball='white';
     updateMuteBtn(); applyBackground();
     screenHome();
   } else { profile=blankProfile(); updateMuteBtn(); applyBackground(); screenProfile(); }
