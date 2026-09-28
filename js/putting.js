@@ -62,6 +62,12 @@ var Putting = (function(){
       state='aim'; drag=null; scored=false; lipped=false; shotTime=0; resultTimer=0;
       help.style.opacity=1;
     }
+    /* 2e essai : dans la continuite, on repart d'ou la balle s'est arretee au lieu de reposer au depart */
+    function continueShot(){
+      ball.vx=0; ball.vy=0;
+      state='aim'; drag=null; scored=false; lipped=false; shotTime=0; resultTimer=0;
+      help.style.opacity=1;
+    }
     setupShot();
 
     function pt(e){ var r=canvas.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*W, y:(e.clientY-r.top)/r.height*H}; }
@@ -199,7 +205,7 @@ var Putting = (function(){
           if(!scored && attempt<2){
             attempt++;
             floatTxt.push({x:W/2,y:H*0.42,t:0,txt:'ENCORE UN ESSAI !'});
-            setupShot();
+            continueShot();
           } else {
             idx++; attempt=1; if(idx>=putts.length){ finish(); return; } setupShot();
           }
@@ -250,6 +256,8 @@ var Putting = (function(){
     var MAX_STROKES=5;
 
     function inBounds(x,y){ return x>4 && x<W2-4 && y>-40 && y<H2+10; }
+    function inBunker(x,y){ var dx=(x-232)/42, dy=(y-(GY+GRY+35))/28; return dx*dx+dy*dy<=1; }
+    function inWater(x,y){ var dx=(x-56)/36, dy=(y-395)/105; return dx*dx+dy*dy<=1; }
 
     var strokes=0, holed=false, totalPts=0;
     var root=document.createElement('div'); root.className='mg';
@@ -274,11 +282,13 @@ var Putting = (function(){
     resize(); window.addEventListener('resize',resize);
 
     var ball={x:TEE_X,y:TEE_Y,vx:0,vy:0}, club='iron', state='choose', drag=null, floatTxt=[], resultTimer=0, shotTime=0, scored=false, lipped=false, flight=null;
+    var prevBall={x:TEE_X,y:TEE_Y}, inBunkerLie=false;
 
     function showClubChoice(){
       state='choose'; drag=null;
       var d=Math.hypot(ball.x-GX,ball.y-HOLE_Y2);
-      help.textContent = d>220 ? 'Tu es loin : le fer porte plus loin.' : 'Tu es pres du trou : le putter est plus precis.';
+      if(inBunkerLie) help.textContent='Tu es dans le bunker : le coup sera moins precis !';
+      else help.textContent = d>220 ? 'Tu es loin : le fer porte plus loin.' : 'Tu es pres du trou : le putter est plus precis.';
       help.style.opacity=1;
       clubsUI.classList.add('show');
     }
@@ -302,6 +312,12 @@ var Putting = (function(){
     function release(){
       if(!drag||state!=='aim')return; var v=launchVec(); drag=null;
       if(!v||v.p<0.1)return;
+      if(inBunkerLie){
+        var distFactor=1+(Math.random()*2-1)*0.3, angDev=(Math.random()*2-1)*0.3;
+        var curAng=Math.atan2(v.vy,v.vx)+angDev, curSpeed=Math.hypot(v.vx,v.vy)*distFactor;
+        v={vx:Math.cos(curAng)*curSpeed, vy:Math.sin(curAng)*curSpeed, p:v.p*distFactor};
+      }
+      prevBall={x:ball.x,y:ball.y};
       strokes++; sndWhoosh(); scored=false; lipped=false; shotTime=0; resultTimer=0;
       if(club==='iron'){
         var ang=Math.atan2(v.vy,v.vx), dist=v.p*IRON_CARRY_MAX;
@@ -444,10 +460,25 @@ var Putting = (function(){
         shotTime+=dt;
         var speed=Math.hypot(ball.vx,ball.vy);
         var oob=!inBounds(ball.x,ball.y);
+        var wet=!oob&&inWater(ball.x,ball.y);
         if(scored&&shotTime>0.08){ resultTimer+=dt; }
-        if(oob||shotTime>6||(scored&&resultTimer>0.9)||(!scored&&speed<4&&shotTime>0.2)){
+        if(oob||wet||shotTime>6||(scored&&resultTimer>0.9)||(!scored&&speed<4&&shotTime>0.2)){
           state='result'; resultTimer=0;
-          if(!scored){ floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt: oob?'HORS LIMITE !':'ARRETEE'}); }
+          if(!scored){
+            if(wet){
+              floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt:'PLOUF ! A L\'EAU'});
+              sndSplash();
+              ball.x=prevBall.x; ball.y=prevBall.y; ball.vx=0; ball.vy=0;
+              inBunkerLie=inBunker(ball.x,ball.y);
+            } else if(oob){
+              floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt:'HORS LIMITE !'});
+              ball.x=prevBall.x; ball.y=prevBall.y; ball.vx=0; ball.vy=0;
+              inBunkerLie=inBunker(ball.x,ball.y);
+            } else {
+              floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt:'ARRETEE'});
+              inBunkerLie=inBunker(ball.x,ball.y);
+            }
+          }
         }
       } else if(state==='result'){
         resultTimer+=dt;

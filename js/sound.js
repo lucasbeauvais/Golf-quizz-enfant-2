@@ -37,6 +37,7 @@ function sndPlop(){ noiseFx(.12,.12,2600,'lowpass',0,.6); beep(300,.1,'sine',.1,
 function sndCheer(){ noiseFx(1.4,.2,900,'bandpass',0,.6); noiseFx(1.1,.1,2200,'bandpass',.15,.8); }
 function sndHorn(){ beep(233,.45,'sawtooth',.1); beep(294,.45,'sawtooth',.08,.02); beep(349,.6,'sawtooth',.09,.05); }
 function sndBoom(){ beep(90,.5,'sine',.4,0); noiseFx(.4,.3,400,'lowpass'); }
+function sndSplash(){ noiseFx(.35,.22,700,'lowpass',0,.7); beep(180,.22,'sine',.12,.05); beep(110,.28,'sine',.09,.12); }
 function updateMuteBtn(){
   var b=document.getElementById('mutebtn'); if(!b) return;
   b.innerHTML=profile.muted
