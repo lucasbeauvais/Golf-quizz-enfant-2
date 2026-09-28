@@ -100,14 +100,14 @@ function scenePitch(bx,by,noLabel){return svg(grass()+
   '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="#6f8f4a"/>'+
   '<ellipse cx="'+(bx-26)+'" cy="'+by+'" rx="11" ry="6" fill="none" stroke="#4f6a32" stroke-width="1.5"/>'+
   (noLabel?'':label(bx-26,by-13,"pitch","#20301f"))+ball(bx,by));}
-function sceneTool(){var cx=200,cy=62;
-  var t='<g stroke="#2b2b2b" stroke-width="7" fill="none" stroke-linecap="round">'+
-    '<line x1="'+cx+'" y1="'+(cy+80)+'" x2="'+cx+'" y2="'+(cy+18)+'"/>'+
-    '<line x1="'+(cx-22)+'" y1="'+(cy+18)+'" x2="'+(cx-22)+'" y2="'+(cy-38)+'"/>'+
-    '<line x1="'+(cx+22)+'" y1="'+(cy+18)+'" x2="'+(cx+22)+'" y2="'+(cy-38)+'"/>'+
-    '<path d="M'+(cx-22)+' '+(cy+18)+' Q'+cx+' '+(cy+38)+' '+(cx+22)+' '+(cy+18)+'"/></g>'+
-    '<rect x="'+(cx-7)+'" y="'+(cy+82)+'" width="14" height="46" rx="7" fill="#2d6a4f"/>';
-  return svg(grass()+'<ellipse cx="200" cy="196" rx="60" ry="12" fill="#000" opacity=".08"/>'+t+label(200,220,"Quel est cet objet ?","#20301f"));}
+function sceneTool(){
+  return svg(grass()+
+    '<ellipse cx="200" cy="196" rx="55" ry="11" fill="#000" opacity=".1"/>'+
+    '<defs><clipPath id="toolClip"><circle cx="200" cy="108" r="72"/></clipPath></defs>'+
+    '<circle cx="200" cy="108" r="74" fill="#0a1a10" opacity=".18"/>'+
+    '<image href="assets/objects/tool_pitchfork.jpg" x="128" y="36" width="144" height="144" clip-path="url(#toolClip)"/>'+
+    '<circle cx="200" cy="108" r="72" fill="none" stroke="#0a1a10" stroke-width="2.5" opacity=".3"/>'+
+    label(200,220,"Quel est cet objet ?","#20301f"));}
 function sceneDivot(){return svg(grass()+fairway()+
   '<ellipse cx="185" cy="150" rx="22" ry="11" fill="#7a5a34"/>'+
   '<ellipse cx="185" cy="150" rx="22" ry="11" fill="none" stroke="#5a4020" stroke-width="1.5"/>'+
