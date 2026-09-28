@@ -28,7 +28,7 @@ body{
 h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 
 /* ===================== FOND DE CLUB HOUSE (photo debloquee) ===================== */
-.bgphoto{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease;filter:brightness(.5) saturate(1.15)}
+.bgphoto{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease;filter:brightness(.85) saturate(1.2)}
 .bgphoto.show{opacity:1}
 body.has-bgphoto .bgfx{opacity:0}
 
@@ -47,9 +47,9 @@ body.has-bgphoto .bgfx{opacity:0}
 .wrap{width:100%;max-width:560px;position:relative;z-index:1}
 .card{background:rgba(28,29,31,.86);-webkit-backdrop-filter:blur(10px) saturate(1.1);backdrop-filter:blur(10px) saturate(1.1);
   border-radius:20px;box-shadow:0 4px 0 var(--outline),var(--shadow);overflow:hidden;border:3px solid var(--outline);
-  animation:cardIn .45s cubic-bezier(.2,.9,.25,1.2);transition:background .5s ease}
-.card.see-bg{background:rgba(28,29,31,.55)}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.card{background:rgba(24,25,27,.97)}.card.see-bg{background:rgba(24,25,27,.8)}}
+  animation:cardIn .45s cubic-bezier(.2,.9,.25,1.2);transition:background .5s ease, backdrop-filter .5s ease}
+.card.see-bg{background:rgba(24,25,27,.38);-webkit-backdrop-filter:blur(3px) saturate(1.25);backdrop-filter:blur(3px) saturate(1.25)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.card{background:rgba(24,25,27,.97)}.card.see-bg{background:rgba(24,25,27,.75)}}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 .topbar{background:linear-gradient(120deg,#000 0%,#1c1d1f 55%,#000 100%);color:var(--ink);padding:13px 14px;display:flex;align-items:center;gap:7px;
   position:relative;transition:background .5s ease;box-shadow:0 3px 0 #000,0 4px 12px rgba(0,0,0,.5)}

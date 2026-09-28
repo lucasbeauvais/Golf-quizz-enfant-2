@@ -100,47 +100,72 @@ document.getElementById('mutebtn').onclick=function(){
 };
 
 /* ============================================================
-   ECRAN PROFIL
+   ECRAN PROFIL (nom + avatars + club house, le tout au meme endroit)
    ============================================================ */
-var pendingAvatar='a1';
 function screenProfile(){
   hideProg(); setTopbarTheme(null);
-  pendingAvatar=profile.avatar||'a1';
-  var grid='';
+  var onboarding=!profile.name;
+  var avGrid='';
   for(var i=0;i<MASCOTS.length;i++){
-    var m=MASCOTS[i], unlocked=mascotUnlocked(m), selCls=(m.id===pendingAvatar?' sel':'');
+    var m=MASCOTS[i], unlocked=mascotUnlocked(m), sel=(m.id===profile.avatar);
     if(unlocked){
-      grid+='<button class="avataropt'+selCls+'" data-av="'+m.id+'">'+avatarSVG(m.id,54)+'</button>';
+      avGrid+='<button class="mascot'+(sel?' sel':'')+'" data-av="'+m.id+'">'+avatarSVG(m.id,46)+
+        '<div class="mtx"><b>'+m.name+'</b><span>'+(sel?'Equipe':'Toucher pour equiper')+'</span></div></button>';
     } else {
-      grid+='<div class="avataropt locked">'+avatarSVG(m.id,54)+'<div class="lock">'+lockSVG()+'<span>'+m.need+' etoiles</span></div></div>';
+      avGrid+='<div class="mascot locked">'+avatarSVG(m.id,46)+'<div class="mtx"><b>'+m.name+'</b><span>&nbsp;</span></div>'+
+        '<div class="mlock">'+lockSVG()+m.need+' etoiles</div></div>';
+    }
+  }
+  var bgGrid='<button class="bgcard'+(!profile.background?' sel':'')+'" data-bg="">'+
+    '<div style="width:100%;height:118px;display:flex;align-items:center;justify-content:center;background:var(--panel3);color:var(--inkSoft);font-size:26px">&#8709;</div>'+
+    '<div class="bgname">Fond par defaut</div>'+
+    (!profile.background?'<div class="bgsel-tag">Equipe</div>':'')+
+    '</button>';
+  for(var bi=0;bi<BACKGROUNDS.length;bi++){
+    var b=BACKGROUNDS[bi], bunlocked=bgUnlocked(b), bsel=(profile.background===b.id);
+    if(bunlocked){
+      bgGrid+='<button class="bgcard'+(bsel?' sel':'')+'" data-bg="'+b.id+'">'+
+        '<img src="assets/backgrounds/'+b.file+'" alt="">'+
+        '<div class="bgname">'+b.name+'</div>'+
+        (bsel?'<div class="bgsel-tag">Equipe</div>':'')+
+        '</button>';
+    } else {
+      bgGrid+='<div class="bgcard locked">'+
+        '<img src="assets/backgrounds/'+b.file+'" alt="">'+
+        '<div class="bgname">'+b.name+'</div>'+
+        '<div class="bglock">'+lockSVG('#e8c94a')+'<span>'+b.need+' points en carriere</span></div>'+
+        '</div>';
     }
   }
   setView(
     '<div class="body">'+decorBanner()+'<div class="pad profile">'+
-      '<h1>Cree ton golfeur</h1>'+
-      tigerCoach('happy',70,'Salut, moi c\'est <b>Tiger</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?')+
+      '<h1>'+(onboarding?'Cree ton golfeur':'Mon profil')+'</h1>'+
+      tigerCoach('happy',70, onboarding
+        ? 'Salut, moi c\'est <b>Tiger</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?'
+        : 'Tu as '+totalStars()+' / 15 etoiles et '+(profile.careerPts||0)+' points en carriere. Continue a jouer pour tout debloquer !')+
       '<label class="lbl">Ton prenom</label>'+
       '<input id="pname" class="nameinput" maxlength="14" placeholder="Ecris ton prenom" value="'+esc(profile.name)+'">'+
-      '<label class="lbl">Choisis ton avatar de golfeur</label>'+
-      '<div class="avatargrid" id="ag">'+grid+'</div>'+
-      '<p class="subhead" style="margin-top:10px">D\'autres avatars se debloquent en gagnant des etoiles, et ton golfeur evolue avec ta progression !</p>'+
-      '<button class="btn big" id="go">C\'est parti !</button>'+
+      '<div class="sectitle">Ton avatar</div>'+
+      '<div class="mascotgrid">'+avGrid+'</div>'+
+      '<div class="sectitle">Club house</div>'+
+      '<div class="bggrid">'+bgGrid+'</div>'+
+      '<button class="btn big" id="go" style="margin-top:18px">'+(onboarding?'C\'est parti !':'Retour a l\'accueil')+'</button>'+
       (totalStars()>0?'<button class="btn ghost big" id="resetBtn" style="margin-top:22px;border-color:var(--ko);color:var(--ko)">Reinitialiser ma progression</button>':'')+
     '</div></div>'
   );
-  var opts=view.querySelectorAll('.avataropt[data-av]');
-  for(var k=0;k<opts.length;k++){opts[k].onclick=function(){
-    sndClick();
-    pendingAvatar=this.getAttribute('data-av');
-    var all=view.querySelectorAll('.avataropt');
-    for(var j=0;j<all.length;j++)all[j].classList.remove('sel');
-    this.classList.add('sel');
+  var avOpts=view.querySelectorAll('.mascot[data-av]');
+  for(var k=0;k<avOpts.length;k++){avOpts[k].onclick=function(){
+    sndClick(); profile.avatar=this.getAttribute('data-av'); persist(); screenProfile();
+  };}
+  var bgOpts=view.querySelectorAll('.bgcard[data-bg]');
+  for(var k2=0;k2<bgOpts.length;k2++){bgOpts[k2].onclick=function(){
+    sndClick(); profile.background=this.getAttribute('data-bg')||null; persist(); applyBackground(); screenProfile();
   };}
   document.getElementById('go').onclick=function(){
     var v=(document.getElementById('pname').value||'').trim();
     if(!v){ var el=document.getElementById('pname'); el.focus(); el.classList.add('shake'); setTimeout(function(){el.classList.remove('shake');},450); return; }
     ensureAudio();
-    profile.name=v; profile.avatar=pendingAvatar; persist(); sndGood(); screenHome();
+    profile.name=v; persist(); if(onboarding)sndGood(); screenHome();
   };
   var resetBtn=document.getElementById('resetBtn');
   if(resetBtn){
@@ -156,8 +181,8 @@ function screenProfile(){
       }
       clearTimeout(resetTimer);
       var keep=profile.name;
-      profile=blankProfile(); profile.name=keep; pendingAvatar='a1';
-      persist();
+      profile=blankProfile(); profile.name=keep;
+      persist(); applyBackground();
       doShake();
       screenProfile();
     };
@@ -210,9 +235,7 @@ function screenHome(){
         '<span class="mixtxt">Grand melange<span>'+(mixOn?'Toutes les etapes melangees - le defi ultime !':'Debloque en reussissant les 5 etapes')+'</span></span>'+
       '</button>'+
       '<div class="homebtns"><button class="btn big puttbtn" id="train">&#127967; Entrainement au putting</button>'+
-      '<button class="btn orange big" id="coll">Mes avatars</button>'+
-      '<button class="btn gold big" id="clubhouse">&#127968; Club house</button>'+
-      '<button class="btn ghost big" id="edit">Modifier mon profil</button></div>'+
+      '<button class="btn gold big" id="edit">&#128100; Mon profil</button></div>'+
     '</div></div>'
   );
   var ms=view.querySelectorAll('.stage[data-unlocked="1"]');
@@ -221,83 +244,8 @@ function screenHome(){
   for(var k2=0;k2<locked.length;k2++){locked[k2].onclick=function(){doShake();};}
   document.getElementById('mix').onclick=function(){ if(mixOn){sndClick();startRound('all');} else { doShake(); } };
   document.getElementById('train').onclick=function(){ sndClick(); Putting.open({title:'Entrainement',putts:practicePutts(),onDone:function(){screenHome();}}); };
-  document.getElementById('coll').onclick=function(){sndClick();screenCollection();};
-  document.getElementById('clubhouse').onclick=function(){sndClick();screenClubhouse();};
   document.getElementById('edit').onclick=function(){sndClick();screenProfile();};
-  document.getElementById('pcard').onclick=function(){sndClick();screenCollection();};
-}
-
-/* ============================================================
-   ECRAN AVATARS
-   ============================================================ */
-function screenCollection(){
-  hideProg(); setTopbarTheme(null);
-  var grid='';
-  for(var i=0;i<MASCOTS.length;i++){
-    var m=MASCOTS[i], unlocked=mascotUnlocked(m), sel=(m.id===profile.avatar);
-    if(unlocked){
-      grid+='<button class="mascot'+(sel?' sel':'')+'" data-av="'+m.id+'">'+avatarSVG(m.id,46)+
-        '<div class="mtx"><b>'+m.name+'</b><span>'+(sel?'Equipe':'Toucher pour equiper')+'</span></div></button>';
-    } else {
-      grid+='<div class="mascot locked">'+avatarSVG(m.id,46)+'<div class="mtx"><b>'+m.name+'</b><span>&nbsp;</span></div>'+
-        '<div class="mlock">'+lockSVG()+m.need+' etoiles</div></div>';
-    }
-  }
-  setView(
-    '<div class="body">'+decorBanner()+'<div class="pad collection">'+
-      '<h1>Mes avatars</h1>'+
-      tigerCoach('happy',56,'Tu as '+totalStars()+' / 15 etoiles et '+(profile.careerPts||0)+' points en carriere. Continue a jouer pour tout debloquer !')+
-      '<div class="mascotgrid">'+grid+'</div>'+
-      '<button class="btn ghost big" id="back" style="margin-top:16px">Retour</button>'+
-    '</div></div>'
-  );
-  var ms=view.querySelectorAll('.mascot[data-av]');
-  for(var k=0;k<ms.length;k++){ms[k].onclick=function(){sndClick();profile.avatar=this.getAttribute('data-av');persist();screenCollection();};}
-  document.getElementById('back').onclick=function(){sndClick();screenHome();};
-}
-
-/* ============================================================
-   ECRAN CLUB HOUSE (fonds d'ecran)
-   ============================================================ */
-function screenClubhouse(){
-  hideProg(); setTopbarTheme(null);
-  var pts=profile.careerPts||0;
-  var grid='<button class="bgcard'+(!profile.background?' sel':'')+'" data-bg="">'+
-    '<div style="width:100%;height:118px;display:flex;align-items:center;justify-content:center;background:var(--panel3);color:var(--inkSoft);font-size:26px">&#8709;</div>'+
-    '<div class="bgname">Fond par defaut</div>'+
-    (!profile.background?'<div class="bgsel-tag">Equipe</div>':'')+
-    '</button>';
-  for(var i=0;i<BACKGROUNDS.length;i++){
-    var b=BACKGROUNDS[i], unlocked=bgUnlocked(b), sel=(profile.background===b.id);
-    if(unlocked){
-      grid+='<button class="bgcard'+(sel?' sel':'')+'" data-bg="'+b.id+'">'+
-        '<img src="assets/backgrounds/'+b.file+'" alt="">'+
-        '<div class="bgname">'+b.name+'</div>'+
-        (sel?'<div class="bgsel-tag">Equipe</div>':'')+
-        '</button>';
-    } else {
-      grid+='<div class="bgcard locked">'+
-        '<img src="assets/backgrounds/'+b.file+'" alt="">'+
-        '<div class="bgname">'+b.name+'</div>'+
-        '<div class="bglock">'+lockSVG('#e8c94a')+'<span>'+b.need+' points en carriere</span></div>'+
-        '</div>';
-    }
-  }
-  setView(
-    '<div class="body">'+decorBanner()+'<div class="pad collection">'+
-      '<h1>Club house</h1>'+
-      tigerCoach('happy',56,'Tu as '+pts+' points en carriere. Choisis le decor de ton club house, et debloques-en d\'autres en jouant !')+
-      '<div class="bggrid">'+grid+'</div>'+
-      '<button class="btn ghost big" id="back" style="margin-top:16px">Retour</button>'+
-    '</div></div>'
-  );
-  var cards=view.querySelectorAll('.bgcard[data-bg]');
-  for(var k=0;k<cards.length;k++){cards[k].onclick=function(){
-    sndClick();
-    profile.background=this.getAttribute('data-bg')||null;
-    persist(); applyBackground(); screenClubhouse();
-  };}
-  document.getElementById('back').onclick=function(){sndClick();screenHome();};
+  document.getElementById('pcard').onclick=function(){sndClick();screenProfile();};
 }
 
 /* ============================================================

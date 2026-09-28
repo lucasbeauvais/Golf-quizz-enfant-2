@@ -14,10 +14,12 @@ var Putting = (function(){
   var GREEN_CX=W/2, GREEN_CY=280, GREEN_RX=155, GREEN_RY=270;
   var AIM_VIS=130; /* la ligne de visee s'estompe avant la distance reelle : on doit sentir la puissance, pas juste viser le trou */
 
-  /* textures d'herbe (fairway/green) chargees une fois, utilisees en motif repete sur le canvas */
-  var texFairwayImg=new Image(), texGreenImg=new Image();
+  /* textures d'herbe/sable/eau chargees une fois, utilisees en motif repete sur le canvas */
+  var texFairwayImg=new Image(), texGreenImg=new Image(), texSandImg=new Image(), texWaterImg=new Image();
   texFairwayImg.src='assets/textures/texture_grass.png';
   texGreenImg.src='assets/textures/texture_green.png';
+  texSandImg.src='assets/textures/texture_sand.png';
+  texWaterImg.src='assets/textures/texture_water.png';
   var _patCache={};
   function tiledPattern(ctx,img,key,tile){
     if(!img.complete||!img.naturalWidth)return null;
@@ -361,6 +363,19 @@ var Putting = (function(){
       var fpat=tiledPattern(ctx,texFairwayImg,'fairway',56);
       if(fpat){ ctx.fillStyle=fpat; ctx.fillRect(0,0,W2,H2); }
       else { var fstrp=34; for(var fx=0,fi=0;fx<W2;fx+=fstrp,fi++){ ctx.fillStyle=(fi%2===0)?'#3f5a26':'#476a2b'; ctx.fillRect(fx,0,fstrp,H2); } }
+      /* bunker et piece d'eau, purement decoratifs (pas de physique dessus) */
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(232,GY+GRY+35,42,28,0,0,Math.PI*2); ctx.clip();
+      var spat=tiledPattern(ctx,texSandImg,'sand',34);
+      ctx.fillStyle=spat||'#d9c383'; ctx.fillRect(0,0,W2,H2);
+      ctx.restore();
+      ctx.beginPath(); ctx.ellipse(232,GY+GRY+35,42,28,0,0,Math.PI*2); ctx.strokeStyle='#b89a53'; ctx.lineWidth=2.5; ctx.stroke();
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(56,395,36,105,0,0,Math.PI*2); ctx.clip();
+      var wpat=tiledPattern(ctx,texWaterImg,'water',50);
+      ctx.fillStyle=wpat||'#3a7ba8'; ctx.fillRect(0,0,W2,H2);
+      ctx.restore();
+      ctx.beginPath(); ctx.ellipse(56,395,36,105,0,0,Math.PI*2); ctx.strokeStyle='#2a5f82'; ctx.lineWidth=2.5; ctx.stroke();
       ctx.save();
       ctx.beginPath(); ctx.ellipse(GX,GY,GRX,GRY,0,0,Math.PI*2); ctx.clip();
       var gpat=tiledPattern(ctx,texGreenImg,'green',40);
