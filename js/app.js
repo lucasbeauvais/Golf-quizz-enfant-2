@@ -227,10 +227,10 @@ function screenHome(){
     ? '<div class="pc-footer">Fond : <b>'+pcBgObj.name+'</b> &middot; changer</div>'
     : '<div class="pc-footer">Fond : <b>aucun</b> &middot; en choisir un</div>';
   setView(
-    '<div class="body">'+decorBanner()+'<div class="pad home">'+
-      '<button class="playercard" id="pcard">'+pcBg+
-        '<div class="pc-top"><div class="pc-av-wrap"><div class="pc-av">'+avatarSVG(profile.avatar,52)+'</div>'+
-        '<div class="pc-lvl">'+levelBadge(totalStars(),30)+'</div></div>'+
+    '<div class="body"><div class="pad home">'+
+      '<button class="playercard big" id="pcard">'+pcBg+
+        '<div class="pc-top"><div class="pc-av-wrap"><div class="pc-av">'+avatarSVG(profile.avatar,66)+'</div>'+
+        '<div class="pc-lvl">'+levelBadge(totalStars(),32)+'</div></div>'+
         '<div class="pc-txt"><b>'+esc(profile.name)+'</b><span>'+rankName()+'</span><span class="pc-pts">'+(profile.careerPts||0)+' points en carriere</span></div>'+
         '<div class="pc-stars">'+starSVG(true,18)+totalStars()+' / 15</div></div>'+
         pcFooter+
