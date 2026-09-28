@@ -202,7 +202,10 @@ var Putting = (function(){
         if(scored&&shotTime>0.08){ resultTimer+=dt; }
         if(off||shotTime>4.5||(scored&&resultTimer>0.9)||(!scored&&speed<4&&shotTime>0.2)){
           state='result'; resultTimer=0;
-          if(!scored){ floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt: off?'HORS DU GREEN !':'TROP COURT !'}); }
+          if(!scored){
+            var missTxt = off ? 'HORS DU GREEN !' : (lipped ? 'CALME-TOI ! 😅' : 'TROP COURT !');
+            floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt:missTxt});
+          }
         }
       } else if(state==='result'){
         resultTimer+=dt;
@@ -481,7 +484,7 @@ var Putting = (function(){
               ball.x=prevBall.x; ball.y=prevBall.y; ball.vx=0; ball.vy=0;
               inBunkerLie=inBunker(ball.x,ball.y);
             } else {
-              floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt:'ARRETEE'});
+              floatTxt.push({x:ball.x,y:ball.y-10,t:0,txt: lipped?'CALME-TOI ! 😅':'ARRETEE'});
               inBunkerLie=inBunker(ball.x,ball.y);
             }
           }
