@@ -262,6 +262,7 @@ h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 .scorecard .row .m.y{color:var(--ok)}
 .scorecard .row .m.x{color:var(--ko)}
 .bestrow{display:inline-flex;align-items:center;gap:7px;margin:2px auto 0;background:#3a2f0a;border:2.5px solid var(--outline);color:var(--yellow);font-size:12.5px;font-weight:800;padding:6px 13px;border-radius:99px;box-shadow:0 3px 0 var(--outline)}
+.result-trophy{display:block;margin:6px auto 0;width:92px;height:92px;object-fit:cover;border-radius:50%;border:3px solid var(--gold);box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .footer{margin-top:16px;font-size:11px;color:var(--inkSoft);text-align:center;line-height:1.5;opacity:.7}
 
 /* ===================== FX (petites touches CSS, le gros du mouvement est en GSAP) ===================== */
@@ -280,14 +281,18 @@ h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 .fx-arena{background:radial-gradient(circle at 50% 45%,rgba(31,122,60,.92),rgba(4,10,6,.95) 70%)}
 .fx-fire{background:radial-gradient(circle at 50% 45%,rgba(200,16,46,.85),rgba(20,4,4,.95) 70%)}
 .fxpanel{width:100%;max-width:440px}
-.fxpanel svg{width:100%;height:auto;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.6);border:3px solid var(--gold);display:block;background:#8bc34a}
+.fxphoto{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6);border:3px solid var(--gold);background:#8bc34a}
+.fxphoto img{display:block;width:100%;aspect-ratio:400/260;object-fit:cover}
 .fx-flash{position:absolute;inset:0;background:#fff;pointer-events:none}
 .fx-flash.hot{background:#ffd27a}
 .fx-title{position:relative;text-align:center;color:#fff;z-index:2;margin-top:-4vh}
 .fx-title b{display:block;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-weight:900;font-size:clamp(38px,12vw,80px);color:var(--gold);line-height:1;-webkit-text-stroke:3px #0a0a0a;text-shadow:0 6px 0 #0a0a0a,0 0 30px rgba(232,201,74,.7);letter-spacing:1px}
 .fx-title span{display:inline-block;margin-top:10px;font-weight:900;font-size:clamp(13px,3.6vw,18px);background:#0a0a0a;padding:6px 14px;border-radius:99px;border:2px solid var(--gold);color:#fff}
 .fx-title.fire b{color:#fff3b0;text-shadow:0 6px 0 #6b0a0a,0 0 40px rgba(255,159,28,.9)}
-.fx-fireball{position:absolute;width:min(56vmin,320px);aspect-ratio:1;left:50%;top:42%;transform:translate(-50%,-50%)}
+.fx-fireball{position:absolute;width:min(56vmin,320px);aspect-ratio:1;left:50%;top:42%;transform:translate(-50%,-50%);border-radius:16px;object-fit:cover;filter:drop-shadow(0 10px 30px rgba(255,140,20,.55))}
+.fx-burst-img{position:absolute;left:50%;top:44%;width:min(70vmin,380px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;object-fit:cover;filter:drop-shadow(0 0 40px rgba(232,201,74,.5))}
+.fxphoto .fx-word{position:absolute;left:0;right:0;bottom:7%;text-align:center;pointer-events:none;margin:0}
+.fxphoto .fx-word b{display:inline-block;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-weight:900;font-size:clamp(26px,8vw,40px);color:var(--gold);-webkit-text-stroke:3px #0a0a0a;text-shadow:0 4px 0 #0a0a0a;letter-spacing:1px}
 .fx-stamp{position:absolute;left:50%;top:40%;margin-left:-110px;width:220px;text-align:center;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-size:52px;color:var(--ko);border:6px solid var(--ko);border-radius:14px;background:rgba(255,255,255,.88);padding:6px 0}
 .fx-pts{position:absolute;left:0;top:0;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-size:64px;color:var(--gold);-webkit-text-stroke:3px #0a0a0a;text-shadow:0 5px 0 #0a0a0a;white-space:nowrap}
 .fx-pass{pointer-events:none;z-index:85;display:block}
@@ -313,6 +318,7 @@ h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 .puttbtn{background:linear-gradient(180deg,var(--gold),#c9a017);color:#2a1a00;box-shadow:0 6px 0 var(--gold-dk)}
 .puttbtn:active{box-shadow:0 1px 0 var(--gold-dk)}
 .puttintro{text-align:center}
+.puttbanner{display:block;width:100%;max-width:340px;height:150px;object-fit:cover;object-position:center 15%;border-radius:16px;margin:0 auto 8px;border:3px solid var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.3)}
 .puttintro .tiger-wrap{margin:6px 0 4px}
 .puttintro p{color:var(--inkSoft);line-height:1.55;font-size:14.5px;font-weight:600;margin:8px 0 4px}
 .puttchips{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:12px 0 6px}

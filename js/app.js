@@ -248,7 +248,7 @@ var streak=0, maxStreak=0, shotCount=0, puttPts=0;
 function startRound(flag){
   curFlag=flag;
   order=buildRound(flag);
-  ROUND=order.length; current=0; score=0; points=0; results=[]; streak=0; maxStreak=0; puttPts=0;
+  ROUND=order.length; current=0; score=0; points=0; results=[]; streak=0; maxStreak=0; shotCount=0; puttPts=0;
   bonusQ=pickBonus();
   setTopbarTheme(flag);
   showProg();
@@ -312,15 +312,21 @@ function renderQuestion(){
     this.style.opacity='.5'; this.disabled=true;
   };
 }
-/* enchaine : birdie/super coup (eagle si grosse serie) -> (serie x3 | en feu x5) -> le score qui vole */
+/* les grosses celebrations plein ecran (serie x3, en feu x5) restent a chaque fois ;
+   le petit ecran birdie/super coup n'arrive que de temps en temps pour ne pas saturer,
+   les autres bonnes reponses ont juste un petit effet discret pres du score */
 function celebrateGood(pts,milestone,done){
-  var kind=(streak>=3&&!milestone)?'eagle':((shotCount++%2===0)?'putt':'drive');
-  FX.shot(kind,function(){
-    var next=function(){ FX.flyPoints('+'+pts,document.getElementById('pbscore'),function(){refreshBar();}); done&&done(); };
-    if(milestone==='fire')FX.fire(streak,next);
-    else if(milestone==='foam')FX.foam(streak,next);
-    else next();
-  });
+  var next=function(){ FX.flyPoints('+'+pts,document.getElementById('pbscore'),function(){refreshBar();}); done&&done(); };
+  if(milestone==='fire'){ FX.fire(streak,next); return; }
+  if(milestone==='foam'){ FX.foam(streak,next); return; }
+  shotCount++;
+  if(shotCount%3===0){
+    FX.shot(shotCount%6===0?'drive':'putt',next);
+  } else {
+    var sc=document.getElementById('pbscore'), r=sc&&sc.getBoundingClientRect();
+    if(r)FX.confAt(r.left+r.width/2,r.top+r.height/2,{particleCount:16,spread:55,startVelocity:18,scalar:.55});
+    next();
+  }
 }
 function finishAnswer(good,qd){
   results.push({ok:good,theme:qd.theme});
@@ -433,7 +439,9 @@ function screenPuttingGreen(){
   hideProg(); setTopbarTheme(null);
   progTxt.textContent='Trou par 3'; progBar.style.width='100%';
   setView(
-    '<div class="pad puttintro">'+tigerCoach('happy',90)+
+    '<div class="pad puttintro">'+
+    '<img src="assets/minigame/minigame_hole_course.jpg" class="puttbanner" alt="">'+
+    tigerCoach('happy',90)+
     '<h2 class="h1">Dernier defi : un trou !</h2>'+
     '<p>Tiger : un vrai trou t\'attend, <b>par 3</b>. A chaque coup, choisis ton club : le <b>fer</b> pour porter loin depuis le depart (et pourquoi pas rentrer directement !), le <b>putter</b> pour finir en douceur sur le green. Vise juste, moins tu mets de coups, plus tu gagnes de points !</p>'+
     '<button class="btn big puttbtn" id="goputt">&#9971; Aller jouer le trou !</button>'+
@@ -499,8 +507,9 @@ function resultScreen(){
   var bestLine=(maxStreak>=2)?'<div style="text-align:center"><span class="bestrow">&#128293; Meilleure serie : '+maxStreak+' d\'affilee</span></div>':'';
   var unlockLine=unlockMsg?'<div class="unlock">'+starSVG(true,18)+unlockMsg+'</div>':'';
   var starBlock=(curFlag!=='all')?'<div class="starsbig">'+starsHtml+'</div>':'';
+  var trophyHtml=(score===ROUND)?'<img src="assets/fx/fx_trophy.jpg" class="result-trophy starpop" alt="Trophee">':'';
   setView(
-    '<div class="pad result"><h2>'+msg+'</h2>'+
+    '<div class="pad result"><h2>'+msg+'</h2>'+trophyHtml+
     '<div class="tiger-wrap center">'+tigerCoach(mood,84)+'</div>'+
     starBlock+
     '<div class="scorebig"><span id="scnum">0</span><small>/'+ROUND+'</small></div>'+

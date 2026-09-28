@@ -14,6 +14,19 @@ var Putting = (function(){
   var GREEN_CX=W/2, GREEN_CY=280, GREEN_RX=155, GREEN_RY=270;
   var AIM_VIS=95; /* la ligne de visee s'estompe avant la distance reelle : on doit sentir la puissance, pas juste viser le trou */
 
+  /* textures d'herbe (fairway/green) chargees une fois, utilisees en motif repete sur le canvas */
+  var texFairwayImg=new Image(), texGreenImg=new Image();
+  texFairwayImg.src='assets/textures/texture_grass.png';
+  texGreenImg.src='assets/textures/texture_green.png';
+  var _patCache={};
+  function tiledPattern(ctx,img,key,tile){
+    if(!img.complete||!img.naturalWidth)return null;
+    if(_patCache[key])return _patCache[key];
+    var oc=document.createElement('canvas'); oc.width=tile; oc.height=tile;
+    oc.getContext('2d').drawImage(img,0,0,tile,tile);
+    var p=ctx.createPattern(oc,'repeat'); _patCache[key]=p; return p;
+  }
+
   function inGreen(x,y){
     var dx=(x-GREEN_CX)/GREEN_RX, dy=(y-GREEN_CY)/GREEN_RY;
     return dx*dx+dy*dy<=1.05;
@@ -107,11 +120,13 @@ var Putting = (function(){
       ctx.restore();
     }
     function drawGreen(){
-      ctx.fillStyle='#3f5a26'; ctx.fillRect(0,0,W,H);
+      var fpat=tiledPattern(ctx,texFairwayImg,'fairway',56);
+      ctx.fillStyle=fpat||'#3f5a26'; ctx.fillRect(0,0,W,H);
       ctx.save();
       ctx.beginPath(); ctx.ellipse(GREEN_CX,GREEN_CY,GREEN_RX,GREEN_RY,0,0,Math.PI*2); ctx.clip();
-      var strp=22;
-      for(var x=0,i=0;x<W;x+=strp,i++){ ctx.fillStyle=(i%2===0)?'#6fa83a':'#7cb943'; ctx.fillRect(x,0,strp,H); }
+      var gpat=tiledPattern(ctx,texGreenImg,'green',40);
+      if(gpat){ ctx.fillStyle=gpat; ctx.fillRect(0,0,W,H); }
+      else { var strp=22; for(var x=0,i=0;x<W;x+=strp,i++){ ctx.fillStyle=(i%2===0)?'#6fa83a':'#7cb943'; ctx.fillRect(x,0,strp,H); } }
       ctx.restore();
       ctx.beginPath(); ctx.ellipse(GREEN_CX,GREEN_CY,GREEN_RX,GREEN_RY,0,0,Math.PI*2); ctx.strokeStyle='#5c8f38'; ctx.lineWidth=3; ctx.stroke();
     }
@@ -332,12 +347,14 @@ var Putting = (function(){
       ctx.restore();
     }
     function drawScene(){
-      var fstrp=34;
-      for(var fx=0,fi=0;fx<W2;fx+=fstrp,fi++){ ctx.fillStyle=(fi%2===0)?'#3f5a26':'#476a2b'; ctx.fillRect(fx,0,fstrp,H2); }
+      var fpat=tiledPattern(ctx,texFairwayImg,'fairway',56);
+      if(fpat){ ctx.fillStyle=fpat; ctx.fillRect(0,0,W2,H2); }
+      else { var fstrp=34; for(var fx=0,fi=0;fx<W2;fx+=fstrp,fi++){ ctx.fillStyle=(fi%2===0)?'#3f5a26':'#476a2b'; ctx.fillRect(fx,0,fstrp,H2); } }
       ctx.save();
       ctx.beginPath(); ctx.ellipse(GX,GY,GRX,GRY,0,0,Math.PI*2); ctx.clip();
-      var strp=20;
-      for(var x=0,i=0;x<W2;x+=strp,i++){ ctx.fillStyle=(i%2===0)?'#9ad35f':'#a6dd6c'; ctx.fillRect(x,0,strp,H2); }
+      var gpat=tiledPattern(ctx,texGreenImg,'green',40);
+      if(gpat){ ctx.fillStyle=gpat; ctx.fillRect(0,0,W2,H2); }
+      else { var strp=20; for(var x=0,i=0;x<W2;x+=strp,i++){ ctx.fillStyle=(i%2===0)?'#9ad35f':'#a6dd6c'; ctx.fillRect(x,0,strp,H2); } }
       ctx.restore();
       ctx.beginPath(); ctx.ellipse(GX,GY,GRX,GRY,0,0,Math.PI*2); ctx.strokeStyle='#7cb342'; ctx.lineWidth=3; ctx.stroke();
     }
