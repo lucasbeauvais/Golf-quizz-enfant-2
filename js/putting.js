@@ -12,6 +12,7 @@
 var Putting = (function(){
   var W=340, H=520, R=9, HOLE_Y=70, HOLE_R=14, FRICTION=230, VMAX=560, PULLMAX=150, CAPTURE_SPEED=140;
   var GREEN_CX=W/2, GREEN_CY=280, GREEN_RX=155, GREEN_RY=270;
+  var AIM_VIS=95; /* la ligne de visee s'estompe avant la distance reelle : on doit sentir la puissance, pas juste viser le trou */
 
   function inGreen(x,y){
     var dx=(x-GREEN_CX)/GREEN_RX, dy=(y-GREEN_CY)/GREEN_RY;
@@ -127,10 +128,12 @@ var Putting = (function(){
       ctx.strokeStyle='rgba(232,201,74,.9)'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(ball.x-(v.vx/VMAX)*PULLMAX*.5,ball.y-(v.vy/VMAX)*PULLMAX*.5); ctx.stroke();
       var dist=(v.vx*v.vx+v.vy*v.vy)/(2*FRICTION);
       var ang=Math.atan2(v.vy,v.vx);
-      var stopX=ball.x+Math.cos(ang)*dist, stopY=ball.y+Math.sin(ang)*dist;
-      ctx.setLineDash([5,6]); ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(stopX,stopY); ctx.stroke(); ctx.setLineDash([]);
-      ctx.beginPath(); ctx.arc(stopX,stopY,4,0,Math.PI*2); ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+      var visDist=Math.min(dist,AIM_VIS);
+      var visX=ball.x+Math.cos(ang)*visDist, visY=ball.y+Math.sin(ang)*visDist;
+      var grad=ctx.createLinearGradient(ball.x,ball.y,visX,visY);
+      grad.addColorStop(0,'rgba(255,255,255,.65)'); grad.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.setLineDash([5,6]); ctx.strokeStyle=grad; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle='rgba(0,0,0,.4)'; ctx.fillRect(ball.x-24,ball.y+22,48,6);
       ctx.fillStyle=v.p>0.92?'#e0435f':'#e8c94a'; ctx.fillRect(ball.x-24,ball.y+22,48*v.p,6);
     }
@@ -349,12 +352,12 @@ var Putting = (function(){
     function drawAim(){
       var v=launchVec(); if(!v||v.p<0.04)return;
       ctx.strokeStyle='rgba(232,201,74,.9)'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(ball.x-(v.vx/VMAX)*PULLMAX*.5,ball.y-(v.vy/VMAX)*PULLMAX*.5); ctx.stroke();
-      var ang=Math.atan2(v.vy,v.vx), tx,ty;
-      if(club==='iron'){ var dist=v.p*IRON_CARRY_MAX; tx=ball.x+Math.cos(ang)*dist; ty=ball.y+Math.sin(ang)*dist; }
-      else { var dist2=(v.vx*v.vx+v.vy*v.vy)/(2*FRICTION); tx=ball.x+Math.cos(ang)*dist2; ty=ball.y+Math.sin(ang)*dist2; }
-      ctx.setLineDash([5,6]); ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(tx,ty); ctx.stroke(); ctx.setLineDash([]);
-      ctx.beginPath(); ctx.arc(tx,ty,club==='iron'?6:4,0,Math.PI*2); ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+      var ang=Math.atan2(v.vy,v.vx), aimVis=club==='iron'?AIM_VIS*1.6:AIM_VIS;
+      var visX=ball.x+Math.cos(ang)*aimVis, visY=ball.y+Math.sin(ang)*aimVis;
+      var grad=ctx.createLinearGradient(ball.x,ball.y,visX,visY);
+      grad.addColorStop(0,'rgba(255,255,255,.65)'); grad.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.setLineDash([5,6]); ctx.strokeStyle=grad; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(visX,visY); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle='rgba(0,0,0,.4)'; ctx.fillRect(ball.x-24,ball.y+22,48,6);
       ctx.fillStyle=v.p>0.92?'#e0435f':'#e8c94a'; ctx.fillRect(ball.x-24,ball.y+22,48*v.p,6);
     }
