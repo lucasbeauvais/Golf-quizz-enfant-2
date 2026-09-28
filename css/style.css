@@ -291,3 +291,25 @@ h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 .fx-stamp{position:absolute;left:50%;top:40%;margin-left:-110px;width:220px;text-align:center;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-size:52px;color:var(--ko);border:6px solid var(--ko);border-radius:14px;background:rgba(255,255,255,.88);padding:6px 0}
 .fx-pts{position:absolute;left:0;top:0;font-family:Impact,"Arial Black",Helvetica,sans-serif;font-size:64px;color:var(--gold);-webkit-text-stroke:3px #0a0a0a;text-shadow:0 5px 0 #0a0a0a;white-space:nowrap}
 .fx-pass{pointer-events:none;z-index:85;display:block}
+
+/* ---- mini-jeu de putting ---- */
+.mg{position:fixed;inset:0;z-index:75;background:#0a1a10;display:flex;flex-direction:column;align-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.mg-top{width:100%;max-width:400px;display:flex;align-items:center;justify-content:space-between;padding:10px 12px 6px;color:#fff}
+.mg-title{font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-family:'Rubik',sans-serif}
+.mg-skip{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:99px;padding:7px 14px;font:inherit;font-family:'Rubik',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.mg-wrap{position:relative}
+.mg-canvas{display:block;border-radius:14px;touch-action:none;cursor:crosshair}
+.mg-help{position:absolute;left:50%;top:56px;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:13px;font-weight:700;padding:7px 12px;border-radius:99px;white-space:nowrap;transition:opacity .3s;pointer-events:none;font-family:'Rubik',sans-serif}
+.mg-end{position:absolute;inset:0;background:rgba(6,14,9,.82);align-items:center;justify-content:center;padding:16px}
+.mg-endcard{background:var(--panel);border-radius:18px;padding:22px;text-align:center;width:100%;max-width:320px;border:3px solid var(--gold);box-shadow:var(--shadow)}
+.mg-endtitle{font-weight:800;font-size:19px;color:var(--ink);text-transform:uppercase;font-family:'Rubik',sans-serif}
+.mg-endscore{font-family:Impact,"Arial Black",Helvetica,sans-serif;font-size:58px;color:var(--gold);line-height:1.1;margin-top:6px}
+.mg-endscore small{font-size:20px}
+.mg-endsub{color:var(--inkSoft);font-weight:600;font-family:'Rubik',sans-serif;font-size:13.5px;margin-top:2px}
+.puttbtn{background:linear-gradient(180deg,var(--gold),#c9a017);color:#2a1a00;box-shadow:0 6px 0 var(--gold-dk)}
+.puttbtn:active{box-shadow:0 1px 0 var(--gold-dk)}
+.puttintro{text-align:center}
+.puttintro .tiger-wrap{margin:6px 0 4px}
+.puttintro p{color:var(--inkSoft);line-height:1.55;font-size:14.5px;font-weight:600;margin:8px 0 4px}
+.puttchips{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+.puttchip{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#e8e8e0 60%,#b7b7a6);color:#1a1a1f;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--outline);box-shadow:0 3px 0 var(--outline);font-family:'Rubik',sans-serif}

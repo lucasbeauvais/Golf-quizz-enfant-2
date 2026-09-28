@@ -195,7 +195,8 @@ function screenHome(){
         '<span style="font-size:26px">'+(mixOn?'&#127942;':'&#128274;')+'</span>'+
         '<span class="mixtxt">Grand melange<span>'+(mixOn?'Toutes les etapes melangees - le defi ultime !':'Debloque en reussissant les 5 etapes')+'</span></span>'+
       '</button>'+
-      '<div class="homebtns"><button class="btn orange big" id="coll">Mes avatars</button>'+
+      '<div class="homebtns"><button class="btn big puttbtn" id="train">&#127967; Entrainement au putting</button>'+
+      '<button class="btn orange big" id="coll">Mes avatars</button>'+
       '<button class="btn ghost big" id="edit">Modifier mon profil</button></div>'+
     '</div></div>'
   );
@@ -204,6 +205,7 @@ function screenHome(){
   var locked=view.querySelectorAll('.stage.locked');
   for(var k2=0;k2<locked.length;k2++){locked[k2].onclick=function(){doShake();};}
   document.getElementById('mix').onclick=function(){ if(mixOn){sndClick();startRound('all');} else { doShake(); } };
+  document.getElementById('train').onclick=function(){ sndClick(); Putting.open({title:'Entrainement',putts:practicePutts(),onDone:function(){screenHome();}}); };
   document.getElementById('coll').onclick=function(){sndClick();screenCollection();};
   document.getElementById('edit').onclick=function(){sndClick();screenProfile();};
   document.getElementById('pcard').onclick=function(){sndClick();screenCollection();};
@@ -242,11 +244,11 @@ function screenCollection(){
    JEU
    ============================================================ */
 var TARGET=5, ROUND=5, order=[], current=0, score=0, points=0, results=[], answered=false, curFlag="vert";
-var streak=0, maxStreak=0, shotCount=0;
+var streak=0, maxStreak=0, shotCount=0, bonusPutts=0, puttPts=0;
 function startRound(flag){
   curFlag=flag;
   order=buildRound(flag);
-  ROUND=order.length; current=0; score=0; points=0; results=[]; streak=0; maxStreak=0;
+  ROUND=order.length; current=0; score=0; points=0; results=[]; streak=0; maxStreak=0; bonusPutts=0; puttPts=0;
   bonusQ=pickBonus();
   setTopbarTheme(flag);
   showProg();
@@ -327,7 +329,7 @@ function finishAnswer(good,qd){
   if(good){
     streak++; if(streak>maxStreak)maxStreak=streak;
     pts=onFire()?6:3; points+=pts;
-    if(streak%5===0)milestone='fire'; else if(streak%3===0)milestone='foam';
+    if(streak%5===0)milestone='fire'; else if(streak%3===0){milestone='foam';bonusPutts++;}
     sndGood();
     celebrateGood(pts,milestone);
     vtxt=(pts===6?'EN FEU, +6 ! ':'+'+pts+' ! ')+pick(GOOD);
@@ -339,11 +341,17 @@ function finishAnswer(good,qd){
   exp.querySelector('.ebadge').outerHTML='<div class="ebadge">'+tigerCoach(good?'happy':'sad',52)+'</div>';
   document.getElementById('verdict').innerHTML=vtxt;
   document.getElementById('exptxt').textContent=qd.explain;
-  document.getElementById('nextrow').classList.add('show');
-  var nb=document.getElementById('nextbtn');
   var last=(current+1>=ROUND);
-  nb.textContent=last?(bonusQ?'Question bonus (culture golf)':'Mon resultat'):'Question suivante';
-  nb.onclick=function(){ sndClick(); if(!last){current++;renderQuestion();} else if(bonusQ){renderBonus();} else {resultScreen();} };
+  var row=document.getElementById('nextrow');
+  row.innerHTML=(milestone==='foam'?'<button class="btn puttbtn" id="bonusputt">&#127967; Putt bonus !</button>':'')+
+    '<button class="btn" id="nextbtn">'+(last?(bonusQ?'Question bonus (culture golf)':'Green de practice'):'Question suivante')+'</button>';
+  row.classList.add('show');
+  var bp=document.getElementById('bonusputt');
+  if(bp)bp.onclick=function(){
+    sndClick(); bonusPutts=Math.max(0,bonusPutts-1);
+    Putting.open({title:'Putt bonus',putts:[{x:0,dist:240,pts:2}],onDone:function(p){ puttPts+=p; points+=p; refreshBar(); bp.parentNode.removeChild(bp); }});
+  };
+  document.getElementById('nextbtn').onclick=function(){ sndClick(); if(!last){current++;renderQuestion();} else if(bonusQ){renderBonus();} else {screenPuttingGreen();} };
 }
 function onAnswer(){
   if(answered)return; answered=true;
@@ -396,11 +404,11 @@ function renderBonus(){
     '<div class="qtext">'+qd.q+'</div>'+
     '<div class="choices">'+ch+'</div>'+
     '<div class="explain" id="explain"><div class="ebadge"></div><div class="ebubble"><b id="verdict"></b><span id="exptxt"></span></div></div>'+
-    '<div class="nextrow" id="nextrow"><button class="btn" id="nextbtn">Mon resultat</button></div></div>'
+    '<div class="nextrow" id="nextrow"><button class="btn" id="nextbtn">Green de practice</button></div></div>'
   );
   var btns=view.querySelectorAll('.choice');
   for(var b=0;b<btns.length;b++)btns[b].onclick=onBonusAnswer;
-  document.getElementById('nextbtn').onclick=function(){sndClick();resultScreen();};
+  document.getElementById('nextbtn').onclick=function(){sndClick();screenPuttingGreen();};
 }
 function onBonusAnswer(){
   var qd=bonusQ;
@@ -413,6 +421,44 @@ function onBonusAnswer(){
   document.getElementById('verdict').textContent=good?'Un vrai champion de la culture golf !':'Pas grave, c\'etait juste pour le fun.';
   document.getElementById('exptxt').textContent=qd.explain;
   document.getElementById('nextrow').classList.add('show');
+}
+
+/* ============================================================
+   GREEN DE PRACTICE (mini-jeu de putting en fin de manche)
+   ============================================================ */
+function puttingGreenShots(n){
+  var presets=[
+    {x:0,dist:160,pts:1},{x:-20,dist:220,pts:2},{x:20,dist:220,pts:2},
+    {x:0,dist:300,pts:2},{x:-25,dist:340,pts:3},{x:25,dist:380,pts:3},{x:0,dist:200,pts:1}
+  ];
+  var s=[];
+  for(var i=0;i<n;i++) s.push(presets[i%presets.length]);
+  var last=s[s.length-1];
+  s[s.length-1]={x:last.x,dist:last.dist,pts:last.pts*2,gold:true};
+  return s;
+}
+function practicePutts(){
+  return [{x:0,dist:180,pts:1},{x:-20,dist:260,pts:2},{x:20,dist:260,pts:2},{x:0,dist:380,pts:3}];
+}
+function screenPuttingGreen(){
+  hideProg(); setTopbarTheme(null);
+  progTxt.textContent='Green de practice'; progBar.style.width='100%';
+  var n=Math.min(6,2+bonusPutts+(score===ROUND?1:0));
+  var shots=puttingGreenShots(n);
+  setView(
+    '<div class="pad puttintro">'+tigerCoach('happy',90)+
+    '<h2 class="h1">Green de practice !</h2>'+
+    '<p>Tiger : tu as gagne <b>'+shots.length+' putts</b> bonus. Chaque trou rapporte des points en plus. Le dernier, c\'est le <b>putt en or</b> : il compte double ! Attention a la puissance : trop fort, la balle "lippe" et ne rentre pas.</p>'+
+    '<div class="puttchips">'+shots.map(function(s){return '<span class="puttchip'+(s.gold?' gold':'')+'" style="'+(s.gold?'background:radial-gradient(circle at 35% 30%,#fff3b0,#e8c94a 60%,#a8891f);':'')+'">+'+s.pts+'</span>';}).join('')+'</div>'+
+    '<button class="btn big puttbtn" id="goputt">&#127967; Aller putter !</button>'+
+    '<button class="btn ghost big" id="skipputt" style="margin-top:10px">Voir mon resultat</button></div>'
+  );
+  sndHorn();
+  document.getElementById('goputt').onclick=function(){
+    sndClick();
+    Putting.open({title:'Green de practice',putts:shots,onDone:function(p){ puttPts+=p; points+=p; resultScreen(); }});
+  };
+  document.getElementById('skipputt').onclick=function(){ sndClick(); resultScreen(); };
 }
 
 /* ============================================================
@@ -473,6 +519,7 @@ function resultScreen(){
     starBlock+
     '<div class="scorebig"><span id="scnum">0</span><small>/'+ROUND+'</small></div>'+
     '<div class="ptsbig"><span id="ptsnum">0</span> points'+(record?' <span class="recordtag">NOUVEAU RECORD !</span>':'')+'</div>'+
+    (puttPts>0?'<div class="bestrow" style="margin-bottom:6px">&#127967; dont '+puttPts+' pts au putting</div>':'')+
     '<div class="verdict">'+lvl+' &middot; '+sub+'</div>'+
     evoHtml+unlockLine+bestLine+
     '<div class="scorecard">'+rows+'</div>'+
