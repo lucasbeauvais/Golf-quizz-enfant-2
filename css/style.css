@@ -300,6 +300,10 @@ h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 .mg-wrap{position:relative}
 .mg-canvas{display:block;border-radius:14px;touch-action:none;cursor:crosshair}
 .mg-help{position:absolute;left:50%;top:56px;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:13px;font-weight:700;padding:7px 12px;border-radius:99px;white-space:nowrap;transition:opacity .3s;pointer-events:none;font-family:'Rubik',sans-serif}
+.mg-clubs{position:absolute;inset:0;background:rgba(6,14,9,.8);display:none;align-items:center;justify-content:center;gap:12px;border-radius:14px;padding:16px}
+.mg-clubs.show{display:flex}
+.mg-clubs .btn{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:16px;padding:16px 18px}
+.mg-clubs .btn span{display:block;font-size:10.5px;text-transform:none;letter-spacing:0;font-weight:600;opacity:.8}
 .mg-end{position:absolute;inset:0;background:rgba(6,14,9,.82);align-items:center;justify-content:center;padding:16px}
 .mg-endcard{background:var(--panel);border-radius:18px;padding:22px;text-align:center;width:100%;max-width:320px;border:3px solid var(--gold);box-shadow:var(--shadow)}
 .mg-endtitle{font-weight:800;font-size:19px;color:var(--ink);text-transform:uppercase;font-family:'Rubik',sans-serif}

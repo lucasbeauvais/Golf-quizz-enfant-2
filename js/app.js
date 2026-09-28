@@ -244,11 +244,11 @@ function screenCollection(){
    JEU
    ============================================================ */
 var TARGET=5, ROUND=5, order=[], current=0, score=0, points=0, results=[], answered=false, curFlag="vert";
-var streak=0, maxStreak=0, shotCount=0, bonusPutts=0, puttPts=0;
+var streak=0, maxStreak=0, shotCount=0, puttPts=0;
 function startRound(flag){
   curFlag=flag;
   order=buildRound(flag);
-  ROUND=order.length; current=0; score=0; points=0; results=[]; streak=0; maxStreak=0; bonusPutts=0; puttPts=0;
+  ROUND=order.length; current=0; score=0; points=0; results=[]; streak=0; maxStreak=0; puttPts=0;
   bonusQ=pickBonus();
   setTopbarTheme(flag);
   showProg();
@@ -329,7 +329,7 @@ function finishAnswer(good,qd){
   if(good){
     streak++; if(streak>maxStreak)maxStreak=streak;
     pts=onFire()?6:3; points+=pts;
-    if(streak%5===0)milestone='fire'; else if(streak%3===0){milestone='foam';bonusPutts++;}
+    if(streak%5===0)milestone='fire'; else if(streak%3===0)milestone='foam';
     sndGood();
     celebrateGood(pts,milestone);
     vtxt=(pts===6?'EN FEU, +6 ! ':'+'+pts+' ! ')+pick(GOOD);
@@ -348,7 +348,7 @@ function finishAnswer(good,qd){
   row.classList.add('show');
   var bp=document.getElementById('bonusputt');
   if(bp)bp.onclick=function(){
-    sndClick(); bonusPutts=Math.max(0,bonusPutts-1);
+    sndClick();
     Putting.open({title:'Putt bonus',putts:[{x:0,dist:240,pts:2}],onDone:function(p){ puttPts+=p; points+=p; refreshBar(); bp.parentNode.removeChild(bp); }});
   };
   document.getElementById('nextbtn').onclick=function(){ sndClick(); if(!last){current++;renderQuestion();} else if(bonusQ){renderBonus();} else {screenPuttingGreen();} };
@@ -424,39 +424,25 @@ function onBonusAnswer(){
 }
 
 /* ============================================================
-   GREEN DE PRACTICE (mini-jeu de putting en fin de manche)
+   TROU PAR 3 (mini-jeu en fin de manche)
    ============================================================ */
-function puttingGreenShots(n){
-  var presets=[
-    {x:0,dist:160,pts:1},{x:-20,dist:220,pts:2},{x:20,dist:220,pts:2},
-    {x:0,dist:300,pts:2},{x:-25,dist:340,pts:3},{x:25,dist:380,pts:3},{x:0,dist:200,pts:1}
-  ];
-  var s=[];
-  for(var i=0;i<n;i++) s.push(presets[i%presets.length]);
-  var last=s[s.length-1];
-  s[s.length-1]={x:last.x,dist:last.dist,pts:last.pts*2,gold:true};
-  return s;
-}
 function practicePutts(){
   return [{x:0,dist:180,pts:1},{x:-20,dist:260,pts:2},{x:20,dist:260,pts:2},{x:0,dist:380,pts:3}];
 }
 function screenPuttingGreen(){
   hideProg(); setTopbarTheme(null);
-  progTxt.textContent='Green de practice'; progBar.style.width='100%';
-  var n=Math.min(6,2+bonusPutts+(score===ROUND?1:0));
-  var shots=puttingGreenShots(n);
+  progTxt.textContent='Trou par 3'; progBar.style.width='100%';
   setView(
     '<div class="pad puttintro">'+tigerCoach('happy',90)+
-    '<h2 class="h1">Green de practice !</h2>'+
-    '<p>Tiger : tu as gagne <b>'+shots.length+' putts</b> bonus. Chaque trou rapporte des points en plus. Le dernier, c\'est le <b>putt en or</b> : il compte double ! Attention a la puissance : trop fort, la balle "lippe" et ne rentre pas.</p>'+
-    '<div class="puttchips">'+shots.map(function(s){return '<span class="puttchip'+(s.gold?' gold':'')+'" style="'+(s.gold?'background:radial-gradient(circle at 35% 30%,#fff3b0,#e8c94a 60%,#a8891f);':'')+'">+'+s.pts+'</span>';}).join('')+'</div>'+
-    '<button class="btn big puttbtn" id="goputt">&#127967; Aller putter !</button>'+
+    '<h2 class="h1">Dernier defi : un trou !</h2>'+
+    '<p>Tiger : un vrai trou t\'attend, <b>par 3</b>. A chaque coup, choisis ton club : le <b>fer</b> pour porter loin depuis le depart (et pourquoi pas rentrer directement !), le <b>putter</b> pour finir en douceur sur le green. Vise juste, moins tu mets de coups, plus tu gagnes de points !</p>'+
+    '<button class="btn big puttbtn" id="goputt">&#9971; Aller jouer le trou !</button>'+
     '<button class="btn ghost big" id="skipputt" style="margin-top:10px">Voir mon resultat</button></div>'
   );
   sndHorn();
   document.getElementById('goputt').onclick=function(){
     sndClick();
-    Putting.open({title:'Green de practice',putts:shots,onDone:function(p){ puttPts+=p; points+=p; resultScreen(); }});
+    Putting.openHole({title:'Trou par 3',onDone:function(p){ puttPts+=p; points+=p; resultScreen(); }});
   };
   document.getElementById('skipputt').onclick=function(){ sndClick(); resultScreen(); };
 }
