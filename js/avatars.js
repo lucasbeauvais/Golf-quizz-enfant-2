@@ -14,6 +14,22 @@ var MASCOTS=[
 ];
 function mascotById(id){for(var i=0;i<MASCOTS.length;i++)if(MASCOTS[i].id===id)return MASCOTS[i];return MASCOTS[0];}
 function mascotUnlocked(m){return totalStars()>=m.need;}
+
+/* ============================================================
+   CLUB HOUSE : fonds d'ecran a debloquer avec les points en carriere
+   ============================================================ */
+var BACKGROUNDS=[
+  {id:'bg1',name:'Practice au crepuscule',file:'bg1_practice.jpg',need:0},
+  {id:'bg2',name:'Bord de mer',file:'bg2_links.jpg',need:50},
+  {id:'bg3',name:'Nuit etoilee',file:'bg3_starry.jpg',need:120},
+  {id:'bg4',name:'Bunker dore',file:'bg4_bunker_gold.jpg',need:220},
+  {id:'bg5',name:'Salle des trophees',file:'bg5_trophy_room.jpg',need:350},
+  {id:'bg6',name:'Feu d\'artifice',file:'bg6_fireworks.jpg',need:500},
+  {id:'bg7',name:'Automne',file:'bg7_autumn.jpg',need:700},
+  {id:'bg8',name:'Legende doree',file:'bg8_legend_gold.jpg',need:1000}
+];
+function bgById(id){for(var i=0;i<BACKGROUNDS.length;i++)if(BACKGROUNDS[i].id===id)return BACKGROUNDS[i];return null;}
+function bgUnlocked(b){return (profile.careerPts||0)>=b.need;}
 function starPts(cx,cy,r){var p='';for(var i=0;i<5;i++){var a=-Math.PI/2+i*2*Math.PI/5;var a2=a+Math.PI/5;p+=(cx+Math.cos(a)*r).toFixed(1)+','+(cy+Math.sin(a)*r).toFixed(1)+' '+(cx+Math.cos(a2)*r*0.46).toFixed(1)+','+(cy+Math.sin(a2)*r*0.46).toFixed(1)+' ';}return p;}
 var AVATAR_FILES={a1:'a1_lion.png',a2:'a2_renard.png',a3:'a3_ours.png',a4:'a4_elephant.png',a5:'a5_chat.png',a6:'a6_koala.png',a7:'a7_chouette.png',a8:'a8_aigle.png',a9:'a9_tigre.png'};
 var AVATAR_EVOLVES=['a1','a2','a3','a4'];

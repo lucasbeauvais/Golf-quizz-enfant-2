@@ -24,7 +24,7 @@ function floatPlusOne(target){
 var SAVE_KEY='golf_academy_tiger_v2';
 var LEGACY_SAVE_KEYS=['golf_academy_tiger_v1','golf_academy_rina_v1','golf_drapeaux_v6'];
 var profile=null;
-function blankProfile(){return {name:'',avatar:'a1',stars:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},best:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},
+function blankProfile(){return {name:'',avatar:'a1',background:null,stars:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},best:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0},
   bestPts:{vert:0,rouge:0,bleu:0,jaune:0,blanc:0,all:0},careerPts:0,played:0,muted:false,createdAt:Date.now()};}
 function loadSave(){
   try{
@@ -65,6 +65,20 @@ function setTopbarTheme(flag){
   if(!flag){ tb.style.background=''; tb.classList.remove('topbar-light'); return; }
   tb.style.background=topbarGradFor(flag);
   tb.classList.toggle('topbar-light', flag==='jaune'||flag==='blanc');
+}
+function applyBackground(){
+  var bg=profile.background?bgById(profile.background):null;
+  var el=document.getElementById('bgphoto'), card=document.getElementById('card');
+  if(bg){
+    el.style.backgroundImage='url(assets/backgrounds/'+bg.file+')';
+    el.classList.add('show');
+    document.body.classList.add('has-bgphoto');
+    if(card)card.classList.add('see-bg');
+  } else {
+    el.classList.remove('show');
+    document.body.classList.remove('has-bgphoto');
+    if(card)card.classList.remove('see-bg');
+  }
 }
 
 function askQuit(){
@@ -197,6 +211,7 @@ function screenHome(){
       '</button>'+
       '<div class="homebtns"><button class="btn big puttbtn" id="train">&#127967; Entrainement au putting</button>'+
       '<button class="btn orange big" id="coll">Mes avatars</button>'+
+      '<button class="btn gold big" id="clubhouse">&#127968; Club house</button>'+
       '<button class="btn ghost big" id="edit">Modifier mon profil</button></div>'+
     '</div></div>'
   );
@@ -207,6 +222,7 @@ function screenHome(){
   document.getElementById('mix').onclick=function(){ if(mixOn){sndClick();startRound('all');} else { doShake(); } };
   document.getElementById('train').onclick=function(){ sndClick(); Putting.open({title:'Entrainement',putts:practicePutts(),onDone:function(){screenHome();}}); };
   document.getElementById('coll').onclick=function(){sndClick();screenCollection();};
+  document.getElementById('clubhouse').onclick=function(){sndClick();screenClubhouse();};
   document.getElementById('edit').onclick=function(){sndClick();screenProfile();};
   document.getElementById('pcard').onclick=function(){sndClick();screenCollection();};
 }
@@ -237,6 +253,50 @@ function screenCollection(){
   );
   var ms=view.querySelectorAll('.mascot[data-av]');
   for(var k=0;k<ms.length;k++){ms[k].onclick=function(){sndClick();profile.avatar=this.getAttribute('data-av');persist();screenCollection();};}
+  document.getElementById('back').onclick=function(){sndClick();screenHome();};
+}
+
+/* ============================================================
+   ECRAN CLUB HOUSE (fonds d'ecran)
+   ============================================================ */
+function screenClubhouse(){
+  hideProg(); setTopbarTheme(null);
+  var pts=profile.careerPts||0;
+  var grid='<button class="bgcard'+(!profile.background?' sel':'')+'" data-bg="">'+
+    '<div style="width:100%;height:118px;display:flex;align-items:center;justify-content:center;background:var(--panel3);color:var(--inkSoft);font-size:26px">&#8709;</div>'+
+    '<div class="bgname">Fond par defaut</div>'+
+    (!profile.background?'<div class="bgsel-tag">Equipe</div>':'')+
+    '</button>';
+  for(var i=0;i<BACKGROUNDS.length;i++){
+    var b=BACKGROUNDS[i], unlocked=bgUnlocked(b), sel=(profile.background===b.id);
+    if(unlocked){
+      grid+='<button class="bgcard'+(sel?' sel':'')+'" data-bg="'+b.id+'">'+
+        '<img src="assets/backgrounds/'+b.file+'" alt="">'+
+        '<div class="bgname">'+b.name+'</div>'+
+        (sel?'<div class="bgsel-tag">Equipe</div>':'')+
+        '</button>';
+    } else {
+      grid+='<div class="bgcard locked">'+
+        '<img src="assets/backgrounds/'+b.file+'" alt="">'+
+        '<div class="bgname">'+b.name+'</div>'+
+        '<div class="bglock">'+lockSVG('#e8c94a')+'<span>'+b.need+' points en carriere</span></div>'+
+        '</div>';
+    }
+  }
+  setView(
+    '<div class="body">'+decorBanner()+'<div class="pad collection">'+
+      '<h1>Club house</h1>'+
+      tigerCoach('happy',56,'Tu as '+pts+' points en carriere. Choisis le decor de ton club house, et debloques-en d\'autres en jouant !')+
+      '<div class="bggrid">'+grid+'</div>'+
+      '<button class="btn ghost big" id="back" style="margin-top:16px">Retour</button>'+
+    '</div></div>'
+  );
+  var cards=view.querySelectorAll('.bgcard[data-bg]');
+  for(var k=0;k<cards.length;k++){cards[k].onclick=function(){
+    sndClick();
+    profile.background=this.getAttribute('data-bg')||null;
+    persist(); applyBackground(); screenClubhouse();
+  };}
   document.getElementById('back').onclick=function(){sndClick();screenHome();};
 }
 
@@ -493,6 +553,8 @@ function resultScreen(){
     }
     for(var i=0;i<MASCOTS.length;i++){ if(MASCOTS[i].need>before && MASCOTS[i].need<=after){ unlockMsg='Nouvel avatar debloque : '+MASCOTS[i].name+' !'; } }
   }
+  var bgUnlockMsg='';
+  for(var bi=0;bi<BACKGROUNDS.length;bi++){ if(BACKGROUNDS[bi].need>ptsBefore && BACKGROUNDS[bi].need<=profile.careerPts){ bgUnlockMsg='Nouveau fond de club house debloque : '+BACKGROUNDS[bi].name+' !'; } }
   persist();
   var starsHtml='';
   for(var s=0;s<3;s++)starsHtml+=starSVG(s<earned,34,s<earned);
@@ -506,6 +568,7 @@ function resultScreen(){
   var lvl=(curFlag==='all')?'Grand melange':FLAGS[curFlag].name;
   var bestLine=(maxStreak>=2)?'<div style="text-align:center"><span class="bestrow">&#128293; Meilleure serie : '+maxStreak+' d\'affilee</span></div>':'';
   var unlockLine=unlockMsg?'<div class="unlock">'+starSVG(true,18)+unlockMsg+'</div>':'';
+  var bgUnlockLine=bgUnlockMsg?'<div class="unlock">&#127968; '+bgUnlockMsg+'</div>':'';
   var starBlock=(curFlag!=='all')?'<div class="starsbig">'+starsHtml+'</div>':'';
   var trophyHtml=(score===ROUND)?'<img src="assets/fx/fx_trophy.jpg" class="result-trophy starpop" alt="Trophee">':'';
   setView(
@@ -516,7 +579,7 @@ function resultScreen(){
     '<div class="ptsbig"><span id="ptsnum">0</span> points'+(record?' <span class="recordtag">NOUVEAU RECORD !</span>':'')+'</div>'+
     (puttPts>0?'<div class="bestrow" style="margin-bottom:6px">&#127967; dont '+puttPts+' pts au putting</div>':'')+
     '<div class="verdict">'+lvl+' &middot; '+sub+'</div>'+
-    evoHtml+unlockLine+bestLine+
+    evoHtml+unlockLine+bgUnlockLine+bestLine+
     '<div class="scorecard">'+rows+'</div>'+
     '<button class="btn big" id="again">Rejouer cette etape</button>'+
     '<button class="btn ghost big" id="home" style="margin-top:10px">Retour a l\'academie</button>'+
@@ -541,8 +604,9 @@ function boot(){
     if(!profile.bestPts)profile.bestPts={vert:0,rouge:0,bleu:0,jaune:0,blanc:0,all:0};
     if(typeof profile.careerPts!=='number')profile.careerPts=0;
     if(typeof profile.muted!=='boolean')profile.muted=false;
-    updateMuteBtn();
+    if(typeof profile.background==='undefined')profile.background=null;
+    updateMuteBtn(); applyBackground();
     screenHome();
-  } else { profile=blankProfile(); updateMuteBtn(); screenProfile(); }
+  } else { profile=blankProfile(); updateMuteBtn(); applyBackground(); screenProfile(); }
 }
 boot();

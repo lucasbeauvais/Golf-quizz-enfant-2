@@ -27,8 +27,13 @@ body{
 }
 h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 
+/* ===================== FOND DE CLUB HOUSE (photo debloquee) ===================== */
+.bgphoto{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease;filter:brightness(.5) saturate(1.15)}
+.bgphoto.show{opacity:1}
+body.has-bgphoto .bgfx{opacity:0}
+
 /* ===================== ANIMATED BACKGROUND (spray + skyline) ===================== */
-.bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;transition:opacity .5s ease}
 .spray{position:absolute;border-radius:50%;filter:blur(26px);opacity:.14;animation:drift linear infinite}
 .spray.s1{top:8%;left:-220px;width:220px;height:220px;background:#5a5b5d;animation-duration:50s}
 .spray.s2{top:52%;left:-260px;width:260px;height:260px;background:var(--cyan);animation-duration:64s;animation-delay:-18s}
@@ -168,6 +173,18 @@ h1,h2,.brand,.scorebig{font-family:'Rubik',sans-serif;font-weight:800}
 .mascot .mtx b{display:block;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Rubik',sans-serif}
 .mascot .mtx span{font-size:11px;color:var(--inkSoft);font-weight:600}
 .mascot .mlock{position:absolute;inset:0;background:rgba(10,10,12,.82);border-radius:14px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px;font-weight:800;color:var(--yellow)}
+
+/* ===================== CLUB HOUSE ===================== */
+.bggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.bgcard{position:relative;border:2.5px solid var(--outline);border-radius:16px;overflow:hidden;cursor:pointer;
+  box-shadow:0 3px 0 var(--outline);transition:border-color .12s ease,transform .08s ease,box-shadow .08s ease;background:var(--panel2)}
+.bgcard:active{transform:translateY(3px);box-shadow:0 0 0 var(--outline)}
+.bgcard.sel{border-color:var(--green);box-shadow:0 0 0 3px rgba(57,255,106,.35),0 3px 0 var(--outline)}
+.bgcard.locked{cursor:default}
+.bgcard img{display:block;width:100%;height:118px;object-fit:cover}
+.bgcard .bgname{padding:7px 9px;font-size:12px;font-weight:800;color:var(--ink);font-family:'Rubik',sans-serif}
+.bgcard .bgsel-tag{position:absolute;top:6px;right:6px;background:var(--green);color:#04140a;font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;border:1.5px solid var(--outline)}
+.bgcard .bglock{position:absolute;inset:0;background:rgba(10,10,12,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11.5px;font-weight:800;color:var(--yellow);text-align:center;padding:6px}
 
 /* ===================== PLAY ===================== */
 .playbar{display:flex;align-items:center;gap:9px;background:var(--panel2);border:2.5px solid var(--outline);border-radius:14px;padding:7px 10px;margin-bottom:14px;box-shadow:0 3px 0 var(--outline);flex-wrap:wrap}
