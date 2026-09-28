@@ -154,7 +154,7 @@ function screenProfile(){
     }
   }
   setView(
-    '<div class="body">'+decorBanner()+'<div class="pad profile">'+
+    '<div class="body"><div class="pad profile">'+
       '<h1>'+(onboarding?'Cree ton golfeur':'Mon profil')+'</h1>'+
       tigerCoach('happy',70, onboarding
         ? 'Salut, moi c\'est <b>Tiger</b> ! Je vais t\'entrainer aux regles et a la politesse du golf. Comment tu t\'appelles ?'
