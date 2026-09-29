@@ -20,13 +20,13 @@ function mascotUnlocked(m){return totalStars()>=m.need;}
    ============================================================ */
 var BACKGROUNDS=[
   {id:'bg1',name:'Practice au crepuscule',file:'bg1_practice.jpg',need:0},
-  {id:'bg2',name:'Bord de mer',file:'bg2_links.jpg',need:50},
-  {id:'bg3',name:'Nuit etoilee',file:'bg3_starry.jpg',need:120},
-  {id:'bg4',name:'Bunker dore',file:'bg4_bunker_gold.jpg',need:220},
-  {id:'bg5',name:'Salle des trophees',file:'bg5_trophy_room.jpg',need:350},
-  {id:'bg6',name:'Feu d\'artifice',file:'bg6_fireworks.jpg',need:500},
-  {id:'bg7',name:'Automne',file:'bg7_autumn.jpg',need:700},
-  {id:'bg8',name:'Legende doree',file:'bg8_legend_gold.jpg',need:1000}
+  {id:'bg2',name:'Bord de mer',file:'bg2_links.jpg',need:25},
+  {id:'bg3',name:'Nuit etoilee',file:'bg3_starry.jpg',need:60},
+  {id:'bg4',name:'Bunker dore',file:'bg4_bunker_gold.jpg',need:110},
+  {id:'bg5',name:'Salle des trophees',file:'bg5_trophy_room.jpg',need:170},
+  {id:'bg6',name:'Feu d\'artifice',file:'bg6_fireworks.jpg',need:250},
+  {id:'bg7',name:'Automne',file:'bg7_autumn.jpg',need:350},
+  {id:'bg8',name:'Legende doree',file:'bg8_legend_gold.jpg',need:500}
 ];
 function bgById(id){for(var i=0;i<BACKGROUNDS.length;i++)if(BACKGROUNDS[i].id===id)return BACKGROUNDS[i];return null;}
 function bgUnlocked(b){return (profile.careerPts||0)>=b.need;}
