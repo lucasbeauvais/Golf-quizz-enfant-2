@@ -1,0 +1,8 @@
+// Deploiement Cloudflare (Workers + fichiers statiques). Aucun build : le site est servi tel quel.
+{
+  "name": "golf-academy",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./"
+  }
+}
