@@ -30,7 +30,7 @@ var FX = (function(){
   var SCENE_WORD={putt:'BIRDIE !',drive:'SUPER COUP !',eagle:'EAGLE !'};
   var SCENE_CONF={putt:{x:.52,y:.6},drive:{x:.64,y:.26},eagle:{x:.5,y:.58}};
   function scenePanel(kind){
-    return '<div class="fxphoto"><img src="'+SCENE_IMG[kind]+'" alt=""><div class="fx-word"><b>'+SCENE_WORD[kind]+'</b></div></div>';
+    return '<div class="fxphoto"><img src="'+SCENE_IMG[kind]+'" alt=""><div class="fx-word"><b>'+t(SCENE_WORD[kind])+'</b></div></div>';
   }
 
   /* ---------- 1. BONNE REPONSE : birdie / super coup / eagle (occasionnel) ---------- */
@@ -60,7 +60,7 @@ var FX = (function(){
     el.innerHTML=
       '<div class="fx-flash"></div>'+
       '<img class="fx-burst-img" src="assets/fx/fx_burst.jpg" alt="">'+
-      '<div class="fx-title"><b>SERIE x'+streakN+' !</b><span>'+streakN+' bonnes reponses d\'affilee</span></div>';
+      '<div class="fx-title"><b>'+tf('SERIE x{n} !',{n:streakN})+'</b><span>'+tf('{n} bonnes reponses d\'affilee',{n:streakN})+'</span></div>';
     var q=function(s){return el.querySelector(s);};
     var tl=gsap.timeline({onComplete:function(){kill(el);done&&done();}});
     sndBoom(); setTimeout(sndHorn,250); setTimeout(sndCheer,400);
@@ -85,7 +85,7 @@ var FX = (function(){
     var el=stage('fx-fire');
     el.innerHTML='<div class="fx-flash hot"></div>'+
       '<img class="fx-fireball" src="assets/fx/fx_fireball.jpg" alt="">'+
-      '<div class="fx-title fire"><b>EN FEU !</b><span>Serie x'+streakN+' : tes points comptent double !</span></div>';
+      '<div class="fx-title fire"><b>'+t('EN FEU !')+'</b><span>'+tf('Serie x{n} : tes points comptent double !',{n:streakN})+'</span></div>';
     var q=function(s){return el.querySelector(s);};
     var card=document.querySelector('.card');
     var tl=gsap.timeline({onComplete:function(){kill(el);if(card)gsap.set(card,{x:0});done&&done();}});
@@ -107,7 +107,7 @@ var FX = (function(){
     sndBad();
     if(reduce||!hasGsap)return;
     var el=stage('fx-pass');
-    el.innerHTML='<div class="fx-stamp">RATE !</div>';
+    el.innerHTML='<div class="fx-stamp">'+t('RATE !')+'</div>';
     var s=el.firstChild;
     gsap.timeline({onComplete:function(){kill(el);}})
       .fromTo(s,{scale:3.5,opacity:0,rotation:-25},{scale:1,opacity:1,rotation:-12,duration:.28,ease:'power4.in'})

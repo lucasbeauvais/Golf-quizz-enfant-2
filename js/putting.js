@@ -42,8 +42,8 @@ var Putting = (function(){
     var putts=cfg.putts||[{x:0,dist:220,pts:2}], idx=0, total=0, made=0;
     var root=document.createElement('div'); root.className='mg mg-practice';
     root.innerHTML=
-      '<div class="mg-top"><div class="mg-title">'+(cfg.title||'Green de practice')+'</div><button class="mg-skip">Passer</button></div>'+
-      '<div class="mg-wrap"><canvas class="mg-canvas"></canvas><div class="mg-help">Pose ton doigt sur la balle, tire vers l\'arriere, relache !</div></div>'+
+      '<div class="mg-top"><div class="mg-title">'+(cfg.title||t('Green de practice'))+'</div><button class="mg-skip">'+t('Passer')+'</button></div>'+
+      '<div class="mg-wrap"><canvas class="mg-canvas"></canvas><div class="mg-help">'+t('Pose ton doigt sur la balle, tire vers l\'arriere, relache !')+'</div></div>'+
       '<div class="mg-end" style="display:none"></div>';
     document.body.appendChild(root);
     var canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), help=root.querySelector('.mg-help');
@@ -172,20 +172,20 @@ var Putting = (function(){
       ctx.fillStyle='rgba(10,10,12,.75)'; ctx.fillRect(10,10,W-20,38);
       ctx.strokeStyle='#e8c94a'; ctx.lineWidth=2; ctx.strokeRect(10,10,W-20,38);
       ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 13px Rubik,Arial';
-      ctx.fillText('Coup '+Math.min(idx+1,putts.length)+' / '+putts.length+(attempt>1?' (essai 2/2)':''),22,33);
+      ctx.fillText(tf('Coup {a} / {b}',{a:Math.min(idx+1,putts.length),b:putts.length})+(attempt>1?t(' (essai 2/2)'):''),22,33);
       ctx.textAlign='right'; ctx.fillStyle='#e8c94a'; ctx.font='900 17px Impact,Arial Black,Helvetica';
       ctx.fillText('+'+total+' PTS',W-22,35);
       if(state==='aim'){
         var cf=cfgFor();
         ctx.textAlign='center'; ctx.font='900 14px Impact,Arial Black,Helvetica'; ctx.fillStyle=cf.gold?'#e8c94a':'#fff';
-        ctx.fillText(cf.gold?('PUTT EN OR x2 (+'+cf.pts+')'):('+'+cf.pts+' POINT'+(cf.pts>1?'S':'')),ball.x,ball.y-22);
+        ctx.fillText(cf.gold?tf('PUTT EN OR x2 (+{n})',{n:cf.pts}):tf(cf.pts>1?'+{n} POINTS':'+{n} POINT',{n:cf.pts}),ball.x,ball.y-22);
       }
     }
     function drawFloat(dt){
       for(var i=floatTxt.length-1;i>=0;i--){
         var f=floatTxt[i]; f.t+=dt; if(f.t>1.1){floatTxt.splice(i,1);continue;}
         ctx.globalAlpha=1-f.t/1.1; ctx.textAlign='center'; ctx.font='900 '+(20+f.t*8)+'px Impact,Arial Black,Helvetica';
-        ctx.lineWidth=3.5; ctx.strokeStyle='#0a0a0a'; ctx.strokeText(f.txt,f.x,f.y-f.t*44); ctx.fillStyle='#e8c94a'; ctx.fillText(f.txt,f.x,f.y-f.t*44);
+        ctx.lineWidth=3.5; ctx.strokeStyle='#0a0a0a'; ctx.strokeText(t(f.txt),f.x,f.y-f.t*44); ctx.fillStyle='#e8c94a'; ctx.fillText(t(f.txt),f.x,f.y-f.t*44);
       }
       ctx.globalAlpha=1;
     }
@@ -230,11 +230,11 @@ var Putting = (function(){
 
     function finish(){
       cancelAnimationFrame(raf); var end=root.querySelector('.mg-end');
-      var msg=made===putts.length?'Parfait, tout est rentre !':(made?'Beau parcours !':'Pas facile, le putting...');
+      var msg=t(made===putts.length?'Parfait, tout est rentre !':(made?'Beau parcours !':'Pas facile, le putting...'));
       end.innerHTML='<div class="mg-endcard"><div class="mg-endtitle">'+msg+'</div>'+
         '<div class="mg-endscore">+'+total+'<small> pts</small></div>'+
-        '<div class="mg-endsub">'+made+' putt'+(made>1?'s':'')+' reussi'+(made>1?'s':'')+' sur '+putts.length+'</div>'+
-        '<button class="btn big puttbtn" id="pgok">Continuer</button></div>';
+        '<div class="mg-endsub">'+tf(made>1?'{m} putts reussis sur {n}':'{m} putt reussi sur {n}',{m:made,n:putts.length})+'</div>'+
+        '<button class="btn big puttbtn" id="pgok">'+t('Continuer')+'</button></div>';
       end.style.display='flex';
       if(made)FX.fireworks(made===putts.length?2200:900);
       if(window.gsap)gsap.fromTo(end.firstChild,{scale:.5,opacity:0},{scale:1,opacity:1,duration:.5,ease:'back.out(2)'});
@@ -270,11 +270,11 @@ var Putting = (function(){
     var strokes=0, holed=false, totalPts=0;
     var root=document.createElement('div'); root.className='mg mg-hole';
     root.innerHTML=
-      '<div class="mg-top"><div class="mg-title">'+(cfg.title||'Trou par 3')+'</div><button class="mg-skip">Passer</button></div>'+
-      '<div class="mg-wrap"><canvas class="mg-canvas"></canvas><div class="mg-help">Choisis ton club !</div>'+
+      '<div class="mg-top"><div class="mg-title">'+(cfg.title||t('Trou par 3'))+'</div><button class="mg-skip">'+t('Passer')+'</button></div>'+
+      '<div class="mg-wrap"><canvas class="mg-canvas"></canvas><div class="mg-help">'+t('Choisis ton club !')+'</div>'+
       '<div class="mg-clubs" id="mgclubs">'+
-        '<button class="btn puttbtn" id="clubIron">&#9971; Fer<span>porte loin</span></button>'+
-        '<button class="btn ghost" id="clubPutter">&#9975; Putter<span>precis</span></button>'+
+        '<button class="btn puttbtn" id="clubIron">&#9971; '+t('Fer')+'<span>'+t('porte loin')+'</span></button>'+
+        '<button class="btn ghost" id="clubPutter">&#9975; Putter<span>'+t('precis')+'</span></button>'+
       '</div></div>'+
       '<div class="mg-end" style="display:none"></div>';
     document.body.appendChild(root);
@@ -296,8 +296,8 @@ var Putting = (function(){
     function showClubChoice(){
       state='choose'; drag=null;
       var d=Math.hypot(ball.x-GX,ball.y-HOLE_Y2);
-      if(inBunkerLie) help.textContent='Tu es dans le bunker : le coup sera moins precis !';
-      else help.textContent = d>220 ? 'Tu es loin : le fer porte plus loin.' : 'Tu es pres du trou : le putter est plus precis.';
+      if(inBunkerLie) help.textContent=t('Tu es dans le bunker : le coup sera moins precis !');
+      else help.textContent = t(d>220 ? 'Tu es loin : le fer porte plus loin.' : 'Tu es pres du trou : le putter est plus precis.');
       help.style.opacity=1;
       clubsUI.classList.add('show');
     }
@@ -436,16 +436,16 @@ var Putting = (function(){
       ctx.fillStyle='rgba(10,10,12,.75)'; ctx.fillRect(10,10,W2-20,38);
       ctx.strokeStyle='#e8c94a'; ctx.lineWidth=2; ctx.strokeRect(10,10,W2-20,38);
       ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 13px Rubik,Arial';
-      ctx.fillText('Coup '+(strokes+ (state==='choose'||state==='aim'?1:0))+' - '+(club==='iron'?'Fer':'Putter'),22,33);
+      ctx.fillText(tf('Coup {n} - {club}',{n:strokes+(state==='choose'||state==='aim'?1:0),club:club==='iron'?t('Fer'):'Putter'}),22,33);
       ctx.textAlign='right'; ctx.fillStyle='#e8c94a'; ctx.font='900 15px Impact,Arial Black,Helvetica';
       var d=Math.round(Math.hypot(ball.x-GX,ball.y-HOLE_Y2)*0.35);
-      ctx.fillText(d+' m',W2-22,35);
+      ctx.fillText(LANG==='en'?Math.round(d*1.0936)+' yd':d+' m',W2-22,35);
     }
     function drawFloat(dt){
       for(var i=floatTxt.length-1;i>=0;i--){
         var f=floatTxt[i]; f.t+=dt; if(f.t>1.1){floatTxt.splice(i,1);continue;}
         ctx.globalAlpha=1-f.t/1.1; ctx.textAlign='center'; ctx.font='900 '+(20+f.t*8)+'px Impact,Arial Black,Helvetica';
-        ctx.lineWidth=3.5; ctx.strokeStyle='#0a0a0a'; ctx.strokeText(f.txt,f.x,f.y-f.t*44); ctx.fillStyle='#e8c94a'; ctx.fillText(f.txt,f.x,f.y-f.t*44);
+        ctx.lineWidth=3.5; ctx.strokeStyle='#0a0a0a'; ctx.strokeText(t(f.txt),f.x,f.y-f.t*44); ctx.fillStyle='#e8c94a'; ctx.fillText(t(f.txt),f.x,f.y-f.t*44);
       }
       ctx.globalAlpha=1;
     }
@@ -508,11 +508,11 @@ var Putting = (function(){
 
     function finish(){
       cancelAnimationFrame(raf); var end=root.querySelector('.mg-end');
-      var title=holed?(strokes===1?'Trou en un !!':(strokes===2?'Birdie !':(strokes===3?'Par, joli trou !':(strokes===4?'Bogey, pas mal !':'Trou termine')))):'Trou non termine';
+      var title=t(holed?(strokes===1?'Trou en un !!':(strokes===2?'Birdie !':(strokes===3?'Par, joli trou !':(strokes===4?'Bogey, pas mal !':'Trou termine')))):'Trou non termine');
       end.innerHTML='<div class="mg-endcard"><div class="mg-endtitle">'+title+'</div>'+
         '<div class="mg-endscore">+'+totalPts+'<small> pts</small></div>'+
-        '<div class="mg-endsub">'+(holed?('En '+strokes+' coup'+(strokes>1?'s':'')):'')+'</div>'+
-        '<button class="btn big puttbtn" id="pgok">Continuer</button></div>';
+        '<div class="mg-endsub">'+(holed?tf(strokes>1?'En {n} coups':'En {n} coup',{n:strokes}):'')+'</div>'+
+        '<button class="btn big puttbtn" id="pgok">'+t('Continuer')+'</button></div>';
       end.style.display='flex';
       if(holed && strokes<=2)FX.fireworks(strokes===1?3000:1500);
       if(window.gsap)gsap.fromTo(end.firstChild,{scale:.5,opacity:0},{scale:1,opacity:1,duration:.5,ease:'back.out(2)'});

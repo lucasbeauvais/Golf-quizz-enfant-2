@@ -3,6 +3,8 @@
    ============================================================ */
 var GOOD=["Dans le mille, champion !","Tiger est fier de toi !","Beau swing de reponse !","Birdie de logique, bravo !","Tu assures a fond !","Superbe, comme une pro !","Coup parfait, bien joue !","Tiger te fait un high-five !"];
 var BAD=["Oups, un petit passage par le rough...","Pas grave, meme les pros ratent parfois !","Presque ! On retient la bonne reponse pour la prochaine fois.","Une petite balle perdue, on en reprend une !","Ce n'est qu'un entrainement, on progresse a chaque coup.","Tiger te glisse un tuyau pour la prochaine question."];
+var GOOD_EN=["Bullseye, champ!","Tiger is proud of you!","What a swing of an answer!","Birdie-level thinking, well done!","You're smashing it!","Superb, just like a pro!","Perfect shot, well played!","Tiger gives you a high five!"];
+var BAD_EN=["Oops, a little trip into the rough...","Never mind, even the pros miss sometimes!","Nearly! Remember the right answer for next time.","A lost ball - let's tee up another one!","It's only practice - you get better with every shot.","Tiger has a tip for you on the next question."];
 
 var actx=null;
 function ensureAudio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ actx=null; } } return actx; }

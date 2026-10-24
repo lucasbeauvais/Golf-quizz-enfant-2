@@ -86,7 +86,7 @@ function cultureBadge(size){
 }
 function cultureBanner(text){
   return '<div class="tiger-wrap"><div class="tiger">'+cultureBadge(66)+'</div>'+
-    '<div class="bubble"><b>Culture Golf</b><br>'+text+'</div></div>';
+    '<div class="bubble"><b>'+t('Culture Golf')+'</b><br>'+text+'</div></div>';
 }
 function starSVG(filled,size,pop){size=size||18;var c=filled?'#ffcf3f':'#eadfc2',s=filled?'#e0a800':'#d6cba8';return '<svg class="'+(pop?'starpop':'')+'" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="'+starPts(12,12,10)+'" fill="'+c+'" stroke="'+s+'" stroke-width="1"/></svg>';}
 function starRow(n){var h='';for(var i=0;i<3;i++)h+=starSVG(i<n,15,false);return h;}
@@ -96,7 +96,7 @@ function levelBadge(n,size){
   return '<svg width="'+size+'" height="'+Math.round(size*1.08)+'" viewBox="0 0 60 65" xmlns="http://www.w3.org/2000/svg">'+
     '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#faff85"/><stop offset="1" stop-color="#d4d800"/></linearGradient></defs>'+
     '<path d="M30 2 L56 12 L56 33 Q56 53 30 63 Q4 53 4 33 L4 12 Z" fill="url(#'+gid+')" stroke="#0a0a0c" stroke-width="3.5"/>'+
-    '<text x="30" y="26" font-family="Rubik, sans-serif" font-size="10" font-weight="800" fill="#4a4a06" text-anchor="middle" letter-spacing="1">NIV</text>'+
+    '<text x="30" y="26" font-family="Rubik, sans-serif" font-size="10" font-weight="800" fill="#4a4a06" text-anchor="middle" letter-spacing="1">'+t('NIV')+'</text>'+
     '<text x="30" y="48" font-family="Rubik, sans-serif" font-size="22" font-weight="800" fill="#2a2a06" text-anchor="middle">'+n+'</text>'+
     '</svg>';
 }
