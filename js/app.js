@@ -598,4 +598,4 @@ function boot(){
     screenHome();
   } else { profile=blankProfile(); updateMuteBtn(); applyBackground(); screenProfile(); }
 }
-boot();
+detectLang(boot);

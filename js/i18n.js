@@ -2,16 +2,34 @@
    LANGUES (francais / anglais)
    Le texte francais sert de cle : t('Texte fr') renvoie l'anglais
    si la langue est 'en', sinon le texte francais tel quel.
-   Choix : ?lang=en dans l'URL > choix sauvegarde > langue du navigateur.
+   Choix : ?lang=en dans l'URL > choix sauvegarde > pays du visiteur
+   (premiere visite, via /api/pays sur Cloudflare) > langue du navigateur.
    ============================================================ */
+var LANG_AUTO=false;
 var LANG=(function(){
   try{
     var m=/[?&]lang=(fr|en)\b/.exec(location.search);
     if(m){ localStorage.setItem('golf_lang',m[1]); return m[1]; }
     var s=localStorage.getItem('golf_lang'); if(s==='fr'||s==='en') return s;
   }catch(e){}
+  LANG_AUTO=true;
   return ((navigator.language||'fr').toLowerCase().indexOf('fr')===0)?'fr':'en';
 })();
+/* pays ou l'on parle francais (France, outre-mer, Belgique, Suisse, Luxembourg, Monaco) */
+var PAYS_FR=['FR','RE','GP','MQ','GF','YT','NC','PF','PM','WF','BL','MF','BE','CH','LU','MC'];
+/* premiere visite : on demande le pays au serveur ; pas de reponse (GitHub Pages, hors ligne...)
+   -> on garde la langue du navigateur. Le resultat est memorise, le bouton FR/EN reste prioritaire. */
+function detectLang(done){
+  if(!LANG_AUTO || !window.fetch){ done(); return; }
+  var fini=false;
+  function fin(){ if(fini) return; fini=true; try{ localStorage.setItem('golf_lang',LANG); }catch(e){} done(); }
+  setTimeout(fin,1500);
+  fetch('/api/pays',{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(d){
+    if(fini) return;
+    if(d && d.pays && d.pays!=='XX' && d.pays!=='T1') LANG=PAYS_FR.indexOf(d.pays)!==-1?'fr':'en';
+    fin();
+  }).catch(fin);
+}
 
 var EN={
   /* --- en-tete / page --- */

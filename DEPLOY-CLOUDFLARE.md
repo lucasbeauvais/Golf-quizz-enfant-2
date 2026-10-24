@@ -1,7 +1,9 @@
 # Déployer Golf Academy sur Cloudflare (sous-domaine)
 
-Le site est 100 % statique : aucun build, aucune dépendance. Le repo contient déjà
-la config Cloudflare (`wrangler.jsonc`, `_headers`, `.assetsignore`).
+Le site est statique : aucun build, aucune dépendance. Le repo contient déjà
+la config Cloudflare (`wrangler.jsonc`, `_headers`, `.assetsignore`) et un mini Worker
+(`worker.js`) qui ne sert que `/api/pays` : le pays du visiteur (déduit de l'IP par
+Cloudflare, rien n'est stocké), utilisé à la première visite pour choisir français ou anglais.
 
 ## 1. Créer le projet (une seule fois)
 
@@ -29,6 +31,9 @@ la config Cloudflare (`wrangler.jsonc`, `_headers`, `.assetsignore`).
 - Les fichiers `.md`, `.git`, `.github` et la config ne sont pas publiés (`.assetsignore`).
 
 ## Alternative : Cloudflare Pages
+
+(Sans Worker, `/api/pays` n'existe pas : la langue est alors choisie d'après celle du navigateur.)
+
 
 **Workers & Pages** → **Create** → onglet **Pages** → **Connect to Git** →
 même repo, preset **None**, build command vide, **Build output directory** `/`.

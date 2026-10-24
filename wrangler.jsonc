@@ -1,8 +1,11 @@
 // Deploiement Cloudflare (Workers + fichiers statiques). Aucun build : le site est servi tel quel.
+// worker.js ne sert que /api/pays (pays du visiteur pour choisir la langue) ; le reste = fichiers statiques.
 {
   "name": "golf-academy",
+  "main": "worker.js",
   "compatibility_date": "2025-10-01",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "binding": "ASSETS"
   }
 }

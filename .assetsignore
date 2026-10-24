@@ -4,3 +4,4 @@
 wrangler.jsonc
 *.md
 .wrangler
+worker.js
