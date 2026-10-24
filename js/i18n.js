@@ -19,6 +19,7 @@ var EN={
   "L'aventure des drapeaux":"The Flags Adventure",
   "Retour au menu":"Back to menu",
   "Son":"Sound",
+  "Side project de":"A side project by",
   /* --- rangs --- */
   "Legende de Coach Tiger":"Coach Tiger Legend",
   "Champion du club":"Club Champion",
@@ -247,6 +248,7 @@ function applyStaticTexts(){
   document.title=t("Golf Academy - L'aventure des Drapeaux avec Coach Tiger");
   var sm=document.querySelector('.brand small'); if(sm) sm.textContent=t("L'aventure des drapeaux");
   var q=document.getElementById('quitbtn'); if(q){ q.title=t('Retour au menu'); q.setAttribute('aria-label',t('Retour au menu')); }
+  var sf=document.getElementById('sitefoottxt'); if(sf) sf.textContent=t('Side project de');
   var m=document.getElementById('mutebtn'); if(m){ m.title=t('Son'); m.setAttribute('aria-label',t('Son')); }
   var b=document.getElementById('langbtn');
   if(b){
